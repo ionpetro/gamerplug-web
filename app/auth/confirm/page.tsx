@@ -13,26 +13,89 @@ function AuthConfirmContent() {
   useEffect(() => {
     const handleAuthConfirm = async () => {
       try {
-        // Get the access_token and refresh_token from URL params
-        const accessToken = searchParams.get('access_token');
-        const refreshToken = searchParams.get('refresh_token');
-        const type = searchParams.get('type');
+        // Parse URL fragments and query parameters
+        const getUrlParams = () => {
+          const params = new URLSearchParams();
+          
+          // First check URL query parameters
+          searchParams.forEach((value, key) => {
+            params.set(key, value);
+          });
+          
+          // Then check URL hash fragments (for success case)
+          if (typeof window !== 'undefined' && window.location.hash) {
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            hashParams.forEach((value, key) => {
+              params.set(key, value);
+            });
+          }
+          
+          return params;
+        };
 
-        if (!accessToken || !refreshToken) {
+        const urlParams = getUrlParams();
+        const accessToken = urlParams.get('access_token');
+        const refreshToken = urlParams.get('refresh_token');
+        const type = urlParams.get('type');
+        const error = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
+
+        console.log('URL params:', {
+          accessToken: accessToken ? 'present' : 'missing',
+          refreshToken: refreshToken ? 'present' : 'missing',
+          type,
+          error,
+          errorDescription
+        });
+
+        // Handle error cases first
+        if (error) {
+          setStatus('error');
+          if (error === 'access_denied' && errorDescription?.includes('expired')) {
+            setMessage('Email link has expired. Please request a new confirmation email.');
+          } else {
+            setMessage(`Authentication failed: ${errorDescription || error}`);
+          }
+          return;
+        }
+
+        // Handle success case - if we have no parameters at all, it might be a successful redirect
+        if (!accessToken && !refreshToken && !error) {
+          // Check if Supabase has automatically handled the session
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+          
+          if (session && !sessionError) {
+            setStatus('success');
+            setMessage('Email confirmed successfully! Redirecting to app...');
+            
+            // Redirect to mobile app after a short delay
+            setTimeout(() => {
+              window.location.href = 'gamerplug://auth-success';
+              
+              // Fallback: show instructions to open the app
+              setTimeout(() => {
+                setMessage('Please open the GamerPlug mobile app to continue.');
+              }, 2000);
+            }, 2000);
+            return;
+          }
+          
+          // If no session, treat as error
           setStatus('error');
           setMessage('Invalid confirmation link. Please try signing up again.');
           return;
         }
 
-        if (type === 'signup') {
+        // Handle case with tokens
+        if (accessToken && refreshToken) {
           // Set the session using the tokens from the URL
-          const { data, error } = await supabase.auth.setSession({
+          const { data, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
           });
 
-          if (error) {
-            console.error('Auth confirmation error:', error);
+          if (setSessionError) {
+            console.error('Auth confirmation error:', setSessionError);
             setStatus('error');
             setMessage('Failed to confirm your account. Please try again.');
             return;
@@ -44,7 +107,6 @@ function AuthConfirmContent() {
             
             // Redirect to mobile app after a short delay
             setTimeout(() => {
-              // Try to open the mobile app first
               window.location.href = 'gamerplug://auth-success';
               
               // Fallback: show instructions to open the app
@@ -55,7 +117,7 @@ function AuthConfirmContent() {
           }
         } else {
           setStatus('error');
-          setMessage('Invalid confirmation type.');
+          setMessage('Invalid confirmation link. Please try signing up again.');
         }
       } catch (error) {
         console.error('Unexpected error during auth confirmation:', error);

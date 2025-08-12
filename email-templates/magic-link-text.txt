@@ -1,0 +1,16 @@
+GAMERPLUG - Your Magic Link is Ready!
+
+Click the link below to instantly sign in to your GamerPlug account. No password needed - just pure gaming magic!
+
+SIGN ME IN:
+{{ .ConfirmationURL }}
+
+SECURITY NOTICE:
+This magic link will expire in 1 hour for your security. If you didn't request this login, please ignore this email.
+
+Having trouble? Copy and paste the link above into your browser.
+
+Game on!
+
+© 2024 GamerPlug. All rights reserved.
+Find Your Perfect Gaming Teammate

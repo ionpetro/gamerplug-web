@@ -10,13 +10,21 @@ These are custom email templates for GamerPlug's authentication emails.
 
 ### 2. Configure Confirm Signup Template
 1. Click on **Confirm signup** template
-2. Replace the content with the HTML from `confirm-signup.html`
-3. Update the subject line to: `🎮 Welcome to GamerPlug - Confirm Your Account`
+2. Replace the content with the HTML from `confirm-signup-gmail.html` (Gmail-optimized version)
+3. Update the subject line to: `Welcome to GamerPlug - Confirm Your Account` (no emojis to avoid spam)
 
 ### 3. Configure Magic Link Template  
 1. Click on **Magic Link** template
-2. Replace the content with the HTML from `magic-link.html`
-3. Update the subject line to: `✨ Your GamerPlug Magic Link`
+2. Replace the content with the HTML from `magic-link-gmail.html` (Gmail-optimized version)
+3. Update the subject line to: `Your GamerPlug Login Link`
+
+### 4. Gmail Spam Prevention
+To avoid Gmail spam filters:
+- Use the `-gmail.html` versions (table-based layout)
+- Avoid excessive emojis in subject lines
+- Keep text-to-image ratio high
+- Use standard fonts (Arial, Helvetica)
+- Include plain text versions if possible
 
 ### 4. Important Variables
 Make sure these Supabase variables are preserved in your templates:

@@ -1,0 +1,20 @@
+GAMERPLUG - Welcome to the Squad!
+
+You're just one click away from connecting with gamers who share your passion. Confirm your email to unlock the ultimate gaming social experience.
+
+CONFIRM YOUR ACCOUNT:
+{{ .ConfirmationURL }}
+
+What's waiting for you:
+✓ Swipe and match with fellow gamers
+✓ Share your epic gaming clips  
+✓ Chat with your matches instantly
+✓ Find teammates for competitive play
+✓ Build your gaming community
+
+This confirmation link will expire in 24 hours. If you didn't create this account, you can safely ignore this email.
+
+Ready to level up your gaming social life?
+
+© 2024 GamerPlug. All rights reserved.
+Find Your Perfect Gaming Teammate
