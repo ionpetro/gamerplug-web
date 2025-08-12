@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your GamerPlug Account</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #000000;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid #FF3B30;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #cccccc;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .content {
+            padding: 40px 20px;
+            background-color: #111111;
+        }
+
+        .welcome-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #cccccc;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF3B30 0%, #FF1744 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+
+        .features {
+            margin: 40px 0;
+            padding: 30px 20px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #333333;
+        }
+
+        .features-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #cccccc;
+            font-size: 15px;
+        }
+
+        .feature-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .footer {
+            background-color: #0a0a0a;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #333333;
+        }
+
+        .footer-text {
+            color: #888888;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .unsubscribe {
+            color: #666666;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .unsubscribe a {
+            color: #888888;
+            text-decoration: underline;
+        }
+
+        /* Mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .content {
+                padding: 30px 15px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+            
+            .welcome-text {
+                font-size: 22px;
+            }
+            
+            .cta-button {
+                padding: 14px 28px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🎮 GamerPlug</div>
+            <p class="tagline">Find Your Perfect Gaming Teammate</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h1 class="welcome-text">Welcome to the Squad! 🚀</h1>
+            
+            <p class="description">
+                You're just one click away from connecting with gamers who share your passion. 
+                Confirm your email to unlock the ultimate gaming social experience.
+            </p>
+
+            <div class="cta-section">
+                <a href="{{ .ConfirmationURL }}" class="cta-button">
+                    ✨ Confirm My Account
+                </a>
+            </div>
+
+            <div class="features">
+                <h2 class="features-title">What's waiting for you:</h2>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">💕</span>
+                        Swipe and match with fellow gamers
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🎮</span>
+                        Share your epic gaming clips
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        Chat with your matches instantly
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🏆</span>
+                        Find teammates for competitive play
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">🌟</span>
+                        Build your gaming community
+                    </li>
+                </ul>
+            </div>
+
+            <p class="description" style="margin-top: 30px; font-size: 14px; color: #888888;">
+                This confirmation link will expire in 24 hours. If you didn't create this account, 
+                you can safely ignore this email.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                Ready to level up your gaming social life?
+            </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">Website</a>
+                <a href="#" class="social-link">Support</a>
+                <a href="#" class="social-link">Privacy</a>
+            </div>
+
+            <div class="unsubscribe">
+                <p>
+                    © 2024 GamerPlug. All rights reserved.<br>
+                    <a href="#">Unsubscribe</a> | <a href="#">Privacy Policy</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

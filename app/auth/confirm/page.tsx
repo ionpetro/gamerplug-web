@@ -2,9 +2,9 @@
 
 import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-export default function AuthConfirm() {
+function AuthConfirmContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -113,5 +113,25 @@ export default function AuthConfirm() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthConfirm() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
+          </div>
+          <div className="space-y-4">
+            <div className="animate-spin w-8 h-8 border-2 border-[#FF3B30] border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-lg">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <AuthConfirmContent />
+    </Suspense>
   );
 }
