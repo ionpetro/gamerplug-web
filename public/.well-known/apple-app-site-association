@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "YOUR_TEAM_ID.com.ionpetro.gamerplug",
+        "paths": [
+          "/auth/confirm*",
+          "/auth/*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "YOUR_TEAM_ID.com.ionpetro.gamerplug"
+    ]
+  }
+}
