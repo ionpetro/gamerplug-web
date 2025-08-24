@@ -1,62 +1,288 @@
-'use client';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Gamepad2, Users, Zap, Trophy, Download, Star } from "lucide-react"
 
-import Link from "next/link";
-import { useState } from "react";
-
-export default function Home() {
-  const [searchUsername, setSearchUsername] = useState('');
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchUsername.trim()) {
-      window.location.href = `/profile/${searchUsername.trim()}`;
-    }
-  };
-
+export default function GamerPlugLanding() {
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="text-center max-w-md mx-auto px-6">
-        <h1 className="text-4xl font-bold mb-4 text-white">Gamerplug Web</h1>
-        <p className="text-xl mb-8 text-white/70">Connect with gamers and share your gaming clips</p>
-        
-        <div className="space-y-6">
-          <form onSubmit={handleSearch} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-white/80 mb-2">
-                Search for a gamer
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={searchUsername}
-                onChange={(e) => setSearchUsername(e.target.value)}
-                placeholder="Enter gamertag..."
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[#FF3B30] focus:border-transparent"
-              />
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="gradient-hero min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-red-900/20" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
+              🎮 The Future of Gaming Connections
+            </Badge>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent">
+              GamerPlug
+            </h1>
+            <p className="text-xl md:text-2xl mb-4 text-muted-foreground max-w-2xl mx-auto">
+              Swipe. Match. Game Together.
+            </p>
+            <p className="text-lg mb-8 text-muted-foreground max-w-3xl mx-auto">
+              The ultimate platform for gamers to find their perfect teammates, build lasting communities, and level up
+              their gaming experience.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button size="lg" className="gradient-accent text-white font-semibold px-8 py-6 text-lg">
+                <Download className="mr-2 h-5 w-5" />
+                Download Now
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary text-primary hover:bg-primary hover:text-white px-8 py-6 text-lg bg-transparent"
+              >
+                Watch Demo
+              </Button>
             </div>
-            <button
-              type="submit"
-              disabled={!searchUsername.trim()}
-              className="w-full bg-[#FF3B30] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#FF3B30]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              View Profile
-            </button>
-          </form>
-
-          <div className="text-white/50 text-sm">
-            <p>Try searching for existing usernames in your database</p>
-          </div>
-
-          <div className="pt-4 border-t border-white/10">
-            <Link 
-              href="/profile" 
-              className="inline-block text-white/70 hover:text-white transition-colors underline"
-            >
-              View static demo profile
-            </Link>
           </div>
         </div>
-      </div>
+
+        {/* Floating Gaming Icons */}
+        <div className="absolute top-20 left-10 animate-bounce">
+          <Gamepad2 className="h-8 w-8 text-primary/60" />
+        </div>
+        <div className="absolute top-40 right-20 animate-bounce delay-300">
+          <Trophy className="h-6 w-6 text-accent/60" />
+        </div>
+        <div className="absolute bottom-40 left-20 animate-bounce delay-700">
+          <Zap className="h-7 w-7 text-primary/40" />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Level Up Your Gaming</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Discover features designed to connect gamers and build the ultimate gaming community
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="mb-6 relative">
+                  <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <Users className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Smart Matching</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our AI-powered algorithm matches you with gamers who share your playstyle, skill level, and gaming
+                  preferences.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="mb-6 relative">
+                  <div className="w-16 h-16 mx-auto bg-accent/20 rounded-full flex items-center justify-center group-hover:bg-accent/30 transition-colors">
+                    <Gamepad2 className="h-8 w-8 text-accent" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Multi-Platform</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Connect across PC, PlayStation, Xbox, Nintendo Switch, and mobile. Find teammates regardless of your
+                  platform.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="mb-6 relative">
+                  <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <Trophy className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Build Communities</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Create or join gaming communities, organize tournaments, and build lasting friendships with fellow
+                  gamers.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 px-4 bg-card/30">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">How GamerPlug Works</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Finding your gaming squad has never been easier
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                1
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Create Your Profile</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Set up your gaming profile with your favorite games, skill level, and what you're looking for in
+                teammates.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                2
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Swipe & Match</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Browse through potential teammates and communities. Swipe right on profiles that interest you.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                3
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Game Together</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Start chatting, plan gaming sessions, and build your ultimate gaming squad for epic adventures.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Gamers Love GamerPlug</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of gamers who've found their perfect teammates
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card className="gradient-card border-border/50">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4 leading-relaxed">
+                  "Found my perfect Valorant team in just 2 days! We've been climbing ranks together ever since."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-primary font-bold">A</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold">Alex_Gamer</p>
+                    <p className="text-sm text-muted-foreground">Valorant Player</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="gradient-card border-border/50">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4 leading-relaxed">
+                  "The community features are amazing! Organized my first tournament and met so many cool people."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-accent font-bold">S</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold">SarahPlays</p>
+                    <p className="text-sm text-muted-foreground">Community Leader</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="gradient-card border-border/50">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4 leading-relaxed">
+                  "Cross-platform matching is a game changer. Finally found PC players who don't mind my console
+                  skills!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-primary font-bold">M</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold">MikeConsole</p>
+                    <p className="text-sm text-muted-foreground">Multi-Platform Gamer</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 gradient-hero relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-red-900/30" />
+        <div className="container mx-auto text-center relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">Ready to Find Your Squad?</h2>
+            <p className="text-xl mb-8 text-muted-foreground">
+              Join the gaming revolution and connect with players who share your passion
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button size="lg" className="gradient-accent text-white font-semibold px-12 py-6 text-xl">
+                <Download className="mr-2 h-6 w-6" />
+                Download GamerPlug
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mt-6">Available on iOS and Android • Free to download</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-4 bg-card/50 border-t border-border/50">
+        <div className="container mx-auto">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              GamerPlug
+            </h3>
+            <p className="text-muted-foreground mb-6">Connecting gamers, building communities, creating legends.</p>
+            <div className="flex justify-center space-x-6 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-primary transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="hover:text-primary transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="hover:text-primary transition-colors">
+                Support
+              </a>
+              <a href="#" className="hover:text-primary transition-colors">
+                Contact
+              </a>
+            </div>
+            <p className="text-xs text-muted-foreground mt-6">© 2024 GamerPlug. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
