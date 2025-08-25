@@ -15,7 +15,7 @@ export default function GamerPlugLanding() {
             <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
               🎮 The Future of Gaming Connections
             </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent leading-tight">
               GamerPlug
             </h1>
             <p className="text-xl md:text-2xl mb-4 text-muted-foreground max-w-2xl mx-auto">
