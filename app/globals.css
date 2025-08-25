@@ -76,6 +76,7 @@
 }
 
 @theme inline {
+  --font-space-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -134,4 +135,10 @@
 
 .gradient-accent {
   background: linear-gradient(90deg, oklch(0.55 0.22 25) 0%, oklch(0.6 0.25 15) 100%);
+}
+
+/* Navbar specific styles */
+.navbar-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }

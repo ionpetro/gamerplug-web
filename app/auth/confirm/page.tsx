@@ -3,6 +3,7 @@
 import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
+import { Footer } from '@/components/Footer';
 
 function AuthConfirmContent() {
   const router = useRouter();
@@ -130,7 +131,8 @@ function AuthConfirmContent() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="flex-1 flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
@@ -174,6 +176,8 @@ function AuthConfirmContent() {
           <p>Having trouble? Try opening the GamerPlug app directly from your home screen.</p>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
@@ -181,16 +185,19 @@ function AuthConfirmContent() {
 export default function AuthConfirm() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-6">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
-          </div>
-          <div className="space-y-4">
-            <div className="animate-spin w-8 h-8 border-2 border-[#FF3B30] border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-lg">Loading...</p>
+      <div className="min-h-screen bg-black text-white flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-6">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
+            </div>
+            <div className="space-y-4">
+              <div className="animate-spin w-8 h-8 border-2 border-[#FF3B30] border-t-transparent rounded-full mx-auto"></div>
+              <p className="text-lg">Loading...</p>
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
     }>
       <AuthConfirmContent />

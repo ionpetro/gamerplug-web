@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { Footer } from '@/components/Footer';
 
 interface User {
   id: string;
@@ -72,8 +73,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="w-full bg-black min-h-screen">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="w-full bg-black flex-1">
         {/* Header */}
         <header className="flex items-center justify-between p-5 pt-12 lg:px-8 lg:pt-8 max-w-screen-xl mx-auto">
           <h1 className="text-xl font-bold text-white lg:text-3xl">Gamerplug</h1>
@@ -218,6 +219,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
 import VideoModal from '@/components/VideoModal';
+import { Footer } from '@/components/Footer';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
@@ -145,42 +146,44 @@ export default function UserProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF3B30] mb-4"></div>
-          <p className="text-white/70">Loading profile...</p>
+      <div className="min-h-screen bg-black text-white flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF3B30] mb-4"></div>
+            <p className="text-white/70">Loading profile...</p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (error || !user) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">😔</div>
-          <h2 className="text-2xl font-bold mb-2">User not found</h2>
-          <p className="text-white/70 mb-6">{error || 'The user you\'re looking for doesn\'t exist.'}</p>
-          <button
-            onClick={() => window.history.back()}
-            className="bg-[#FF3B30] text-white px-6 py-3 rounded-lg hover:bg-[#FF3B30]/80 transition-colors"
-          >
-            Go Back
-          </button>
+      <div className="min-h-screen bg-black text-white flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-6xl mb-4">😔</div>
+            <h2 className="text-2xl font-bold mb-2">User not found</h2>
+            <p className="text-white/70 mb-6">{error || 'The user you\'re looking for doesn\'t exist.'}</p>
+            <button
+              onClick={() => window.history.back()}
+              className="bg-[#FF3B30] text-white px-6 py-3 rounded-lg hover:bg-[#FF3B30]/80 transition-colors"
+            >
+              Go Back
+            </button>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="w-full bg-black min-h-screen">
-        {/* Header */}
-        <header className="flex items-center justify-center p-5 pt-12 lg:px-8 lg:pt-8 max-w-screen-xl mx-auto">
-          <h1 className="text-xl font-bold text-white lg:text-3xl">Gamerplug</h1>
-        </header>
-
-        <div className="px-5 pb-6 lg:px-8 lg:pb-8 max-w-screen-xl mx-auto">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="w-full bg-black flex-1">
+        
+        <div className="pt-12 px-12 pb-12 lg:px-12 lg:pb-12 max-w-screen-xl mx-auto">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Profile Info */}
             <div className="lg:col-span-4 xl:col-span-3">
@@ -193,11 +196,11 @@ export default function UserProfilePage() {
                       alt="Profile"
                       width={100}
                       height={100}
-                      className="rounded-full lg:w-40 lg:h-40 xl:w-48 xl:h-48"
+                      className="rounded-full lg:w-28 lg:h-28 xl:w-32 xl:h-32"
                     />
                   ) : (
-                    <div className="w-[100px] h-[100px] lg:w-40 lg:h-40 xl:w-48 xl:h-48 rounded-full bg-white/10 flex items-center justify-center">
-                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="lg:w-16 lg:h-16">
+                    <div className="w-[100px] h-[100px] lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full bg-white/10 flex items-center justify-center">
+                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="lg:w-12 lg:h-12">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                       </svg>
@@ -206,7 +209,7 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <h2 className="text-lg font-medium text-white lg:text-2xl xl:text-3xl mb-2">
+                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-2">
                     @{user.gamertag}
                   </h2>
                   {user.platform && (
@@ -231,7 +234,12 @@ export default function UserProfilePage() {
                   <div className="w-full flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg mb-3">
                     <div className="flex items-center">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="mr-3">
-                        <path d="M6 12h4l3 9 4-9h4c1 0 2-1 2-2V7c0-1-1-2-2-2H2c-1 0-2 1-2 2v3c0 1 1 2 2 2Z"/>
+                        <rect x="2" y="7" width="20" height="10" rx="2"/>
+                        <path d="M6 12h4"/>
+                        <path d="M8 10v4"/>
+                        <circle cx="16" cy="12" r="1"/>
+                        <circle cx="18" cy="10" r="1"/>
+                        <circle cx="18" cy="14" r="1"/>
                       </svg>
                       <div className="text-left">
                         <div className="text-base font-semibold text-white">Games</div>
@@ -247,7 +255,12 @@ export default function UserProfilePage() {
                         <div key={userGame.id} className="flex items-center p-3 bg-white/5 rounded-lg">
                           <div className="w-8 h-8 bg-white/10 rounded mr-3 flex items-center justify-center">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2">
-                              <path d="M6 12h4l3 9 4-9h4c1 0 2-1 2-2V7c0-1-1-2-2-2H2c-1 0-2 1-2 2v3c0 1 1 2 2 2Z"/>
+                              <rect x="2" y="7" width="20" height="10" rx="2"/>
+                              <path d="M6 12h4"/>
+                              <path d="M8 10v4"/>
+                              <circle cx="16" cy="12" r="1"/>
+                              <circle cx="18" cy="10" r="1"/>
+                              <circle cx="18" cy="14" r="1"/>
                             </svg>
                           </div>
                           <span className="text-white text-sm">{userGame.games.display_name}</span>
@@ -271,7 +284,12 @@ export default function UserProfilePage() {
                 <div className="w-full flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg mb-3 hover:bg-white/10 transition-colors">
                   <div className="flex items-center">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="mr-3">
-                      <path d="M6 12h4l3 9 4-9h4c1 0 2-1 2-2V7c0-1-1-2-2-2H2c-1 0-2 1-2 2v3c0 1 1 2 2 2Z"/>
+                      <rect x="2" y="7" width="20" height="10" rx="2"/>
+                      <path d="M6 12h4"/>
+                      <path d="M8 10v4"/>
+                      <circle cx="16" cy="12" r="1"/>
+                      <circle cx="18" cy="10" r="1"/>
+                      <circle cx="18" cy="14" r="1"/>
                     </svg>
                     <div className="text-left">
                       <div className="text-base font-semibold text-white">Games</div>
@@ -290,7 +308,12 @@ export default function UserProfilePage() {
                       <div key={userGame.id} className="flex items-center p-3 bg-white/5 rounded-lg">
                         <div className="w-8 h-8 bg-white/10 rounded mr-3 flex items-center justify-center">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2">
-                            <path d="M6 12h4l3 9 4-9h4c1 0 2-1 2-2V7c0-1-1-2-2-2H2c-1 0-2 1-2 2v3c0 1 1 2 2 2Z"/>
+                            <rect x="2" y="7" width="20" height="10" rx="2"/>
+                            <path d="M6 12h4"/>
+                            <path d="M8 10v4"/>
+                            <circle cx="16" cy="12" r="1"/>
+                            <circle cx="18" cy="10" r="1"/>
+                            <circle cx="18" cy="14" r="1"/>
                           </svg>
                         </div>
                         <span className="text-white text-sm">{userGame.games.display_name}</span>
@@ -364,6 +387,7 @@ export default function UserProfilePage() {
         onNext={handleNextClip}
         onPrev={handlePrevClip}
       />
+      <Footer />
     </div>
   );
 }
