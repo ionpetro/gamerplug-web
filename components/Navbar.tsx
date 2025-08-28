@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X, User, Settings, LogOut } from "lucide-react"
 import Image from "next/image"
+import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -29,12 +30,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Games
-            </Link>
+            <GameDropdown />
             <Link
               href="#"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -75,13 +71,10 @@ export function Navbar() {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden py-4 space-y-4 border-t border-border/50">
-            <Link
-              href="#"
-              className="block text-muted-foreground hover:text-foreground transition-colors py-2"
-              onClick={() => setIsOpen(false)}
-            >
-              Games
-            </Link>
+            <div>
+              <div className="text-muted-foreground font-medium mb-2">Games</div>
+              <MobileGameMenu onClose={() => setIsOpen(false)} />
+            </div>
             <Link
               href="#"
               className="block text-muted-foreground hover:text-foreground transition-colors py-2"
