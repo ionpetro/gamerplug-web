@@ -39,7 +39,7 @@ export default async function GamesPage() {
                 >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
-                      src={game.image}
+                      src={game.image || ''}
                       alt={game.display_name}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
