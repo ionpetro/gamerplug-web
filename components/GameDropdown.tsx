@@ -10,7 +10,7 @@ export function GameDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [games, setGames] = useState<GameWithDetails[]>([])
   const [loading, setLoading] = useState(true)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     async function fetchGames() {

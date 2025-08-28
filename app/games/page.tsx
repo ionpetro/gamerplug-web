@@ -66,7 +66,7 @@ export default async function GamesPage() {
                   </p>
 
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {game.genres.slice(0, 2).map((genre) => (
+                    {(game.genres || []).slice(0, 2).map((genre) => (
                       <Badge
                         key={genre}
                         variant="secondary"
