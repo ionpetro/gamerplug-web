@@ -38,6 +38,7 @@ function AuthConfirmContent() {
         const accessToken = urlParams.get('access_token');
         const refreshToken = urlParams.get('refresh_token');
         const code = urlParams.get('code');
+        const email = urlParams.get('email');
         const type = urlParams.get('type');
         const error = urlParams.get('error');
         const errorDescription = urlParams.get('error_description');
@@ -46,6 +47,7 @@ function AuthConfirmContent() {
           accessToken: accessToken ? 'present' : 'missing',
           refreshToken: refreshToken ? 'present' : 'missing',
           code: code ? 'present' : 'missing',
+          email: email ? 'present' : 'missing',
           type,
           error,
           errorDescription
@@ -66,7 +68,7 @@ function AuthConfirmContent() {
         if (code) {
           console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
-            token: code,
+            token_hash: code,
             type: 'email'
           });
 
@@ -103,7 +105,7 @@ function AuthConfirmContent() {
         if (code) {
           console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
-            token: code,
+            token_hash: code,
             type: 'email'
           });
 
