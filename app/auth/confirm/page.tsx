@@ -37,6 +37,7 @@ function AuthConfirmContent() {
         const urlParams = getUrlParams();
         const accessToken = urlParams.get('access_token');
         const refreshToken = urlParams.get('refresh_token');
+        const code = urlParams.get('code');
         const type = urlParams.get('type');
         const error = urlParams.get('error');
         const errorDescription = urlParams.get('error_description');
@@ -44,6 +45,7 @@ function AuthConfirmContent() {
         console.log('URL params:', {
           accessToken: accessToken ? 'present' : 'missing',
           refreshToken: refreshToken ? 'present' : 'missing',
+          code: code ? 'present' : 'missing',
           type,
           error,
           errorDescription
@@ -87,8 +89,35 @@ function AuthConfirmContent() {
           return;
         }
 
-        // Handle case with tokens
-        if (accessToken && refreshToken) {
+        // Handle case with code (email confirmation)
+        if (code) {
+          const { data, error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash: code,
+            type: 'email'
+          });
+
+          if (verifyError) {
+            console.error('Email confirmation error:', verifyError);
+            setStatus('error');
+            setMessage('Failed to confirm your account. Please try again.');
+            return;
+          }
+
+          if (data.session) {
+            setStatus('success');
+            setMessage('Email confirmed successfully! Redirecting to app...');
+            
+            setTimeout(() => {
+              window.location.href = 'gamerplug://auth-success';
+              
+              setTimeout(() => {
+                setMessage('Please open the GamerPlug mobile app to continue.');
+              }, 2000);
+            }, 2000);
+          }
+        }
+        // Handle case with tokens (OAuth flow)
+        else if (accessToken && refreshToken) {
           // Set the session using the tokens from the URL
           const { data, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
