@@ -66,7 +66,7 @@ function AuthConfirmContent() {
         if (code) {
           console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: code,
+            token: code,
             type: 'email'
           });
 
@@ -103,7 +103,7 @@ function AuthConfirmContent() {
         if (code) {
           console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: code,
+            token: code,
             type: 'email'
           });
 
