@@ -91,10 +91,13 @@ function AuthConfirmContent() {
 
         // Handle case with code (email confirmation)
         if (code) {
+          console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
             token_hash: code,
             type: 'email'
           });
+
+          console.log('VerifyOtp result:', { data, error: verifyError });
 
           if (verifyError) {
             console.error('Email confirmation error:', verifyError);
@@ -104,6 +107,7 @@ function AuthConfirmContent() {
           }
 
           if (data.session) {
+            console.log('Session created successfully:', data.session);
             setStatus('success');
             setMessage('Email confirmed successfully! Redirecting to app...');
             
@@ -114,6 +118,10 @@ function AuthConfirmContent() {
                 setMessage('Please open the GamerPlug mobile app to continue.');
               }, 2000);
             }, 2000);
+          } else {
+            console.log('No session in verifyOtp response, but no error either');
+            setStatus('error');
+            setMessage('Email confirmed but session not created. Please try logging in.');
           }
         }
         // Handle case with tokens (OAuth flow)
