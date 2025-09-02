@@ -62,34 +62,7 @@ function AuthConfirmContent() {
           return;
         }
 
-        // Handle success case - if we have no parameters at all, it might be a successful redirect
-        if (!accessToken && !refreshToken && !error) {
-          // Check if Supabase has automatically handled the session
-          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-          
-          if (session && !sessionError) {
-            setStatus('success');
-            setMessage('Email confirmed successfully! Redirecting to app...');
-            
-            // Redirect to mobile app after a short delay
-            setTimeout(() => {
-              window.location.href = 'gamerplug://auth-success';
-              
-              // Fallback: show instructions to open the app
-              setTimeout(() => {
-                setMessage('Please open the GamerPlug mobile app to continue.');
-              }, 2000);
-            }, 2000);
-            return;
-          }
-          
-          // If no session, treat as error
-          setStatus('error');
-          setMessage('Invalid confirmation link. Please try signing up again.');
-          return;
-        }
-
-        // Handle case with code (email confirmation)
+        // Handle case with code (email confirmation) FIRST
         if (code) {
           console.log('Attempting to verify OTP with code:', code);
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
@@ -123,9 +96,75 @@ function AuthConfirmContent() {
             setStatus('error');
             setMessage('Email confirmed but session not created. Please try logging in.');
           }
+          return;
         }
+
+        // Handle case with code (email confirmation) FIRST
+        if (code) {
+          console.log('Attempting to verify OTP with code:', code);
+          const { data, error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash: code,
+            type: 'email'
+          });
+
+          console.log('VerifyOtp result:', { data, error: verifyError });
+
+          if (verifyError) {
+            console.error('Email confirmation error:', verifyError);
+            setStatus('error');
+            setMessage('Failed to confirm your account. Please try again.');
+            return;
+          }
+
+          if (data.session) {
+            console.log('Session created successfully:', data.session);
+            setStatus('success');
+            setMessage('Email confirmed successfully! Redirecting to app...');
+            
+            setTimeout(() => {
+              window.location.href = 'gamerplug://auth-success';
+              
+              setTimeout(() => {
+                setMessage('Please open the GamerPlug mobile app to continue.');
+              }, 2000);
+            }, 2000);
+          } else {
+            console.log('No session in verifyOtp response, but no error either');
+            setStatus('error');
+            setMessage('Email confirmed but session not created. Please try logging in.');
+          }
+          return;
+        }
+
+        // Handle success case - if we have no parameters at all, it might be a successful redirect
+        if (!accessToken && !refreshToken && !error) {
+          // Check if Supabase has automatically handled the session
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+          
+          if (session && !sessionError) {
+            setStatus('success');
+            setMessage('Email confirmed successfully! Redirecting to app...');
+            
+            // Redirect to mobile app after a short delay
+            setTimeout(() => {
+              window.location.href = 'gamerplug://auth-success';
+              
+              // Fallback: show instructions to open the app
+              setTimeout(() => {
+                setMessage('Please open the GamerPlug mobile app to continue.');
+              }, 2000);
+            }, 2000);
+            return;
+          }
+          
+          // If no session, treat as error
+          setStatus('error');
+          setMessage('Invalid confirmation link. Please try signing up again.');
+          return;
+        }
+
         // Handle case with tokens (OAuth flow)
-        else if (accessToken && refreshToken) {
+        if (accessToken && refreshToken) {
           // Set the session using the tokens from the URL
           const { data, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
