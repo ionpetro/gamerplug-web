@@ -12,10 +12,9 @@ function AuthConfirmContent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Handle token-based confirmation only
+    // Handle PKCE auth code flow
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
-    const refreshToken = urlParams.get('refresh_token');
+    const code = urlParams.get('code');
     const error = urlParams.get('error');
 
     if (error) {
@@ -24,23 +23,20 @@ function AuthConfirmContent() {
       return;
     }
 
-    if (accessToken && refreshToken) {
-      // Handle token-based confirmation
-      handleTokenConfirmation(accessToken, refreshToken);
+    if (code) {
+      // Handle PKCE code exchange
+      handleCodeExchange(code);
     } else {
       setStatus('error');
       setMessage('Invalid confirmation link. Please request a new confirmation email.');
     }
   }, []);
 
-  const handleTokenConfirmation = async (accessToken: string, refreshToken: string) => {
+  const handleCodeExchange = async (code: string) => {
     try {
-      const { data, error: setSessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
+      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
-      if (setSessionError) {
+      if (exchangeError) {
         setStatus('error');
         setMessage('Failed to confirm your account. Please try again.');
         return;
