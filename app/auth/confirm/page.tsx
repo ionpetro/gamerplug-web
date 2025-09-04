@@ -12,52 +12,26 @@ function AuthConfirmContent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Handle PKCE auth code flow
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const error = urlParams.get('error');
+    const errorDescription = urlParams.get('error_description');
 
     if (error) {
       setStatus('error');
-      setMessage(`Authentication failed: ${error}`);
+      const decodedDescription = errorDescription ? decodeURIComponent(errorDescription) : '';
+      setMessage(`Authentication failed: ${error}${decodedDescription ? ` - ${decodedDescription}` : ''}`);
       return;
     }
 
     if (code) {
-      // Handle PKCE code exchange
-      handleCodeExchange(code);
+      setStatus('success');
+      setMessage('Email confirmed successfully! Please return to the GamerPlug mobile app to continue.');
     } else {
       setStatus('error');
       setMessage('Invalid confirmation link. Please request a new confirmation email.');
     }
   }, []);
-
-  const handleCodeExchange = async (code: string) => {
-    try {
-      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (exchangeError) {
-        setStatus('error');
-        setMessage('Failed to confirm your account. Please try again.');
-        return;
-      }
-
-      if (data.session) {
-        setStatus('success');
-        setMessage('Email confirmed successfully! Redirecting to app...');
-        
-        setTimeout(() => {
-          window.location.href = 'gamerplug://auth-success';
-          setTimeout(() => {
-            setMessage('Please open the GamerPlug mobile app to continue.');
-          }, 2000);
-        }, 2000);
-      }
-    } catch (error) {
-      setStatus('error');
-      setMessage('An unexpected error occurred. Please try again.');
-    }
-  };
 
 
   return (
@@ -80,11 +54,6 @@ function AuthConfirmContent() {
             <div className="space-y-4">
               <div className="text-4xl mb-4">✅</div>
               <p className="text-lg text-green-400">{message}</p>
-              <div className="mt-8 p-4 bg-white/10 rounded-lg">
-                <p className="text-sm text-white/70">
-                  If the app doesn't open automatically, please open the GamerPlug mobile app manually.
-                </p>
-              </div>
             </div>
           )}
 
@@ -92,14 +61,6 @@ function AuthConfirmContent() {
             <div className="space-y-4">
               <div className="text-4xl mb-4">❌</div>
               <p className="text-lg text-red-400">{message}</p>
-              <div className="mt-8">
-                <button
-                  onClick={() => window.location.href = 'gamerplug://login'}
-                  className="bg-[#FF3B30] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#FF3B30]/80 transition-colors"
-                >
-                  Open GamerPlug App
-                </button>
-              </div>
             </div>
           )}
 
