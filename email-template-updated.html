@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your GamerPlug Account</title>
+    <style>
+        body {
+            font-family: 'Space Mono', monospace, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #000000 !important;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffffff !important;
+            margin-bottom: 16px;
+        }
+        .tagline {
+            font-size: 18px;
+            color: #ffffff !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .content {
+            background-color: #000000 !important;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+        .welcome-text {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #ffffff !important;
+        }
+        .description {
+            font-size: 16px;
+            color: #ffffff !important;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        .confirm-button {
+            display: inline-block;
+            background-color: #FF3B30 !important;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+        .confirm-button:hover {
+            transform: translateY(-2px);
+            background-color: #e53e3e !important;
+        }
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #ffffff !important;
+        }
+        .footer a {
+            color: #FF3B30 !important;
+            text-decoration: none;
+        }
+        .security-note {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #000000 !important;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #ffffff !important;
+        }
+        /* Force dark theme override */
+        * {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        a {
+            color: #FF3B30 !important;
+        }
+        .confirm-button, .confirm-button * {
+            background-color: #FF3B30 !important;
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">GamerPlug</div>
+            <div class="tagline">Swipe. Match. Game Together.</div>
+        </div>
+        
+        <div class="content">
+            <h1 class="welcome-text">Welcome to GamerPlug!</h1>
+            <p class="description">
+                You're just one click away from connecting with fellow gamers. 
+                Click the button below to confirm your email and complete your account setup.
+            </p>
+            
+            <a href="{{ .ConfirmationURL }}" class="confirm-button">
+                CONFIRM EMAIL
+            </a>
+            
+            <div class="security-note">
+                <strong>Security Note:</strong> This link will expire in 24 hours for your security. 
+                If you didn't create this account, you can safely ignore this email.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>
+                Having trouble? Contact us at <a href="mailto:support@gamerplug.app">support@gamerplug.app</a>
+            </p>
+            <p>Built by gamers, for gamers</p>
+        </div>
+    </div>
+</body>
+</html>
