@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | Gamerplug",
@@ -154,6 +155,7 @@ export default function TermsAndConditionsPage() {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

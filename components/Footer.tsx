@@ -8,10 +8,10 @@ export function Footer() {
           </h3>
           <p className="text-muted-foreground mb-6">Connecting gamers, building communities, creating legends.</p>
           <div className="flex justify-center space-x-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="/privacy" className="hover:text-primary transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="/tac" className="hover:text-primary transition-colors">
               Terms of Service
             </a>
             <a href="#" className="hover:text-primary transition-colors">

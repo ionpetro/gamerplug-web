@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Gamerplug",
@@ -116,6 +117,7 @@ export default function PrivacyPolicyPage() {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
