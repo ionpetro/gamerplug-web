@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Gamepad2, Users, Zap, Trophy, Download, Star } from "lucide-react"
 import { Footer } from "@/components/Footer"
+import WaitlistForm from "@/components/WaitlistForm"
 
 export default function GamerPlugLanding() {
   return (
@@ -25,19 +26,7 @@ export default function GamerPlugLanding() {
               The ultimate platform for gamers to find their perfect teammates, build lasting communities, and level up
               their gaming experience.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="gradient-accent text-white font-semibold px-8 py-6 text-lg">
-                <Download className="mr-2 h-5 w-5" />
-                Download Now
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-primary text-primary hover:bg-primary hover:text-white px-8 py-6 text-lg bg-transparent"
-              >
-                Watch Demo
-              </Button>
-            </div>
+            <WaitlistForm />
           </div>
         </div>
 
@@ -247,12 +236,7 @@ export default function GamerPlugLanding() {
             <p className="text-xl mb-8 text-muted-foreground">
               Join the gaming revolution and connect with players who share your passion
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="gradient-accent text-white font-semibold px-12 py-6 text-xl">
-                <Download className="mr-2 h-6 w-6" />
-                Download GamerPlug
-              </Button>
-            </div>
+            <WaitlistForm />
             <p className="text-sm text-muted-foreground mt-6">Available on iOS and Android • Free to download</p>
           </div>
         </div>
