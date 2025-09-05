@@ -13,7 +13,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for')
   const realIP = request.headers.get('x-real-ip')
-  const clientIP = request.ip
 
   if (forwarded) {
     return forwarded.split(',')[0].trim()
@@ -21,7 +20,7 @@ function getClientIP(request: NextRequest): string {
   if (realIP) {
     return realIP
   }
-  return clientIP || '127.0.0.1'
+  return '127.0.0.1'
 }
 
 export async function POST(request: NextRequest) {
