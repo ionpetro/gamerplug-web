@@ -102,7 +102,7 @@ export default function WaitlistForm() {
 
       {!isSuccess && (
         <p className="text-xs text-gray-500 text-center mt-3">
-          Be the first to know when GamerPlug launches!
+          Be the first to know when Gamerplug launches!
         </p>
       )}
     </div>

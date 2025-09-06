@@ -26,7 +26,7 @@ function AuthConfirmContent() {
 
     if (code) {
       setStatus('success');
-      setMessage('Email confirmed successfully! Please return to the GamerPlug mobile app to continue.');
+      setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
     } else {
       setStatus('error');
       setMessage('Invalid confirmation link. Please request a new confirmation email.');
@@ -39,7 +39,7 @@ function AuthConfirmContent() {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-6">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
+            <h1 className="text-4xl font-bold mb-4">🎮 Gamerplug</h1>
           </div>
 
           {status === 'loading' && (
@@ -65,7 +65,7 @@ function AuthConfirmContent() {
           )}
 
           <div className="mt-8 text-sm text-white/50">
-            <p>Having trouble? Try opening the GamerPlug app directly from your home screen.</p>
+            <p>Having trouble? Try opening the Gamerplug app directly from your home screen.</p>
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function AuthConfirm() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-6">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4">🎮 GamerPlug</h1>
+              <h1 className="text-4xl font-bold mb-4">🎮 Gamerplug</h1>
             </div>
             <div className="space-y-4">
               <div className="animate-spin w-8 h-8 border-2 border-[#FF3B30] border-t-transparent rounded-full mx-auto"></div>

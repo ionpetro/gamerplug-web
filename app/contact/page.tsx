@@ -18,7 +18,7 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="text-xl mb-8 text-muted-foreground leading-relaxed">
-              Have questions about GamerPlug? Need support? We're here to help you connect with the gaming community.
+              Have questions about Gamerplug? Need support? We're here to help you connect with the gaming community.
             </p>
           </div>
         </div>
@@ -85,25 +85,25 @@ export default function ContactPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Common questions about GamerPlug and how to get started
+              Common questions about Gamerplug and how to get started
             </p>
           </div>
 
           <div className="grid gap-6 max-w-4xl mx-auto">
             <Card className="gradient-card border-border/50">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3 text-primary">When will GamerPlug be available?</h3>
+                <h3 className="text-lg font-semibold mb-3 text-primary">When will Gamerplug be available?</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  GamerPlug is currently in development. Join our waitlist to be the first to know when we launch!
+                  Gamerplug is currently in development. Join our waitlist to be the first to know when we launch!
                 </p>
               </CardContent>
             </Card>
 
             <Card className="gradient-card border-border/50">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3 text-primary">Which platforms will GamerPlug support?</h3>
+                <h3 className="text-lg font-semibold mb-3 text-primary">Which platforms will Gamerplug support?</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  GamerPlug will be available on iOS and Android, with support for cross-platform gaming communities including PC, PlayStation, Xbox, and Nintendo Switch.
+                  Gamerplug will be available on iOS and Android, with support for cross-platform gaming communities including PC, PlayStation, Xbox, and Nintendo Switch.
                 </p>
               </CardContent>
             </Card>

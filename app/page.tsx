@@ -5,7 +5,7 @@ import { Gamepad2, Users, Zap, Trophy, Download, Star } from "lucide-react"
 import { Footer } from "@/components/Footer"
 import WaitlistForm from "@/components/WaitlistForm"
 
-export default function GamerPlugLanding() {
+export default function GamerplugLanding() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -17,7 +17,7 @@ export default function GamerPlugLanding() {
               🎮 The Future of Gaming Connections
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent leading-tight">
-              GamerPlug
+              Gamerplug
             </h1>
             <p className="text-xl md:text-2xl mb-4 text-muted-foreground max-w-2xl mx-auto">
               Swipe. Match. Game Together.
@@ -105,7 +105,7 @@ export default function GamerPlugLanding() {
       <section className="py-20 px-4 bg-card/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">How GamerPlug Works</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">How Gamerplug Works</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Finding your gaming squad has never been easier
             </p>
@@ -150,7 +150,7 @@ export default function GamerPlugLanding() {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Gamers Love GamerPlug</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Gamers Love Gamerplug</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Join thousands of gamers who've found their perfect teammates
             </p>

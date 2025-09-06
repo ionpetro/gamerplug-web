@@ -1,6 +1,6 @@
 GAMERPLUG - Your Magic Link is Ready!
 
-Click the link below to instantly sign in to your GamerPlug account. No password needed - just pure gaming magic!
+Click the link below to instantly sign in to your Gamerplug account. No password needed - just pure gaming magic!
 
 SIGN ME IN:
 {{ .ConfirmationURL }}
@@ -12,5 +12,5 @@ Having trouble? Copy and paste the link above into your browser.
 
 Game on!
 
-© 2024 GamerPlug. All rights reserved.
+© 2024 Gamerplug. All rights reserved.
 Find Your Perfect Gaming Teammate

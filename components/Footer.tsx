@@ -4,7 +4,7 @@ export function Footer() {
       <div className="container mx-auto">
         <div className="text-center">
           <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            GamerPlug
+            Gamerplug
           </h3>
           <p className="text-muted-foreground mb-6">Connecting gamers, building communities, creating legends.</p>
           <div className="flex justify-center space-x-6 text-sm text-muted-foreground">
@@ -21,7 +21,7 @@ export function Footer() {
               Contact
             </a>
           </div>
-          <p className="text-xs text-muted-foreground mt-6">© 2025 GamerPlug. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground mt-6">© 2025 Gamerplug. All rights reserved.</p>
         </div>
       </div>
     </footer>

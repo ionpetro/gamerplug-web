@@ -18,13 +18,13 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src="/gamerplug.png"
-              alt="GamerPlug Logo"
+              alt="Gamerplug Logo"
               width={32}
               height={32}
               className="rounded-lg"
             />
             <span className="text-xl font-bold" style={{ color: '#DDC1C1' }}>
-              GamerPlug
+              Gamerplug
             </span>
           </Link>
 

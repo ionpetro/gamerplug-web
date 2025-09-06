@@ -20,7 +20,7 @@ const games = {
     hero: {
       title: 'Find Your Apex Legends Squad',
       subtitle: 'Connect with skilled Legends and dominate the Outlands together',
-      description: 'Join 1M+ players using GamerPlug to find the perfect Apex Legends teammates. Our smart matching connects you with players who complement your playstyle.',
+      description: 'Join 1M+ players using Gamerplug to find the perfect Apex Legends teammates. Our smart matching connects you with players who complement your playstyle.',
       stats: {
         players: '100M+',
         matches: '50k+',
@@ -94,7 +94,7 @@ const games = {
     hero: {
       title: 'Find Your Valorant Team',
       subtitle: 'Connect with tactical players and climb the ranks together',
-      description: 'Join thousands of Valorant players using GamerPlug to build their dream team. Find agents who complement your playstyle and dominate the competition.',
+      description: 'Join thousands of Valorant players using Gamerplug to build their dream team. Find agents who complement your playstyle and dominate the competition.',
       stats: {
         players: '15M+',
         matches: '25k+',
@@ -168,7 +168,7 @@ const games = {
     hero: {
       title: 'Find Your League of Legends Team',
       subtitle: 'Connect with skilled summoners and dominate the Rift',
-      description: 'Join 1M+ LoL players using GamerPlug to find their perfect team. Get matched with players who complement your champion pool and climb together.',
+      description: 'Join 1M+ LoL players using Gamerplug to find their perfect team. Get matched with players who complement your champion pool and climb together.',
       stats: {
         players: '180M+',
         matches: '75k+',
@@ -616,7 +616,7 @@ function getGameDetails(gameName: string) {
     hero: {
       title: `Find Your ${gameName} Team`,
       subtitle: 'Connect with skilled players and dominate together',
-      description: `Join players using GamerPlug to find the perfect ${gameName} teammates.`,
+      description: `Join players using Gamerplug to find the perfect ${gameName} teammates.`,
       stats: {
         players: '10M+',
         matches: '5k+',
@@ -660,7 +660,7 @@ function getGameDetails(gameName: string) {
     testimonials: [
       {
         name: 'GamerPro',
-        text: `Found an amazing team through GamerPlug! Our synergy is incredible.`,
+        text: `Found an amazing team through Gamerplug! Our synergy is incredible.`,
         rating: 5
       }
     ],
@@ -738,7 +738,7 @@ export default async function GamePage({ params }: GamePageProps) {
 
               <div className="max-w-md mx-auto sm:mx-0">
                 <WaitlistForm />
-                <p className="text-sm text-muted-foreground mt-4 text-center">Join the waitlist to be notified when GamerPlug launches!</p>
+                <p className="text-sm text-muted-foreground mt-4 text-center">Join the waitlist to be notified when Gamerplug launches!</p>
               </div>
             </div>
             
@@ -761,7 +761,7 @@ export default async function GamePage({ params }: GamePageProps) {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Choose GamerPlug for {game.display_name}?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Choose Gamerplug for {game.display_name}?</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover features designed specifically for {game.display_name} players
             </p>
@@ -816,7 +816,7 @@ export default async function GamePage({ params }: GamePageProps) {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{game.display_name} Players Love GamerPlug</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">{game.display_name} Players Love Gamerplug</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               See what our community is saying about finding teammates
             </p>
@@ -888,7 +888,7 @@ export default async function GamePage({ params }: GamePageProps) {
             <div className="max-w-md mx-auto">
               <WaitlistForm />
             </div>
-            <p className="text-sm text-muted-foreground mt-6">Be the first to know when GamerPlug launches!</p>
+            <p className="text-sm text-muted-foreground mt-6">Be the first to know when Gamerplug launches!</p>
           </div>
         </div>
       </section>
