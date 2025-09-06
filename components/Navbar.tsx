@@ -32,13 +32,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <GameDropdown />
             <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Resources
-            </Link>
-            <Link
-              href="#"
+              href="/contact"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact Us
@@ -76,14 +70,7 @@ export function Navbar() {
               <MobileGameMenu onClose={() => setIsOpen(false)} />
             </div>
             <Link
-              href="#"
-              className="block text-muted-foreground hover:text-foreground transition-colors py-2"
-              onClick={() => setIsOpen(false)}
-            >
-              Resources
-            </Link>
-            <Link
-              href="#"
+              href="/contact"
               className="block text-muted-foreground hover:text-foreground transition-colors py-2"
               onClick={() => setIsOpen(false)}
             >

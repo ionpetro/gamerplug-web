@@ -1,11 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Download, Users, MessageCircle, Star, Trophy, Gamepad2 } from "lucide-react"
+import { Users, MessageCircle, Star, Trophy, Gamepad2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getAllGames, getGameBySlug } from "@/lib/games"
+import WaitlistForm from "@/components/WaitlistForm"
 
 // Game data with detailed information for each game
 const games = {
@@ -735,19 +736,9 @@ export default async function GamePage({ params }: GamePageProps) {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="gradient-accent text-white font-semibold px-8 py-6 text-lg">
-                  <Download className="mr-2 h-5 w-5" />
-                  Download GamerPlug
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-primary text-primary hover:bg-primary hover:text-white px-8 py-6 text-lg bg-transparent"
-                >
-                  <Gamepad2 className="mr-2 h-5 w-5" />
-                  Watch Demo
-                </Button>
+              <div className="max-w-md mx-auto sm:mx-0">
+                <WaitlistForm />
+                <p className="text-sm text-muted-foreground mt-4 text-center">Join the waitlist to be notified when GamerPlug launches!</p>
               </div>
             </div>
             
@@ -894,13 +885,10 @@ export default async function GamePage({ params }: GamePageProps) {
             <p className="text-xl mb-8 text-muted-foreground">
               Join thousands of players who've already found their perfect teammates
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="gradient-accent text-white font-semibold px-12 py-6 text-xl">
-                <Download className="mr-2 h-6 w-6" />
-                Download GamerPlug
-              </Button>
+            <div className="max-w-md mx-auto">
+              <WaitlistForm />
             </div>
-            <p className="text-sm text-muted-foreground mt-6">Available on iOS and Android • Free to download</p>
+            <p className="text-sm text-muted-foreground mt-6">Be the first to know when GamerPlug launches!</p>
           </div>
         </div>
       </section>
