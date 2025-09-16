@@ -146,83 +146,59 @@ export default function GamerplugLanding() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Why Gamerplug Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Gamers Love Gamerplug</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of gamers who've found their perfect teammates
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Gamerplug</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We're on a mission to cure the loneliness epidemic plaguing the gaming community
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="gradient-card border-border/50">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  "Found my perfect Valorant team in just 2 days! We've been climbing ranks together ever since."
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-center">
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">The Problem</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Gaming has never been more popular, yet millions of players feel isolated and disconnected. 
+                  Despite being part of massive online communities, many gamers struggle to find meaningful 
+                  connections and lasting friendships.
                 </p>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-primary font-bold">A</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold">Alex_Gamer</p>
-                    <p className="text-sm text-muted-foreground">Valorant Player</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="gradient-card border-border/50">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  "The community features are amazing! Organized my first tournament and met so many cool people."
+              <div>
+                <h3 className="text-2xl font-bold mb-4">Our Solution</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Gamerplug bridges the gap between solo gaming and genuine human connection. We believe that 
+                  gaming is better when shared, and that the right teammates can transform not just your gameplay, 
+                  but your entire gaming experience.
                 </p>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-accent font-bold">S</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold">SarahPlays</p>
-                    <p className="text-sm text-muted-foreground">Community Leader</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="gradient-card border-border/50">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  "Cross-platform matching is a game changer. Finally found PC players who don't mind my console
-                  skills!"
+              <div>
+                <h3 className="text-2xl font-bold mb-4">The Impact</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  By fostering authentic relationships within the gaming community, we're not just creating better 
+                  teams – we're building a support network that extends beyond the game. Together, we can make 
+                  gaming a force for connection, friendship, and belonging.
                 </p>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-primary font-bold">M</span>
+              </div>
+            </div>
+
+            <div className="relative">
+              <Card className="gradient-card border-border/50 p-8">
+                <CardContent className="text-center space-y-6">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                    <Users className="h-10 w-10 text-white" />
                   </div>
-                  <div>
-                    <p className="font-semibold">MikeConsole</p>
-                    <p className="text-sm text-muted-foreground">Multi-Platform Gamer</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  <h4 className="text-2xl font-bold">Building Connections</h4>
+                  <p className="text-muted-foreground">
+                    Every match made is a step towards ending gaming loneliness
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
