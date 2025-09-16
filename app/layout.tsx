@@ -26,6 +26,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-D83F82KSGK"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-D83F82KSGK');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${spaceMono.variable} antialiased font-space-mono`}
       >
