@@ -20,12 +20,6 @@ const games = {
     hero: {
       title: 'Find Your Apex Legends Squad',
       subtitle: 'Connect with skilled Legends and dominate the Outlands together',
-      description: 'Join 1M+ players using Gamerplug to find the perfect Apex Legends teammates. Our smart matching connects you with players who complement your playstyle.',
-      stats: {
-        players: '100M+',
-        matches: '50k+',
-        rating: 4.8
-      }
     },
     features: [
       {
@@ -61,18 +55,6 @@ const games = {
         description: 'Join your new squad, communicate strategies, and claim victory in the Arena'
       }
     ],
-    testimonials: [
-      {
-        name: 'WraithMain2023',
-        text: 'Found my perfect Bloodhound and Gibraltar mains! We\'ve hit Diamond together this season.',
-        rating: 5
-      },
-      {
-        name: 'ApexPredator',
-        text: 'The matchmaking actually works. No more random teammates who don\'t communicate!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is Apex Legends LFG?',
@@ -94,12 +76,6 @@ const games = {
     hero: {
       title: 'Find Your Valorant Team',
       subtitle: 'Connect with tactical players and climb the ranks together',
-      description: 'Join thousands of Valorant players using Gamerplug to build their dream team. Find agents who complement your playstyle and dominate the competition.',
-      stats: {
-        players: '15M+',
-        matches: '25k+',
-        rating: 4.6
-      }
     },
     features: [
       {
@@ -135,18 +111,6 @@ const games = {
         description: 'Coordinate with your team to execute flawless rounds and secure victories'
       }
     ],
-    testimonials: [
-      {
-        name: 'SageMain',
-        text: 'Finally found a consistent 5-stack! We went from Gold to Immortal in one act.',
-        rating: 5
-      },
-      {
-        name: 'JettDash',
-        text: 'Love how the app matches me with supportive players who actually communicate.',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is Valorant LFG?',
@@ -168,12 +132,6 @@ const games = {
     hero: {
       title: 'Find Your League of Legends Team',
       subtitle: 'Connect with skilled summoners and dominate the Rift',
-      description: 'Join 1M+ LoL players using Gamerplug to find their perfect team. Get matched with players who complement your champion pool and climb together.',
-      stats: {
-        players: '180M+',
-        matches: '75k+',
-        rating: 4.7
-      }
     },
     features: [
       {
@@ -209,18 +167,6 @@ const games = {
         description: 'Coordinate with your team to secure objectives and climb the ranked ladder'
       }
     ],
-    testimonials: [
-      {
-        name: 'ADCMain2023',
-        text: 'Found an amazing support duo! We have perfect synergy and climbed to Diamond.',
-        rating: 5
-      },
-      {
-        name: 'JungleKing',
-        text: 'The team chemistry is incredible. We actually coordinate objectives now!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is League of Legends LFG?',
@@ -243,11 +189,6 @@ const games = {
       title: 'Assemble Your Overwatch 2 Team',
       subtitle: 'Unite with heroes and push the payload to victory',
       description: 'Connect with skilled heroes across all roles. Our matching system helps you build the perfect 6-stack for competitive play.',
-      stats: {
-        players: '35M+',
-        matches: '30k+',
-        rating: 4.5
-      }
     },
     features: [
       {
@@ -283,18 +224,6 @@ const games = {
         description: 'Coordinate ultimate abilities and strategies to secure objectives'
       }
     ],
-    testimonials: [
-      {
-        name: 'MercyMain',
-        text: 'Found a consistent team that actually protects their supports! Climbed to Masters.',
-        rating: 5
-      },
-      {
-        name: 'ReinhardtHammer',
-        text: 'Amazing coordination with my new team. We have incredible synergy!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is Overwatch 2 LFG?',
@@ -317,11 +246,6 @@ const games = {
       title: 'Squad Up in Fortnite',
       subtitle: 'Build, battle, and claim Victory Royales together',
       description: 'Connect with builders, fighters, and strategists. Find your perfect squad for Battle Royale, Creative, or competitive play.',
-      stats: {
-        players: '400M+',
-        matches: '100k+',
-        rating: 4.6
-      }
     },
     features: [
       {
@@ -357,18 +281,6 @@ const games = {
         description: 'Land together, build together, and claim Victory Royales as a team'
       }
     ],
-    testimonials: [
-      {
-        name: 'BuildMaster',
-        text: 'Found teammates who actually know how to build! Our win rate is through the roof.',
-        rating: 5
-      },
-      {
-        name: 'VictoryRoyale',
-        text: 'Finally have a consistent squad for ranked. We communicate so much better now!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is Fortnite LFG?',
@@ -391,11 +303,6 @@ const games = {
       title: 'Find Your PUBG Squad',
       subtitle: 'Team up for tactical battle royale dominance',
       description: 'Connect with strategic players who understand positioning, rotations, and tactical gameplay. Build your perfect PUBG squad.',
-      stats: {
-        players: '75M+',
-        matches: '20k+',
-        rating: 4.3
-      }
     },
     features: [
       {
@@ -431,18 +338,6 @@ const games = {
         description: 'Execute tactical strategies and secure chicken dinners as a coordinated team'
       }
     ],
-    testimonials: [
-      {
-        name: 'TacticalSniper',
-        text: 'Found a squad that actually understands positioning and rotations. Win rate improved drastically!',
-        rating: 5
-      },
-      {
-        name: 'ChickenDinner',
-        text: 'Great communication with my new team. We plan every move and it shows in our results.',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is PUBG LFG?',
@@ -465,11 +360,6 @@ const games = {
       title: 'Find Your CS2 Team',
       subtitle: 'Connect with tactical players and dominate competitive matches',
       description: 'Join skilled players who understand CS2 strategy, economy management, and team coordination. Build your perfect 5-stack.',
-      stats: {
-        players: '30M+',
-        matches: '40k+',
-        rating: 4.4
-      }
     },
     features: [
       {
@@ -505,18 +395,6 @@ const games = {
         description: 'Coordinate tactics, manage economy, and execute precise strategies as a team'
       }
     ],
-    testimonials: [
-      {
-        name: 'AWPMaster',
-        text: 'Found a team that actually sets me up for picks! Our coordination is on another level.',
-        rating: 5
-      },
-      {
-        name: 'IGLPro',
-        text: 'Finally have players who listen to calls and execute strategies properly. Ranked up fast!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is CS2 LFG?',
@@ -539,11 +417,6 @@ const games = {
       title: 'Find Your Rocket League Team',
       subtitle: 'Connect with skilled players and score amazing goals together',
       description: 'Team up with players who understand rotation, positioning, and aerial mechanics. Build your championship team.',
-      stats: {
-        players: '50M+',
-        matches: '15k+',
-        rating: 4.5
-      }
     },
     features: [
       {
@@ -579,18 +452,6 @@ const games = {
         description: 'Execute perfect rotations, amazing passes, and coordinate team plays for victory'
       }
     ],
-    testimonials: [
-      {
-        name: 'AerialAce',
-        text: 'Found teammates who actually rotate properly! We reached Champion rank together.',
-        rating: 5
-      },
-      {
-        name: 'GoalMachine',
-        text: 'The team chemistry is incredible. We set up amazing plays and our pass game is on point!',
-        rating: 5
-      }
-    ],
     faq: [
       {
         question: 'What is Rocket League LFG?',
@@ -616,12 +477,6 @@ function getGameDetails(gameName: string) {
     hero: {
       title: `Find Your ${gameName} Team`,
       subtitle: 'Connect with skilled players and dominate together',
-      description: `Join players using Gamerplug to find the perfect ${gameName} teammates.`,
-      stats: {
-        players: '10M+',
-        matches: '5k+',
-        rating: 4.5
-      }
     },
     features: [
       {
@@ -655,13 +510,6 @@ function getGameDetails(gameName: string) {
         step: '3',
         title: 'Play Together',
         description: 'Join your new team and dominate the competition'
-      }
-    ],
-    testimonials: [
-      {
-        name: 'GamerPro',
-        text: `Found an amazing team through Gamerplug! Our synergy is incredible.`,
-        rating: 5
       }
     ],
     faq: [
