@@ -562,27 +562,6 @@ export default async function GamePage({ params }: GamePageProps) {
               <p className="text-xl mb-4 text-muted-foreground">
                 {gameDetails.hero.subtitle}
               </p>
-              <p className="text-lg mb-8 text-muted-foreground leading-relaxed">
-                {gameDetails.hero.description}
-              </p>
-              
-              <div className="flex items-center gap-8 mb-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">{gameDetails.hero.stats.players}</div>
-                  <div className="text-sm text-muted-foreground">Active Players</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-accent">{gameDetails.hero.stats.matches}</div>
-                  <div className="text-sm text-muted-foreground">Teams Found</div>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1">
-                    <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                    <span className="text-2xl font-bold">{gameDetails.hero.stats.rating}</span>
-                  </div>
-                  <div className="text-sm text-muted-foreground">App Rating</div>
-                </div>
-              </div>
 
               <div className="max-w-md mx-auto sm:mx-0">
                 <WaitlistForm />
