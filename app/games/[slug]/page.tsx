@@ -639,46 +639,6 @@ export default async function GamePage({ params }: GamePageProps) {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{game.display_name} Players Love Gamerplug</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              See what our community is saying about finding teammates
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {gameDetails.testimonials.map((testimonial, index) => (
-              <Card key={index} className="gradient-card border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-accent fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-4 leading-relaxed">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="flex items-center">
-                    <div 
-                      className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-white font-bold"
-                      style={{ backgroundColor: game.color || '#8B5CF6' }}
-                    >
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-semibold">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">{game.display_name} Player</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* FAQ Section */}
       <section className="py-20 px-4 bg-card/30">
