@@ -2,12 +2,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Users, Star } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import Image from "next/image"
 import { getAllGames } from "@/lib/games"
 
-export default async function GamesPage() {
+export default async function LocalizedGames({ params }: { params: { locale: string } }) {
   const games = await getAllGames();
+  const locale = params.locale || "en";
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -34,7 +34,7 @@ export default async function GamesPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
               {games.map((game) => (
-              <Link key={game.id} href={`/games/${game.slug}`}>
+              <Link key={game.id} href={`/${locale}/games/${game.slug}`}>
                 <Card
                   className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group overflow-hidden cursor-pointer p-0"
                 >
@@ -93,3 +93,6 @@ export default async function GamesPage() {
     </div>
   );
 }
+
+
+

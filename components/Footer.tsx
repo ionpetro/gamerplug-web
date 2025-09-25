@@ -1,4 +1,16 @@
+"use client"
+
+import { useMemo } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
 export function Footer() {
+  const pathname = usePathname()
+  const locale = useMemo(() => {
+    const seg = pathname?.split("/")[1]
+    return seg === "es" ? "es" : "en"
+  }, [pathname])
+  const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`
   return (
     <footer className="py-12 px-4 bg-card/50 border-t border-border/50">
       <div className="container mx-auto">
@@ -8,18 +20,15 @@ export function Footer() {
           </h3>
           <p className="text-muted-foreground mb-6">Connecting gamers, building communities, creating legends.</p>
           <div className="flex justify-center space-x-6 text-sm text-muted-foreground">
-            <a href="/privacy" className="hover:text-primary transition-colors">
+            <Link href={hrefWithLocale("/privacy")} className="hover:text-primary transition-colors">
               Privacy Policy
-            </a>
-            <a href="/tac" className="hover:text-primary transition-colors">
+            </Link>
+            <Link href={hrefWithLocale("/tac")} className="hover:text-primary transition-colors">
               Terms of Service
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Support
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            </Link>
+            <Link href={hrefWithLocale("/contact")} className="hover:text-primary transition-colors">
               Contact
-            </a>
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground mt-6">© 2025 Gamerplug. All rights reserved.</p>
         </div>

@@ -1,21 +1,39 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X, User, Settings, LogOut } from "lucide-react"
 import Image from "next/image"
 import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
+import { usePathname } from "next/navigation"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  const locale = useMemo(() => {
+    const seg = pathname?.split("/")[1]
+    return seg === "es" ? "es" : "en"
+  }, [pathname])
+
+  const hrefWithLocale = (path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`
+  const switchLocaleHref = useMemo(() => {
+    const segs = pathname?.split('/') || []
+    const nextLocale = locale === 'en' ? 'es' : 'en'
+    if (segs.length > 1) {
+      segs[1] = nextLocale
+    }
+    const nextPath = segs.join('/') || '/'
+    return nextPath.startsWith('/') ? nextPath : `/${nextPath}`
+  }, [pathname, locale])
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-card/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href={hrefWithLocale("/")} className="flex items-center space-x-2">
             <Image
               src="/gamerplug.png"
               alt="Gamerplug Logo"
@@ -32,11 +50,19 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <GameDropdown />
             <Link
-              href="/contact"
+              href={hrefWithLocale("/contact")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact Us
             </Link>
+
+            {/* Locale Switcher */}
+            <div className="flex items-center gap-2">
+              <Link href={switchLocaleHref}
+                className="text-muted-foreground hover:text-foreground text-sm">
+                {locale === 'en' ? 'ES' : 'EN'}
+              </Link>
+            </div>
           </div>
 
           {/* App Store Buttons */}
@@ -70,11 +96,18 @@ export function Navbar() {
               <MobileGameMenu onClose={() => setIsOpen(false)} />
             </div>
             <Link
-              href="/contact"
+              href={hrefWithLocale("/contact")}
               className="block text-muted-foreground hover:text-foreground transition-colors py-2"
               onClick={() => setIsOpen(false)}
             >
               Contact Us
+            </Link>
+            <Link
+              href={switchLocaleHref}
+              className="block text-muted-foreground hover:text-foreground transition-colors py-2"
+              onClick={() => setIsOpen(false)}
+            >
+              {locale === 'en' ? 'ES' : 'EN'}
             </Link>
             <div className="pt-4 flex space-x-3 border-t border-border/50">
               <Button variant="outline" size="sm">

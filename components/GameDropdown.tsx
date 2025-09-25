@@ -1,16 +1,25 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 import { GameWithDetails, getAllGames } from "@/lib/games"
+import { usePathname } from "next/navigation"
 
 export function GameDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [games, setGames] = useState<GameWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const pathname = usePathname()
+
+  const locale = useMemo(() => {
+    const seg = pathname?.split("/")[1]
+    return seg === "es" ? "es" : "en"
+  }, [pathname])
+
+  const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`
 
   useEffect(() => {
     async function fetchGames() {
@@ -56,7 +65,7 @@ export function GameDropdown() {
     >
       {/* Trigger */}
       <Link
-        href="/games"
+        href={hrefWithLocale("/games")}
         className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors"
       >
         <span>Games</span>
@@ -85,7 +94,7 @@ export function GameDropdown() {
                 {games.map((game) => (
                   <Link
                     key={game.id}
-                    href={`/games/${game.slug}`}
+                    href={hrefWithLocale(`/games/${game.slug}`)}
                     className="flex items-center space-x-3 p-2 rounded-md hover:bg-primary/10 transition-colors group"
                   >
                     <div className="relative w-8 h-8 rounded-md overflow-hidden flex-shrink-0">
@@ -122,7 +131,7 @@ export function GameDropdown() {
             
             <div className="mt-4 pt-3 border-t border-border/50">
               <Link
-                href="/games"
+                href={hrefWithLocale("/games")}
                 className="block text-sm text-primary hover:text-primary/80 transition-colors font-medium"
               >
                 View All Games →
@@ -157,7 +166,7 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
   return (
     <div className="py-2 space-y-2">
       <Link
-        href="/games"
+        href={hrefWithLocale("/games")}
         className="block text-muted-foreground hover:text-foreground transition-colors py-2 font-medium"
         onClick={onClose}
       >
@@ -176,7 +185,7 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
           {games.slice(0, 6).map((game) => (
             <Link
               key={game.id}
-              href={`/games/${game.slug}`}
+              href={hrefWithLocale(`/games/${game.slug}`)}
               className="flex items-center space-x-3 p-2 rounded-md hover:bg-primary/10 transition-colors"
               onClick={onClose}
             >
