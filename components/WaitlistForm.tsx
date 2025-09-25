@@ -3,13 +3,24 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Mail } from "lucide-react"
+import { useI18n } from "@/components/I18nProvider"
 
 export default function WaitlistForm() {
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [honeypot, setHoneypot] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
+
+  // Default fallback values when i18n context is not available
+  const waitlistText = {
+    placeholder: t?.waitlist?.placeholder || "Enter your email",
+    button: t?.waitlist?.button || "Join Waitlist",
+    loading: t?.waitlist?.loading || "Joining...",
+    success: t?.waitlist?.success || "Joined!",
+    note: t?.waitlist?.note || "Be the first to know when Gamerplug launches!"
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,7 +73,7 @@ export default function WaitlistForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={waitlistText.placeholder}
               required
               disabled={isLoading || isSuccess}
               className="w-full px-4 py-[14px] h-[50px] rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -76,14 +87,14 @@ export default function WaitlistForm() {
             {isLoading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Joining...
+                {waitlistText.loading}
               </div>
             ) : isSuccess ? (
-              'Joined!'
+              waitlistText.success
             ) : (
               <>
                 <Mail className="mr-2 h-4 w-4" />
-                Join Waitlist
+                {waitlistText.button}
               </>
             )}
           </Button>
@@ -102,7 +113,7 @@ export default function WaitlistForm() {
 
       {!isSuccess && (
         <p className="text-xs text-gray-500 text-center mt-3">
-          Be the first to know when Gamerplug launches!
+          {waitlistText.note}
         </p>
       )}
     </div>

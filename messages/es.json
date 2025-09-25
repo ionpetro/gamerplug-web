@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "games": "Juegos",
+    "contact": "Contáctanos",
+    "gamesLabelMobile": "Juegos",
+    "switchTo": {
+      "en": "EN",
+      "es": "ES"
+    }
+  },
+  "dropdown": {
+    "popular": "Juegos populares",
+    "viewAll": "Ver todos los juegos"
+  },
+  "footer": {
+    "tagline": "Conectando gamers, construyendo comunidades, creando leyendas.",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos del Servicio",
+    "contact": "Contacto",
+    "copyright": "Todos los derechos reservados."
+  },
+  "home": {
+    "badge": "El futuro de las conexiones gamer",
+    "subtitle": "Desliza. Haz match. Jueguen juntos.",
+    "lead": "La plataforma definitiva para encontrar a tus compañeros ideales, crear comunidades duraderas y elevar tu experiencia de juego.",
+    "featuresTitle": "Potencia tu juego",
+    "featuresSub": "Descubre funciones diseñadas para conectar gamers y construir la mejor comunidad",
+    "feature1": "Match inteligente",
+    "feature1Desc": "Nuestro algoritmo te conecta con jugadores que comparten tu estilo, nivel y preferencias.",
+    "feature2": "Multiplataforma",
+    "feature2Desc": "Conecta en PC, PlayStation, Xbox, Nintendo Switch y móvil. Encuentra compañeros sin importar la plataforma.",
+    "feature3": "Crea comunidades",
+    "feature3Desc": "Crea o únete a comunidades, organiza torneos y construye amistades que trascienden el juego.",
+    "howTitle": "Cómo funciona Gamerplug",
+    "howSub": "Encontrar tu equipo gamer nunca fue tan fácil",
+    "how1Title": "Crea tu perfil",
+    "how1Desc": "Configura tu perfil con tus juegos favoritos, nivel y lo que buscas en compañeros.",
+    "how2Title": "Desliza y haz match",
+    "how2Desc": "Explora posibles compañeros y comunidades. Haz match con quienes te interesen.",
+    "how3Title": "Jueguen juntos",
+    "how3Desc": "Empiecen a chatear, planifiquen sesiones y formen su escuadrón para aventuras épicas.",
+    "ctaTitle": "¿Listo para encontrar tu escuadrón?",
+    "ctaSub": "Únete a la revolución gamer y conecta con jugadores que comparten tu pasión",
+    "ctaFoot": "Disponible en iOS y Android • Descarga gratuita"
+  },
+  "waitlist": {
+    "placeholder": "Ingresa tu correo",
+    "button": "Unirme a la lista",
+    "loading": "Uniéndote...",
+    "success": "¡Unido!",
+    "note": "¡Sé el primero en enterarte cuando lancemos Gamerplug!"
+  },
+  "games": {
+    "title": "Juegos Populares",
+    "subtitle": "Encuentra tu comunidad en los títulos más populares. Conecta con jugadores que comparten tu pasión y nivel.",
+    "notFound": "No se encontraron juegos. Vuelve más tarde.",
+    "players": "Jugadores",
+    "active": "Comunidad activa"
+  },
+  "contact": {
+    "badge": "Ponte en contacto",
+    "title": "Contáctanos",
+    "subtitle": "¿Tienes preguntas sobre Gamerplug? ¿Necesitas soporte? Estamos aquí para ayudarte a conectar con la comunidad gamer.",
+    "emailTitle": "Soporte por correo",
+    "emailDesc": "¿Necesitas ayuda con tu cuenta, tienes preguntas o quieres reportar un problema? Envíanos un correo y te responderemos lo antes posible.",
+    "followTitle": "Síguenos",
+    "followDesc": "Mantente al día con noticias, funciones y lo mejor de la comunidad. Síguenos en Twitter para actualizaciones en tiempo real y tips de gaming.",
+    "faqTitle": "Preguntas frecuentes",
+    "faqSub": "Preguntas comunes sobre Gamerplug y cómo empezar"
+  },
+  "profile": {
+    "loading": "Cargando perfil...",
+    "userNotFoundTitle": "Usuario no encontrado",
+    "userNotFoundBody": "El usuario que buscas no existe.",
+    "goBack": "Volver",
+    "gamesTitle": "Juegos",
+    "gamesCount": "{count} juegos",
+    "moreGames": "+{count} juegos más",
+    "clipsTitle": "Clips",
+    "noClips": "No hay clips públicos",
+    "age": "Edad: {age}",
+    "altProfile": "Perfil",
+    "altClipThumb": "Miniatura del clip"
+  }
+}
+
+

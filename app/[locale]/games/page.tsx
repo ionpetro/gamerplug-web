@@ -5,9 +5,9 @@ import Link from "next/link"
 import Image from "next/image"
 import { getAllGames } from "@/lib/games"
 
-export default async function LocalizedGames({ params }: { params: { locale: string } }) {
+export default async function LocalizedGames({ params }: { params: Promise<{ locale: string }> }) {
   const games = await getAllGames();
-  const locale = params.locale || "en";
+  const { locale } = await params;
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -15,10 +15,10 @@ export default async function LocalizedGames({ params }: { params: { locale: str
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent">
-              Popular Games
+              {locale === 'es' ? 'Juegos Populares' : 'Popular Games'}
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Find your gaming community in the most popular titles. Connect with players who share your passion and skill level.
+              {locale === 'es' ? 'Encuentra tu comunidad en los títulos más populares. Conecta con jugadores que comparten tu pasión y nivel.' : 'Find your gaming community in the most popular titles. Connect with players who share your passion and skill level.'}
             </p>
           </div>
         </div>
@@ -29,7 +29,7 @@ export default async function LocalizedGames({ params }: { params: { locale: str
         <div className="container mx-auto">
           {games.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-xl text-muted-foreground">No games found. Please check back later.</p>
+              <p className="text-xl text-muted-foreground">{locale === 'es' ? 'No se encontraron juegos. Vuelve más tarde.' : 'No games found. Please check back later.'}</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -54,7 +54,7 @@ export default async function LocalizedGames({ params }: { params: { locale: str
                       className="absolute bottom-4 left-4 text-xs"
                       style={{ backgroundColor: game.color, border: 'none' }}
                     >
-                      {game.playerCount} Players
+                      {game.playerCount} {locale === 'es' ? 'Jugadores' : 'Players'}
                     </Badge>
                   </div>
 
@@ -80,7 +80,7 @@ export default async function LocalizedGames({ params }: { params: { locale: str
 
                   <div className="flex items-center text-muted-foreground text-sm">
                     <Users className="h-4 w-4 mr-1" />
-                    Active Community
+                    {locale === 'es' ? 'Comunidad activa' : 'Active Community'}
                   </div>
                 </CardContent>
                 </Card>

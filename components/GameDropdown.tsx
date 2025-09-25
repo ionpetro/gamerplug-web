@@ -6,6 +6,7 @@ import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 import { GameWithDetails, getAllGames } from "@/lib/games"
 import { usePathname } from "next/navigation"
+import { useI18n } from "@/components/I18nProvider"
 
 export function GameDropdown() {
   const [isOpen, setIsOpen] = useState(false)
@@ -13,6 +14,7 @@ export function GameDropdown() {
   const [loading, setLoading] = useState(true)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const pathname = usePathname()
+  const { t } = useI18n()
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -68,7 +70,7 @@ export function GameDropdown() {
         href={hrefWithLocale("/games")}
         className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors"
       >
-        <span>Games</span>
+        <span>{t.nav.games}</span>
         <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </Link>
 
@@ -82,7 +84,7 @@ export function GameDropdown() {
         <div className="absolute top-full left-0 mt-2 bg-card/95 backdrop-blur-lg border border-border/50 rounded-lg shadow-xl min-w-[280px] z-50 animate-in fade-in-0 zoom-in-95 duration-200">
           <div className="p-4">
             <div className="text-sm font-semibold text-muted-foreground mb-3 px-2">
-              Popular Games
+              {t.dropdown.popular}
             </div>
             
             {loading ? (
@@ -134,7 +136,7 @@ export function GameDropdown() {
                 href={hrefWithLocale("/games")}
                 className="block text-sm text-primary hover:text-primary/80 transition-colors font-medium"
               >
-                View All Games →
+                {t.dropdown.viewAll} →
               </Link>
             </div>
           </div>
@@ -147,6 +149,14 @@ export function GameDropdown() {
 export function MobileGameMenu({ onClose }: { onClose: () => void }) {
   const [games, setGames] = useState<GameWithDetails[]>([])
   const [loading, setLoading] = useState(true)
+  const pathname = usePathname()
+  
+  const locale = useMemo(() => {
+    const seg = pathname?.split("/")[1]
+    return seg === "es" ? "es" : "en"
+  }, [pathname])
+
+  const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`
 
   useEffect(() => {
     async function fetchGames() {

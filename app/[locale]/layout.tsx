@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Mono } from "next/font/google";
 import "../globals.css";
 import { Navbar } from "@/components/Navbar";
+import { loadMessages } from "@/lib/i18n";
+import { I18nProvider } from "@/components/I18nProvider";
 
 const spaceMono = Space_Mono({
   variable: "--font-space-mono",
@@ -26,19 +28,25 @@ export function generateStaticParams() {
   ];
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale: rawLocale } = await params;
+  const locale = rawLocale === 'es' ? 'es' : 'en';
+  const messages = await loadMessages(locale);
   return (
-    <div className={`${spaceMono.variable} antialiased font-space-mono`}>
-      <Navbar />
-      <main className="pt-16">
-        {children}
-      </main>
-    </div>
+    <I18nProvider locale={locale} messages={messages}>
+      <div className={`${spaceMono.variable} antialiased font-space-mono`}>
+        <Navbar />
+        <main className="pt-16">
+          {children}
+        </main>
+      </div>
+    </I18nProvider>
   );
 }
 
