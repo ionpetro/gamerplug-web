@@ -43,12 +43,9 @@
     "ctaSub": "Únete a la revolución gamer y conecta con jugadores que comparten tu pasión",
     "ctaFoot": "Disponible en iOS y Android • Descarga gratuita"
   },
-  "waitlist": {
-    "placeholder": "Ingresa tu correo",
-    "button": "Unirme a la lista",
-    "loading": "Uniéndote...",
-    "success": "¡Unido!",
-    "note": "¡Sé el primero en enterarte cuando lancemos Gamerplug!"
+  "download": {
+    "button": "Descargar en iOS",
+    "note": "Próximamente en Play Store"
   },
   "games": {
     "title": "Juegos Populares",

@@ -1,7 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Gamepad2, Users, Zap, Trophy } from "lucide-react";
-import WaitlistForm from "@/components/WaitlistForm";
+import DownloadButton from "@/components/DownloadButton";
 import { Footer } from "@/components/Footer";
 import { useI18n } from "@/components/I18nProvider";
 
@@ -26,7 +26,7 @@ export default function LocalizedHome() {
             <p className="text-lg mb-8 text-muted-foreground max-w-3xl mx-auto">
               {t.home.lead}
             </p>
-            <WaitlistForm />
+            <DownloadButton />
           </div>
         </div>
 
@@ -151,7 +151,7 @@ export default function LocalizedHome() {
             <p className="text-xl mb-8 text-muted-foreground">
               {t.home.ctaSub}
             </p>
-            <WaitlistForm />
+            <DownloadButton />
             <p className="text-sm text-muted-foreground mt-6">{t.home.ctaFoot}</p>
           </div>
         </div>

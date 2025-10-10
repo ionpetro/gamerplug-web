@@ -6,7 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getAllGames, getGameBySlug } from "@/lib/games"
-import WaitlistForm from "@/components/WaitlistForm"
+import DownloadButton from "@/components/DownloadButton"
 
 // Game data with detailed information for each game
 const games = {
@@ -564,8 +564,7 @@ export default async function GamePage({ params }: GamePageProps) {
               </p>
 
               <div className="max-w-md mx-auto sm:mx-0">
-                <WaitlistForm />
-                <p className="text-sm text-muted-foreground mt-4 text-center">Join the waitlist to be notified when Gamerplug launches!</p>
+                <DownloadButton />
               </div>
             </div>
             
@@ -673,9 +672,8 @@ export default async function GamePage({ params }: GamePageProps) {
               Join thousands of players who've already found their perfect teammates
             </p>
             <div className="max-w-md mx-auto">
-              <WaitlistForm />
+              <DownloadButton />
             </div>
-            <p className="text-sm text-muted-foreground mt-6">Be the first to know when Gamerplug launches!</p>
           </div>
         </div>
       </section>

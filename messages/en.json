@@ -43,12 +43,9 @@
     "ctaSub": "Join the gaming revolution and connect with players who share your passion",
     "ctaFoot": "Available on iOS and Android • Free to download"
   },
-  "waitlist": {
-    "placeholder": "Enter your email",
-    "button": "Join Waitlist",
-    "loading": "Joining...",
-    "success": "Joined!",
-    "note": "Be the first to know when Gamerplug launches!"
+  "download": {
+    "button": "Download on iOS",
+    "note": "Coming soon on Play Store"
   },
   "games": {
     "title": "Popular Games",
