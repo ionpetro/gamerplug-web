@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Twitter } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function LocalizedContact({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -29,7 +30,7 @@ export default async function LocalizedContact({ params }: { params: Promise<{ l
 
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
               <CardContent className="p-8 text-center">
                 <div className="mb-6 relative">
@@ -51,11 +52,11 @@ export default async function LocalizedContact({ params }: { params: Promise<{ l
               </CardContent>
             </Card>
 
-            <Card className="gradient-card border-border/50 hover:border-accent/50 transition-all duration-300 group">
+            <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
               <CardContent className="p-8 text-center">
                 <div className="mb-6 relative">
-                  <div className="w-16 h-16 mx-auto bg-accent/20 rounded-full flex items-center justify-center group-hover:bg-accent/30 transition-colors">
-                    <Twitter className="h-8 w-8 text-accent" />
+                  <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <Twitter className="h-8 w-8 text-primary" />
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Síguenos</h3>
@@ -66,10 +67,37 @@ export default async function LocalizedContact({ params }: { params: Promise<{ l
                   href="https://x.com/The_Gamer_Plug"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors font-medium"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
                 >
                   <Twitter className="mr-2 h-4 w-4" />
                   @The_Gamer_Plug
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="mb-6 relative">
+                  <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <svg className="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Míranos</h3>
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  Descubre nuestro contenido gaming, lo mejor de la comunidad y actualizaciones detrás de cámaras en TikTok.
+                </p>
+                <Link
+                  href="https://www.tiktok.com/@thegamerplugapp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                >
+                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                  </svg>
+                  @thegamerplugapp
                 </Link>
               </CardContent>
             </Card>
