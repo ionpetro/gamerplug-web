@@ -213,7 +213,7 @@ export default function GamerplugLanding() {
               Join the gaming revolution and connect with players who share your passion
             </p>
             <WaitlistForm />
-            <p className="text-sm text-muted-foreground mt-6">Available on iOS and Android • Free to download</p>
+            <p className="text-sm text-muted-foreground mt-6">Free to download</p>
           </div>
         </div>
       </section>
