@@ -44,8 +44,9 @@
     "ctaFoot": "Disponible en iOS y Android • Descarga gratuita"
   },
   "download": {
-    "button": "Descargar en iOS",
-    "note": "Próximamente en Play Store"
+    "iosButton": "Descargar en iOS",
+    "androidButton": "Descargar en Android",
+    "note": "Disponible en App Store y Play Store"
   },
   "games": {
     "title": "Juegos Populares",

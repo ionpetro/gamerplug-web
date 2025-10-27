@@ -44,8 +44,9 @@
     "ctaFoot": "Free to download"
   },
   "download": {
-    "button": "Download on iOS",
-    "note": "Coming soon on Play Store"
+    "iosButton": "Download on iOS",
+    "androidButton": "Download on Android",
+    "note": "Available on App Store and Play Store"
   },
   "games": {
     "title": "Popular Games",
