@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Space_Mono } from "next/font/google";
+import "./globals.css";
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Gamerplug",
@@ -28,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
       </head>
-      <body>
+      <body className={`${spaceMono.variable} antialiased font-space-mono`}>
         {children}
       </body>
     </html>
