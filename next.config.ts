@@ -4,7 +4,8 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       'defdpaewkfkpvdzyhvsr.supabase.co',
-      'gamerplug-gameplay-videos.s3.us-east-2.amazonaws.com'
+      'gamerplug-gameplay-videos.s3.us-east-2.amazonaws.com',
+      'd11fcxbq4rxmpu.cloudfront.net'
     ],
     remotePatterns: [
       {
@@ -18,6 +19,10 @@ const nextConfig: NextConfig = {
         hostname: 'gamerplug-gameplay-videos.s3.us-east-2.amazonaws.com',
         port: '',
         pathname: '/users/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'd11fcxbq4rxmpu.cloudfront.net',
       }
     ]
   }
