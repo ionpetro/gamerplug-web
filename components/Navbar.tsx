@@ -35,17 +35,14 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href={hrefWithLocale("/")} className="flex items-center space-x-2">
+          <Link href={hrefWithLocale("/")} className="flex items-center">
             <Image
-              src="/gamerplug.png"
+              src="/logo-new.png"
               alt="Gamerplug Logo"
               width={32}
               height={32}
-              className="rounded-lg"
+              className="rounded-md"
             />
-            <span className="text-xl font-bold" style={{ color: '#DDC1C1' }}>
-              Gamerplug
-            </span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -89,11 +89,6 @@ export default async function DownloadPage() {
               </Button>
             </a>
           </div>
-
-          <p className="text-xs text-gray-500 text-center mt-3">
-            Available on App Store and Play Store
-          </p>
-
           <a
             href={FALLBACK_URL}
             className="text-sm text-primary hover:underline inline-block mt-4"

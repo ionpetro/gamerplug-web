@@ -1,6 +1,5 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
-import { Gamepad2, Users, Zap, Trophy } from "lucide-react";
+import { Gamepad2, Users, Trophy } from "lucide-react";
 import DownloadButton from "@/components/DownloadButton";
 import { Footer } from "@/components/Footer";
 import { useI18n } from "@/components/I18nProvider";
@@ -10,35 +9,20 @@ export default function LocalizedHome() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="gradient-hero min-h-screen flex items-center justify-center relative overflow-hidden">
+      <section className="gradient-hero hero-background min-h-screen flex items-center justify-center relative overflow-hidden text-white pt-6 pb-14 md:pt-4 md:pb-18">
         <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-red-900/20" />
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
-              🎮 {t.home.badge}
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent leading-tight">
+          <div className="max-w-4xl mx-auto space-y-5 md:space-y-6">
+            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
               Gamerplug
             </h1>
-            <p className="text-xl md:text-2xl mb-4 text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-2xl text-white max-w-2xl mx-auto">
               {t.home.subtitle}
             </p>
-            <p className="text-lg mb-8 text-muted-foreground max-w-3xl mx-auto">
-              {t.home.lead}
-            </p>
-            <DownloadButton />
+            <div className="flex justify-center">
+              <DownloadButton />
+            </div>
           </div>
-        </div>
-
-        {/* Floating Icons */}
-        <div className="absolute top-20 left-10 animate-bounce">
-          <Gamepad2 className="h-8 w-8 text-primary/60" />
-        </div>
-        <div className="absolute top-40 right-20 animate-bounce delay-300">
-          <Trophy className="h-6 w-6 text-accent/60" />
-        </div>
-        <div className="absolute bottom-40 left-20 animate-bounce delay-700">
-          <Zap className="h-7 w-7 text-primary/40" />
         </div>
       </section>
 
@@ -161,6 +145,3 @@ export default function LocalizedHome() {
     </div>
   );
 }
-
-
-

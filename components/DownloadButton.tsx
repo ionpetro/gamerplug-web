@@ -8,8 +8,7 @@ export default function DownloadButton() {
 
   const downloadText = {
     iosButton: t?.download?.iosButton || "Download on iOS",
-    androidButton: t?.download?.androidButton || "Download on Android",
-    note: t?.download?.note || "Available on App Store and Play Store"
+    androidButton: t?.download?.androidButton || "Download on Android"
   }
 
   return (
@@ -47,10 +46,6 @@ export default function DownloadButton() {
           </Button>
         </a>
       </div>
-
-      <p className="text-xs text-gray-500 text-center mt-3">
-        {downloadText.note}
-      </p>
     </div>
   )
 }

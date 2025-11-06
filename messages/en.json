@@ -45,8 +45,7 @@
   },
   "download": {
     "iosButton": "Download on iOS",
-    "androidButton": "Download on Android",
-    "note": "Available on App Store and Play Store"
+    "androidButton": "Download on Android"
   },
   "games": {
     "title": "Popular Games",
@@ -81,5 +80,4 @@
     "altClipThumb": "Clip thumbnail"
   }
 }
-
 
