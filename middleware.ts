@@ -9,6 +9,7 @@ export function middleware(req: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.includes("/api/") ||
+    pathname.startsWith("/auth") ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
