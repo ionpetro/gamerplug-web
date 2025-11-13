@@ -18,9 +18,10 @@ export function Footer() {
   const footerText = {
     tagline: t?.footer?.tagline || "Connecting gamers, building communities, creating legends.",
     privacy: t?.footer?.privacy || "Privacy Policy",
-    terms: t?.footer?.terms || "Terms of Service", 
+    terms: t?.footer?.terms || "Terms of Service",
     contact: t?.footer?.contact || "Contact",
-    copyright: t?.footer?.copyright || "All rights reserved."
+    copyright: t?.footer?.copyright || "All rights reserved.",
+    patentPending: t?.footer?.patentPending || "Patent Pending"
   }
   return (
     <footer className="py-12 px-4 bg-card/50 border-t border-border/50">
@@ -41,7 +42,7 @@ export function Footer() {
               {footerText.contact}
             </Link>
           </div>
-          <p className="text-xs text-muted-foreground mt-6">© 2025 Gamerplug. {footerText.copyright}</p>
+          <p className="text-xs text-muted-foreground mt-6">© 2025 Gamerplug. {footerText.copyright} {footerText.patentPending}</p>
         </div>
       </div>
     </footer>
