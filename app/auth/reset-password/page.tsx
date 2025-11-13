@@ -14,12 +14,14 @@ function ResetPasswordContent() {
   useEffect(() => {
     const handlePasswordReset = async () => {
       const token_hash = searchParams.get('token_hash');
+      const token = searchParams.get('token');
       const type = searchParams.get('type');
       const error = searchParams.get('error');
       const error_description = searchParams.get('error_description');
 
       console.log('🔍 Reset password params:', {
         token_hash: token_hash ? 'YES' : 'NO',
+        token: token ? 'YES' : 'NO',
         type,
         error
       });
@@ -32,9 +34,59 @@ function ResetPasswordContent() {
         return;
       }
 
-      // Verify token_hash and get session
+      // Handle PKCE flow (token parameter)
+      if (token && type === 'recovery') {
+        console.log('⏳ Verifying PKCE token...');
+        try {
+          const { data, error } = await supabase.auth.verifyOtp({
+            token_hash: token,
+            type: 'recovery',
+          });
+
+          console.log('🔍 VerifyOtp result:', {
+            success: !error,
+            hasSession: !!data?.session,
+            error: error?.message
+          });
+
+          if (error) {
+            console.error('❌ Error verifying token:', error);
+            setStatus('error');
+            setMessage(error.message || 'Invalid or expired reset link');
+            return;
+          }
+
+          if (data.session) {
+            const { access_token, refresh_token } = data.session;
+            console.log('✅ Got tokens, redirecting to app...');
+
+            // Redirect to mobile app with tokens
+            const deepLink = `gamerplug://reset-password#access_token=${access_token}&refresh_token=${refresh_token}&type=recovery`;
+            console.log('🔗 Deep link:', deepLink);
+
+            setStatus('success');
+            setMessage('Redirecting to Gamerplug app...');
+            window.location.href = deepLink;
+
+            setTimeout(() => {
+              setMessage('If the app didn\'t open automatically, please open Gamerplug manually.');
+            }, 2000);
+          } else {
+            console.error('❌ No session returned');
+            setStatus('error');
+            setMessage('Failed to verify reset link');
+          }
+        } catch (err) {
+          console.error('❌ Exception:', err);
+          setStatus('error');
+          setMessage('An error occurred while verifying the link');
+        }
+        return;
+      }
+
+      // Handle legacy flow with token_hash
       if (token_hash && type === 'recovery') {
-        console.log('⏳ Verifying token_hash...');
+        console.log('⏳ Verifying token_hash (legacy)...');
         try {
           const { data, error } = await supabase.auth.verifyOtp({
             token_hash,
