@@ -124,4 +124,4 @@ The app includes proper error handling for:
 - Graceful fallbacks for missing data
 
 ---
-Note: This project is awesome!
+Note: This project is awesome! Remember to stay hydrated while coding.
