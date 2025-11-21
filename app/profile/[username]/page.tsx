@@ -288,13 +288,20 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-2">
+                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-3">
                     @{user.gamertag}
                   </h2>
-                  {user.platform && (
-                    <p className="text-sm text-white/70 mb-2 lg:text-lg">
-                      {user.platform}
-                    </p>
+                  {user.platform && user.platform.length > 0 && (
+                    <div className="flex gap-2 justify-center lg:justify-start flex-wrap mb-3">
+                      {user.platform.map((platform) => (
+                        <span
+                          key={platform}
+                          className="px-3 py-1 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-1.5"
+                        >
+                          {platform}
+                        </span>
+                      ))}
+                    </div>
                   )}
                   {user.age && (
                     <p className="text-sm text-white/50 mb-3 lg:text-base">

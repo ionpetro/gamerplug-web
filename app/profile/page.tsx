@@ -7,7 +7,7 @@ import { Footer } from '@/components/Footer';
 interface User {
   id: string;
   gamertag: string;
-  platform?: string;
+  platform?: string[];
   profile_image_url?: string;
 }
 
@@ -29,7 +29,7 @@ export default function ProfilePage() {
   const [user] = useState<User>({
     id: '1',
     gamertag: 'ProGamer123',
-    platform: 'PlayStation 5',
+    platform: ['PC', 'PS5', 'Xbox'],
     profile_image_url: '/api/placeholder/100/100'
   });
 
@@ -123,13 +123,20 @@ export default function ProfilePage() {
             </div>
             
             <div className="text-center">
-              <h2 className="text-lg font-medium text-white lg:text-xl">
+              <h2 className="text-lg font-medium text-white lg:text-xl mb-3">
                 @{user.gamertag}
               </h2>
-              {user.platform && (
-                <p className="text-sm text-white/70 mt-1 lg:text-base">
-                  {user.platform}
-                </p>
+              {user.platform && user.platform.length > 0 && (
+                <div className="flex gap-2 justify-center flex-wrap">
+                  {user.platform.map((platform) => (
+                    <span
+                      key={platform}
+                      className="px-3 py-1 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-1.5"
+                    >
+                      {platform}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           </div>

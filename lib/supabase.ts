@@ -14,8 +14,8 @@ export interface User {
   id: string;
   steam_id?: string;
   gamertag: string;
-  platform: 'PC' | 'PS5' | 'Xbox' | 'Nintendo Switch';
-  bio: string;
+  platform?: ('PC' | 'PS5' | 'Xbox' | 'Nintendo Switch')[];
+  bio?: string;
   profile_image_url?: string;
   game_images?: string[];
   steam_profile_url?: string;
