@@ -12,25 +12,51 @@ function AuthConfirmContent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const error = urlParams.get('error');
-    const errorDescription = urlParams.get('error_description');
+    const handleEmailConfirmation = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
+      const error_description = urlParams.get('error_description');
 
-    if (error) {
-      setStatus('error');
-      const decodedDescription = errorDescription ? decodeURIComponent(errorDescription) : '';
-      setMessage(`Authentication failed: ${error}${decodedDescription ? ` - ${decodedDescription}` : ''}`);
-      return;
-    }
+      // Check for errors
+      if (error) {
+        setStatus('error');
+        const decodedDescription = error_description ? decodeURIComponent(error_description) : '';
+        setMessage(`Authentication failed: ${error}${decodedDescription ? ` - ${decodedDescription}` : ''}`);
+        return;
+      }
 
-    if (code) {
-      setStatus('success');
-      setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
-    } else {
+      // Handle PKCE flow with code parameter
+      if (code) {
+        try {
+          const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+
+          if (exchangeError) {
+            setStatus('error');
+            setMessage(exchangeError.message || 'Invalid or expired confirmation link');
+            return;
+          }
+
+          if (data.session) {
+            setStatus('success');
+            setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
+          } else {
+            setStatus('error');
+            setMessage('Failed to confirm email');
+          }
+        } catch (err) {
+          setStatus('error');
+          setMessage('An error occurred while confirming your email');
+        }
+        return;
+      }
+
+      // No valid code parameter
       setStatus('error');
       setMessage('Invalid confirmation link. Please request a new confirmation email.');
-    }
+    };
+
+    handleEmailConfirmation();
   }, []);
 
 
