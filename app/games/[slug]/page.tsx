@@ -1,682 +1,381 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Users, MessageCircle, Star, Trophy, Gamepad2 } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { getAllGames, getGameBySlug } from "@/lib/games"
-import DownloadButton from "@/components/DownloadButton"
+'use client'
 
-// Game data with detailed information for each game
-const games = {
-  'apex-legends': {
-    id: 'apex-legends',
-    name: 'Apex Legends',
-    displayName: 'Apex Legends',
-    slug: 'apex-legends',
-    color: '#FF3B30',
-    image: '/images/games/apex.webp',
-    hero: {
-      title: 'Find Your Apex Legends Squad',
-      subtitle: 'Connect with skilled Legends and dominate the Outlands together',
-    },
+import { motion } from "framer-motion"
+import { Users, MessageCircle, Trophy, Gamepad2 } from "lucide-react"
+import Image from "next/image"
+import { notFound } from "next/navigation"
+import { useEffect, useState } from "react"
+import DownloadButton from "@/components/DownloadButton"
+import { Footer } from "@/components/Footer"
+
+// Game details data structure
+const gameDetails: any = {
+  'battlefield-6': {
+    hero: { title: 'SQUAD UP. TACTICAL PLAY.', titleHighlight: 'BATTLEFIELD.', subtitle: 'Connect with tactical players and dominate the battlefield together' },
     features: [
-      {
-        icon: Users,
-        title: 'Smart Legend Matching',
-        description: 'Get matched with players based on your main legends, rank, and playstyle preferences'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Team Communication',
-        description: 'Built-in voice chat and messaging to coordinate strategies and rotations'
-      },
-      {
-        icon: Trophy,
-        title: 'Ranked Progression',
-        description: 'Find teammates at your skill level to climb ranked together from Bronze to Predator'
-      }
+      { icon: Users, title: 'Squad Matching', description: 'Get matched with players based on your preferred class, playstyle, and tactical approach' },
+      { icon: MessageCircle, title: 'Tactical Coordination', description: 'Built-in voice chat and messaging to coordinate squad movements and objectives' },
+      { icon: Trophy, title: 'Ranked Progression', description: 'Find teammates to climb ranked mode and complete challenging objectives together' }
     ],
     howItWorks: [
-      {
-        step: '1',
-        title: 'Set Your Legend Preferences',
-        description: 'Tell us your main legends, preferred roles, and what rank you\'re aiming for'
-      },
-      {
-        step: '2',
-        title: 'Get Matched with Legends',
-        description: 'Our algorithm finds players who complement your squad composition and skill level'
-      },
-      {
-        step: '3',
-        title: 'Drop Hot Together',
-        description: 'Join your new squad, communicate strategies, and claim victory in the Arena'
-      }
+      { step: '01', title: 'Select Your Class', desc: 'Choose your preferred class and playstyle - Assault, Support, Recon, or Engineer' },
+      { step: '02', title: 'Match with Squad', desc: 'Our algorithm finds players who complement your tactical approach and skill level' },
+      { step: '03', title: 'Deploy Together', desc: 'Join your squad, coordinate strategies, and dominate the battlefield' }
     ],
     faq: [
-      {
-        question: 'What is Apex Legends LFG?',
-        answer: 'LFG (Looking for Group) helps you find teammates for Apex Legends matches. Instead of playing with random squad members, you can connect with players who share your skill level and goals.'
-      },
-      {
-        question: 'How does legend matching work?',
-        answer: 'Our system considers your preferred legends, playstyle, rank, and communication preferences to match you with compatible teammates who complement your squad composition.'
-      }
+      { question: 'What is Battlefield 6 LFG?', answer: 'LFG (Looking for Group) helps you find squadmates for Battlefield 6 matches. Instead of playing with random players, you can connect with teammates who share your tactical approach and communication style.' },
+      { question: 'How does squad matching work?', answer: 'We match you based on your preferred class, playstyle, rank, and communication preferences to create balanced squads that work well together.' }
+    ]
+  },
+  'apex-legends': {
+    hero: { title: 'Find Your', titleHighlight: 'Apex Legends', titleSuffix: 'Squad', subtitle: 'Connect with skilled Legends and dominate the Outlands together' },
+    features: [
+      { icon: Users, title: 'Smart Legend Matching', description: 'Get matched with players based on your main legends, rank, and playstyle preferences' },
+      { icon: MessageCircle, title: 'Team Communication', description: 'Built-in voice chat and messaging to coordinate strategies and rotations' },
+      { icon: Trophy, title: 'Ranked Progression', description: 'Find teammates at your skill level to climb ranked together from Bronze to Predator' }
+    ],
+    howItWorks: [
+      { step: '01', title: 'Set Your Legend Preferences', desc: 'Tell us your main legends, preferred roles, and what rank you\'re aiming for' },
+      { step: '02', title: 'Get Matched with Legends', desc: 'Our algorithm finds players who complement your squad composition and skill level' },
+      { step: '03', title: 'Drop Hot Together', desc: 'Join your new squad, communicate strategies, and claim victory in the Arena' }
+    ],
+    faq: [
+      { question: 'What is Apex Legends LFG?', answer: 'LFG (Looking for Group) helps you find teammates for Apex Legends matches. Instead of playing with random squad members, you can connect with players who share your skill level and goals.' },
+      { question: 'How does legend matching work?', answer: 'Our system considers your preferred legends, playstyle, rank, and communication preferences to match you with compatible teammates who complement your squad composition.' }
     ]
   },
   'valorant': {
-    id: 'valorant',
-    name: 'Valorant',
-    displayName: 'Valorant',
-    slug: 'valorant',
-    color: '#FF4655',
-    image: '/images/games/valorant.webp',
-    hero: {
-      title: 'Find Your Valorant Team',
-      subtitle: 'Connect with tactical players and climb the ranks together',
-    },
+    hero: { title: 'Find Your', titleHighlight: 'Valorant', titleSuffix: 'Team', subtitle: 'Connect with tactical players and climb the ranks together' },
     features: [
-      {
-        icon: Users,
-        title: 'Agent Role Matching',
-        description: 'Find players who main complementary agents to create the perfect team composition'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Tactical Communication',
-        description: 'Coordinate strategies, callouts, and executions with built-in voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Climbing',
-        description: 'Team up with players at your rank to climb from Iron to Radiant together'
-      }
+      { icon: Users, title: 'Agent Role Matching', description: 'Find players who main complementary agents to create the perfect team composition' },
+      { icon: MessageCircle, title: 'Tactical Communication', description: 'Coordinate strategies, callouts, and executions with built-in voice chat' },
+      { icon: Trophy, title: 'Competitive Climbing', description: 'Team up with players at your rank to climb from Iron to Radiant together' }
     ],
     howItWorks: [
-      {
-        step: '1',
-        title: 'Choose Your Agent Role',
-        description: 'Select your main agents, preferred roles (Duelist, Controller, Initiator, Sentinel)'
-      },
-      {
-        step: '2',
-        title: 'Match with Teammates',
-        description: 'Get matched with players who complement your agent pool and skill level'
-      },
-      {
-        step: '3',
-        title: 'Execute Perfect Strategies',
-        description: 'Coordinate with your team to execute flawless rounds and secure victories'
-      }
+      { step: '01', title: 'Choose Your Agent Role', desc: 'Select your main agents, preferred roles (Duelist, Controller, Initiator, Sentinel)' },
+      { step: '02', title: 'Match with Teammates', desc: 'Get matched with players who complement your agent pool and skill level' },
+      { step: '03', title: 'Execute Perfect Strategies', desc: 'Coordinate with your team to execute flawless rounds and secure victories' }
     ],
     faq: [
-      {
-        question: 'What is Valorant LFG?',
-        answer: 'LFG helps Valorant players find teammates instead of solo queuing. You can find players who complement your agent preferences and communication style.'
-      },
-      {
-        question: 'How does agent matching work?',
-        answer: 'We match you based on your agent preferences, role flexibility, communication style, and rank to create balanced team compositions.'
-      }
-    ]
-  },
-  'league-of-legends': {
-    id: 'league-of-legends',
-    name: 'League of Legends',
-    displayName: 'League of Legends',
-    slug: 'league-of-legends',
-    color: '#FFD700',
-    image: '/images/games/lol.webp',
-    hero: {
-      title: 'Find Your League of Legends Team',
-      subtitle: 'Connect with skilled summoners and dominate the Rift',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Role & Champion Matching',
-        description: 'Find teammates based on your preferred role, champion pool, and playstyle'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Strategic Communication',
-        description: 'Coordinate ganks, objectives, and team fights with integrated voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Ranked Climbing',
-        description: 'Team up with players at your skill level to climb from Iron to Challenger'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Set Your Role Preferences',
-        description: 'Choose your main and secondary roles, plus your champion preferences for each'
-      },
-      {
-        step: '2',
-        title: 'Get Matched with Summoners',
-        description: 'Our algorithm finds players who complement your team composition and skill level'
-      },
-      {
-        step: '3',
-        title: 'Conquer the Rift Together',
-        description: 'Coordinate with your team to secure objectives and climb the ranked ladder'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is League of Legends LFG?',
-        answer: 'LFG (Looking for Group) helps you find teammates for League of Legends instead of solo queue. Connect with players who share your goals and communication style.'
-      },
-      {
-        question: 'How does role matching work?',
-        answer: 'We match you based on your preferred roles, champion pool, rank, and playstyle to create balanced team compositions for ranked or normal games.'
-      }
-    ]
-  },
-  'overwatch-2': {
-    id: 'overwatch-2',
-    name: 'Overwatch 2',
-    displayName: 'Overwatch 2',
-    slug: 'overwatch-2',
-    color: '#FF6B35',
-    image: '/images/games/overwatch2.webp',
-    hero: {
-      title: 'Assemble Your Overwatch 2 Team',
-      subtitle: 'Unite with heroes and push the payload to victory',
-      description: 'Connect with skilled heroes across all roles. Our matching system helps you build the perfect 6-stack for competitive play.',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Hero Role Matching',
-        description: 'Find Tank, Damage, and Support players who complement your hero pool'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Team Coordination',
-        description: 'Coordinate ultimate combos and strategies with integrated voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Rankings',
-        description: 'Team up to climb competitive ranks from Bronze to Grandmaster'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Select Your Hero Roles',
-        description: 'Choose your preferred roles and main heroes for Tank, Damage, or Support'
-      },
-      {
-        step: '2',
-        title: 'Match with Heroes',
-        description: 'Get paired with players who create balanced team compositions'
-      },
-      {
-        step: '3',
-        title: 'Push Together',
-        description: 'Coordinate ultimate abilities and strategies to secure objectives'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is Overwatch 2 LFG?',
-        answer: 'LFG helps you find teammates for Overwatch 2 matches. Build consistent teams instead of relying on random matchmaking.'
-      },
-      {
-        question: 'How does hero matching work?',
-        answer: 'We match you based on your preferred heroes, role flexibility, and skill rating to create balanced team compositions.'
-      }
-    ]
-  },
-  'fortnite': {
-    id: 'fortnite',
-    name: 'Fortnite',
-    displayName: 'Fortnite',
-    slug: 'fortnite',
-    color: '#8B5CF6',
-    image: '/images/games/fortnite.webp',
-    hero: {
-      title: 'Squad Up in Fortnite',
-      subtitle: 'Build, battle, and claim Victory Royales together',
-      description: 'Connect with builders, fighters, and strategists. Find your perfect squad for Battle Royale, Creative, or competitive play.',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Playstyle Matching',
-        description: 'Find teammates who match your building skills, combat style, and game modes'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Squad Communication',
-        description: 'Coordinate rotations, builds, and strategies with voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Victory Royales',
-        description: 'Team up with skilled players to secure more wins and improve your stats'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Set Your Playstyle',
-        description: 'Tell us if you prefer aggressive pushes, strategic rotations, or creative builds'
-      },
-      {
-        step: '2',
-        title: 'Find Your Squad',
-        description: 'Get matched with players who complement your skills and game mode preferences'
-      },
-      {
-        step: '3',
-        title: 'Drop and Conquer',
-        description: 'Land together, build together, and claim Victory Royales as a team'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is Fortnite LFG?',
-        answer: 'LFG helps you find squadmates for Fortnite Battle Royale, Creative, or competitive modes instead of playing with random fills.'
-      },
-      {
-        question: 'How does playstyle matching work?',
-        answer: 'We consider your building skills, preferred landing spots, combat style, and game modes to find compatible teammates.'
-      }
-    ]
-  },
-  'pubg': {
-    id: 'pubg',
-    name: 'PUBG',
-    displayName: 'PUBG',
-    slug: 'pubg',
-    color: '#FFA500',
-    image: '/images/games/pubg.webp',
-    hero: {
-      title: 'Find Your PUBG Squad',
-      subtitle: 'Team up for tactical battle royale dominance',
-      description: 'Connect with strategic players who understand positioning, rotations, and tactical gameplay. Build your perfect PUBG squad.',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Tactical Team Building',
-        description: 'Find players who excel at different aspects: sniping, support, assault, and strategy'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Strategic Communication',
-        description: 'Coordinate rotations, callouts, and tactical decisions with voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Play',
-        description: 'Team up for ranked matches and improve your squad\'s placement ratings'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Define Your Role',
-        description: 'Choose your preferred playstyle: aggressive pusher, support player, sniper, or strategist'
-      },
-      {
-        step: '2',
-        title: 'Match with Squad',
-        description: 'Get paired with players who complement your tactical approach and skill level'
-      },
-      {
-        step: '3',
-        title: 'Dominate the Battlegrounds',
-        description: 'Execute tactical strategies and secure chicken dinners as a coordinated team'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is PUBG LFG?',
-        answer: 'LFG helps you find tactical teammates for PUBG matches who understand strategic gameplay and communication.'
-      },
-      {
-        question: 'How does tactical matching work?',
-        answer: 'We match you based on your preferred playstyle, weapon preferences, map knowledge, and communication skills.'
-      }
-    ]
-  },
-  'cs2': {
-    id: 'cs2',
-    name: 'Counter-Strike 2',
-    displayName: 'Counter-Strike 2',
-    slug: 'cs2',
-    color: '#F39C12',
-    image: '/images/games/cs2.webp',
-    hero: {
-      title: 'Find Your CS2 Team',
-      subtitle: 'Connect with tactical players and dominate competitive matches',
-      description: 'Join skilled players who understand CS2 strategy, economy management, and team coordination. Build your perfect 5-stack.',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Role-Based Matching',
-        description: 'Find players for specific roles: AWPer, entry fragger, support, IGL, and lurker'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Tactical Communication',
-        description: 'Coordinate strategies, callouts, and executions with integrated voice chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Rankings',
-        description: 'Team up to climb Premier rankings and improve your team rating'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Choose Your Role',
-        description: 'Select your preferred role and positions you like to play on different maps'
-      },
-      {
-        step: '2',
-        title: 'Match with Players',
-        description: 'Get matched with players who complement your role and have similar skill levels'
-      },
-      {
-        step: '3',
-        title: 'Execute Strategies',
-        description: 'Coordinate tactics, manage economy, and execute precise strategies as a team'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is CS2 LFG?',
-        answer: 'LFG helps you find teammates for Counter-Strike 2 competitive matches instead of solo queuing with random players.'
-      },
-      {
-        question: 'How does role matching work?',
-        answer: 'We match you based on your preferred roles, map preferences, skill level, and communication style to create balanced teams.'
-      }
-    ]
-  },
-  'rocket-league': {
-    id: 'rocket-league',
-    name: 'Rocket League',
-    displayName: 'Rocket League',
-    slug: 'rocket-league',
-    color: '#E74C3C',
-    image: '/images/games/rocketleague.webp',
-    hero: {
-      title: 'Find Your Rocket League Team',
-      subtitle: 'Connect with skilled players and score amazing goals together',
-      description: 'Team up with players who understand rotation, positioning, and aerial mechanics. Build your championship team.',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Playstyle Matching',
-        description: 'Find teammates who complement your rotation style and mechanical skill level'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Team Coordination',
-        description: 'Coordinate rotations, passes, and plays with voice chat and quick chat'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Ranks',
-        description: 'Team up to climb competitive ranks from Bronze to Grand Champion'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Set Your Playstyle',
-        description: 'Choose your preferred position, mechanical skills, and what game modes you enjoy'
-      },
-      {
-        step: '2',
-        title: 'Match with Teammates',
-        description: 'Get paired with players who have complementary skills and similar competitive goals'
-      },
-      {
-        step: '3',
-        title: 'Score Together',
-        description: 'Execute perfect rotations, amazing passes, and coordinate team plays for victory'
-      }
-    ],
-    faq: [
-      {
-        question: 'What is Rocket League LFG?',
-        answer: 'LFG helps you find teammates for Rocket League competitive matches who understand rotation, positioning, and team play.'
-      },
-      {
-        question: 'How does playstyle matching work?',
-        answer: 'We match you based on your mechanical skill level, preferred positions, rotation style, and competitive goals.'
-      }
+      { question: 'What is Valorant LFG?', answer: 'LFG helps Valorant players find teammates instead of solo queuing. You can find players who complement your agent preferences and communication style.' },
+      { question: 'How does agent matching work?', answer: 'We match you based on your agent preferences, role flexibility, communication style, and rank to create balanced team compositions.' }
     ]
   }
-};
-
-// Get detailed game information based on name
-function getGameDetails(gameName: string) {
-  return games[gameName as keyof typeof games] || {
-    id: gameName,
-    name: gameName,
-    displayName: gameName,
-    slug: gameName,
-    color: '#8B5CF6',
-    image: `/images/games/${gameName}.webp`,
-    hero: {
-      title: `Find Your ${gameName} Team`,
-      subtitle: 'Connect with skilled players and dominate together',
-    },
-    features: [
-      {
-        icon: Users,
-        title: 'Smart Matching',
-        description: 'Get matched with players based on your skill level and playstyle'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Team Communication',
-        description: 'Built-in voice chat and messaging to coordinate strategies'
-      },
-      {
-        icon: Trophy,
-        title: 'Competitive Play',
-        description: 'Find teammates at your skill level to climb ranked together'
-      }
-    ],
-    howItWorks: [
-      {
-        step: '1',
-        title: 'Set Your Preferences',
-        description: 'Tell us your playstyle and what you\'re looking for in teammates'
-      },
-      {
-        step: '2',
-        title: 'Get Matched',
-        description: 'Our algorithm finds players who complement your style'
-      },
-      {
-        step: '3',
-        title: 'Play Together',
-        description: 'Join your new team and dominate the competition'
-      }
-    ],
-    faq: [
-      {
-        question: `What is ${gameName} LFG?`,
-        answer: `LFG helps you find teammates for ${gameName} matches instead of playing with random players.`
-      }
-    ]
-  };
 }
 
-export async function generateStaticParams() {
-  const games = await getAllGames();
-  return games.map((game) => ({
-    slug: game.slug,
-  }));
+function getGameDetails(slug: string, gameName: string) {
+  return gameDetails[slug] || {
+    hero: { title: 'Find Your', titleHighlight: gameName, titleSuffix: 'Team', subtitle: 'Connect with skilled players and dominate together' },
+    features: [
+      { icon: Users, title: 'Smart Matching', description: 'Get matched with players based on your skill level and playstyle' },
+      { icon: MessageCircle, title: 'Team Communication', description: 'Built-in voice chat and messaging to coordinate strategies' },
+      { icon: Trophy, title: 'Competitive Play', description: 'Find teammates at your skill level to climb ranked together' }
+    ],
+    howItWorks: [
+      { step: '01', title: 'Set Your Preferences', desc: 'Tell us your playstyle and what you\'re looking for in teammates' },
+      { step: '02', title: 'Get Matched', desc: 'Our algorithm finds players who complement your style' },
+      { step: '03', title: 'Play Together', desc: 'Join your new team and dominate the competition' }
+    ],
+    faq: [
+      { question: `What is ${gameName} LFG?`, answer: `LFG helps you find teammates for ${gameName} matches instead of playing with random players.` }
+    ]
+  }
 }
 
 interface GamePageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>
 }
 
-export default async function GamePage({ params }: GamePageProps) {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
+export default function GamePage({ params }: GamePageProps) {
+  const [game, setGame] = useState<any>(null)
+  const [details, setDetails] = useState<any>(null)
 
-  if (!game) {
-    notFound();
+  useEffect(() => {
+    async function loadData() {
+      const { slug } = await params
+      const { getGameBySlug } = await import('@/lib/games')
+      const gameData = await getGameBySlug(slug)
+
+      if (!gameData) {
+        notFound()
+      }
+
+      setGame(gameData)
+      setDetails(getGameDetails(slug, gameData.display_name))
+    }
+    loadData()
+  }, [params])
+
+  if (!game || !details) {
+    return null
   }
 
-  // Get detailed game information (this could be moved to database in the future)
-  const gameDetails = getGameDetails(game.name);
-
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background selection:bg-primary selection:text-white">
       {/* Hero Section */}
-      <section className="gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-transparent to-black/30" />
-        <div className="container mx-auto px-4 py-20 relative z-10">
+      <section className="relative min-h-[70vh] flex items-center pt-24 overflow-hidden bg-background">
+        {/* Background Elements */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-accent/10 rounded-full blur-[120px] -z-10"></div>
+
+        {/* Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#202020_1px,transparent_1px),linear-gradient(to_bottom,#202020_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] -z-10 opacity-20"></div>
+
+        <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Badge className="mb-6 bg-primary/20 text-primary border-primary/30">
-                🎮 LFG - Looking for Group
-              </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent">
-                {gameDetails.hero.title}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6 uppercase tracking-wider"
+              >
+                <Gamepad2 size={12} />
+                LFG - Looking for Group
+              </motion.div>
+
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
+                {details.hero.titleHighlight ? (
+                  <>
+                    {details.hero.title.includes('.') ? (
+                      details.hero.title.split('.').filter(Boolean).map((part: string, idx: number) => (
+                        <span key={idx}>
+                          {part.trim()}
+                          <br />
+                        </span>
+                      ))
+                    ) : (
+                      <>
+                        {details.hero.title}
+                        <br />
+                      </>
+                    )}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                      {details.hero.titleHighlight.toUpperCase()}
+                    </span>
+                    {details.hero.titleSuffix && (
+                      <>
+                        <br />
+                        {details.hero.titleSuffix.toUpperCase()}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {details.hero.title.split(' ').slice(0, -2).join(' ')}<br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                      {details.hero.title.split(' ').slice(-2).join(' ').toUpperCase()}
+                    </span>
+                  </>
+                )}
               </h1>
-              <p className="text-xl mb-4 text-muted-foreground">
-                {gameDetails.hero.subtitle}
+
+              <p className="text-muted-foreground text-lg mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-6">
+                {details.hero.subtitle}
               </p>
 
-              <div className="max-w-md mx-auto sm:mx-0">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <DownloadButton />
               </div>
-            </div>
-            
-            <div className="relative">
-              <div className="relative aspect-square max-w-md mx-auto">
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative flex justify-center"
+            >
+              <div className="relative max-w-lg mx-auto">
                 <Image
                   src={game.image || '/placeholder.svg'}
                   alt={game.display_name}
-                  fill
-                  className="object-cover rounded-2xl shadow-2xl"
+                  width={600}
+                  height={800}
+                  className="rounded-3xl shadow-2xl w-full h-auto"
+                  style={{ objectFit: 'contain' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Choose Gamerplug for {game.display_name}?</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+      <section className="py-32 relative bg-background overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
+            >
+              Features
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
+            >
+              Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GamerPlug?</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-muted-foreground max-w-2xl mx-auto text-lg"
+            >
               Discover features designed specifically for {game.display_name} players
-            </p>
+            </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {gameDetails.features.map((feature, index) => (
-              <Card key={index} className="gradient-card border-border/50 hover:border-primary/50 transition-all duration-300 group">
-                <CardContent className="p-8 text-center">
-                  <div className="mb-6 relative">
-                    <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                      <feature.icon className="h-8 w-8 text-primary" />
-                    </div>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                </CardContent>
-              </Card>
+          <div className="grid md:grid-cols-3 gap-6">
+            {details.features.map((feature: any, idx: number) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                className="p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 group cursor-default relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                <div className="w-14 h-14 bg-secondary rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 border border-border group-hover:border-primary shadow-lg relative z-10 text-primary">
+                  <feature.icon size={28} />
+                </div>
+
+                <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors relative z-10">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-gray-300 transition-colors relative z-10">{feature.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-20 px-4 bg-card/30">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">How It Works</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+      {/* How It Works */}
+      <section className="py-32 bg-secondary/20 relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div>
+              <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">
+                How It <br/><span className="text-primary">Works</span>
+              </h2>
+            </div>
+            <p className="text-muted-foreground max-w-md pb-2">
               Finding your {game.display_name} team has never been easier
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-            {gameDetails.howItWorks.map((step, index) => (
-              <div key={index} className="text-center">
-                <div 
-                  className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center text-white font-bold text-2xl"
-                  style={{ background: `linear-gradient(135deg, ${game.color || '#8B5CF6'}, ${game.color || '#8B5CF6'}dd)` }}
-                >
-                  {step.step}
+          <div className="grid md:grid-cols-3 gap-8 relative z-10">
+            {details.howItWorks.map((step: any, idx: number) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+                className="relative group"
+              >
+                <div className="bg-card border border-border p-10 rounded-3xl h-full hover:border-primary transition-colors duration-500 relative overflow-hidden">
+                  <span className="absolute -bottom-4 -right-4 text-9xl font-black text-secondary/40 group-hover:text-primary/10 transition-colors select-none">
+                    {step.step}
+                  </span>
+
+                  <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-primary font-bold border border-border mb-8 group-hover:bg-primary group-hover:text-white transition-colors">
+                    {step.step}
+                  </div>
+
+                  <h3 className="text-2xl font-bold mb-4 text-foreground">{step.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{step.description}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
       {/* FAQ Section */}
-      <section className="py-20 px-4 bg-card/30">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to know about finding {game.display_name} teammates
-            </p>
+      <section className="py-32 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
+            >
+              FAQ
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
+            >
+              Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Questions</span>
+            </motion.h2>
           </div>
 
           <div className="grid gap-6 max-w-4xl mx-auto">
-            {gameDetails.faq.map((item, index) => (
-              <Card key={index} className="gradient-card border-border/50">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3 text-primary">{item.question}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
-                </CardContent>
-              </Card>
+            {details.faq.map((item: any, idx: number) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-card border border-border p-8 rounded-2xl hover:border-primary/50 transition-all duration-300"
+              >
+                <h3 className="text-lg font-bold mb-3 text-primary">{item.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/30" />
-        <div className="container mx-auto text-center relative z-10">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">Ready to Find Your {game.display_name} Team?</h2>
-            <p className="text-xl mb-8 text-muted-foreground">
-              Join thousands of players who've already found their perfect teammates
-            </p>
-            <div className="max-w-md mx-auto">
-              <DownloadButton />
+      <section className="py-24 px-4">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative rounded-[2.5rem] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent"></div>
+            <div className="absolute inset-[2px] bg-background rounded-[2.4rem]"></div>
+
+            <div className="bg-card/50 backdrop-blur-xl rounded-[2.4rem] p-12 md:p-24 text-center relative overflow-hidden z-10 m-[2px]">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-primary/5 blur-3xl -z-10"></div>
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent/20 blur-[100px] rounded-full"></div>
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/20 blur-[100px] rounded-full"></div>
+
+              <div className="relative z-10 max-w-3xl mx-auto">
+                <h2 className="text-4xl md:text-7xl font-black mb-8 text-foreground uppercase italic leading-none">
+                  Ready to Find Your<br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{game.display_name.toUpperCase()}</span> Team?
+                </h2>
+                <p className="text-muted-foreground text-xl mb-10">
+                  Join thousands of players who've already found their perfect teammates
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <DownloadButton />
+                </div>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
+
+      <Footer />
     </div>
-  );
+  )
 }

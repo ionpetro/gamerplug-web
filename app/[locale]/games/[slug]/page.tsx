@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 }
 
 export default function LocalizedGamePage(props: any) {
-  return GamePage(props as any);
+  return <GamePage {...props} />;
 }
 
 

@@ -77,25 +77,30 @@ function transformGameForDisplay(game: Game): GameWithDetails {
 
 // Helper function to get the correct image path with format fallback
 function getGameImagePath(iconName: string): string {
-  // Map of game names to their image files with extensions
+  const normalized = iconName
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/_/g, '-');
+
+  // Try multiple image formats (webp, jpg, png)
+  // The actual format will be determined at runtime
   const imageMap: Record<string, string> = {
     'rocket-league': 'rocket-league.jpg',
     'rocketleague': 'rocketleague.webp',
     'battlefield-6': 'battlefield-6.jpg',
     'marvel-rivals': 'marvel-rivals.jpg',
     'call-of-duty': 'call-of-duty.png',
-    'apex-legends': 'apex.webp',
+    'apex-legends': 'apex-legends.jpg',
     'overwatch-2': 'overwatch2.webp',
     'league-of-legends': 'lol.webp',
     'pubg': 'pubg.webp',
-    'fortnite': 'fortnite.webp',
+    'fortnite': 'fortnite.jpg',
     'cs2': 'cs2.webp',
     'counter-strike-2': 'cs2.webp',
     'valorant': 'valorant.webp',
   };
 
-  // Return mapped image or fallback to webp
-  const imagePath = imageMap[iconName] || `${iconName}.webp`;
+  const imagePath = imageMap[normalized] || `${normalized}.webp`;
   return `/images/games/${imagePath}`;
 }
 

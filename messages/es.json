@@ -1,8 +1,8 @@
 {
   "nav": {
-    "games": "Juegos",
+    "games": "JUEGOS",
     "contact": "Contáctanos",
-    "gamesLabelMobile": "Juegos",
+    "gamesLabelMobile": "JUEGOS",
     "switchTo": {
       "en": "EN",
       "es": "ES"
@@ -13,11 +13,17 @@
     "viewAll": "Ver todos los juegos"
   },
   "footer": {
-    "tagline": "Conectando gamers, construyendo comunidades, creando leyendas.",
-    "privacy": "Política de Privacidad",
+    "tagline": "La plataforma social definitiva para gamers. Encuentra tu escuadrón, construye tu comunidad, y nunca juegues solo de nuevo.",
+    "company": "Compañía",
+    "aboutUs": "Sobre Nosotros",
+    "careers": "Carreras",
+    "blog": "Blog",
+    "pressKit": "Kit de Prensa",
+    "support": "Soporte",
     "terms": "Términos del Servicio",
-    "contact": "Contacto",
-    "copyright": "Todos los derechos reservados.",
+    "privacy": "Política de Privacidad",
+    "cookies": "Cookies",
+    "copyright": "GamerPlug Inc.",
     "patentPending": "Patente en trámite"
   },
   "home": {
@@ -45,8 +51,8 @@
     "ctaFoot": "Disponible en iOS y Android • Descarga gratuita"
   },
   "download": {
-    "iosButton": "Descargar en iOS",
-    "androidButton": "Descargar en Android"
+    "iosButton": "Descargar para iOS",
+    "androidButton": "Descargar para Android"
   },
   "games": {
     "title": "Juegos Populares",
@@ -79,6 +85,64 @@
     "age": "Edad: {age}",
     "altProfile": "Perfil",
     "altClipThumb": "Miniatura del clip"
+  },
+  "landing": {
+    "header": {
+      "features": "Características",
+      "howItWorks": "Cómo Funciona",
+      "downloadApp": "Descargar App",
+      "downloadNow": "Descargar Ahora"
+    },
+    "hero": {
+      "badge": "La App Social #1 Real para Gamers",
+      "title1": "DESLIZA.",
+      "title2": "HAZ MATCH.",
+      "title3": "A JUGAR.",
+      "subtitle": "Conecta a tu jugador ideal.",
+      "gamersOnline": "gamers en línea ahora"
+    },
+    "features": {
+      "sectionLabel": "Características Clave",
+      "title": "Mejora Tu",
+      "titleHighlight": "Lobby",
+      "subtitle": "Hemos equipado GamerPlug con todo lo que necesitas para dominar la competencia y encontrar a tu gente.",
+      "aiMatching": "Emparejamiento con IA",
+      "aiMatchingDesc": "Nuestro algoritmo analiza KD, tasa de victorias y estilo de juego para emparejarte con compañeros que realmente complementan tu forma de jugar.",
+      "platformSync": "Sincronización de Plataformas",
+      "platformSyncDesc": "Conecta sin problemas tus cuentas de Steam, PSN y Xbox para mostrar tus estadísticas y rangos verificados.",
+      "squadBuilder": "Constructor de Escuadrones",
+      "squadBuilderDesc": "Crea grupos permanentes, organiza equipos de torneos, o simplemente encuentra un 5to para una sesión rápida rankeada.",
+      "toxicFree": "Zona Libre de Toxicidad",
+      "toxicFreeDesc": "Sistema de reputación impulsado por la comunidad asegura que juegues con gente tranquila. Tolerancia cero para los que abandonan partidas.",
+      "lowLatency": "Voz de Baja Latencia",
+      "lowLatencyDesc": "Planea tus estrategias antes de lanzar el juego con nuestro chat de voz y texto integrado de alta fidelidad.",
+      "tournaments": "Torneos Semanales",
+      "tournamentsDesc": "Únete a torneos exclusivos de la comunidad directamente desde la app. Gana premios, skins y derechos de alardeo."
+    },
+    "howItWorks": {
+      "title1": "Cómo",
+      "title2": "Funciona",
+      "subtitle": "Tres simples pasos para dejar de jugar con randoms y empezar a ganar con un equipo coordinado.",
+      "step1Title": "Crear Perfil",
+      "step1Desc": "Vincula tus estadísticas, establece tu horario y elige tus títulos.",
+      "step2Title": "Desliza y Haz Match",
+      "step2Desc": "Explora recomendaciones personalizadas. Desliza a la derecha para formar escuadrón.",
+      "step3Title": "Domina",
+      "step3Desc": "Chatea, forma grupo y escala las tablas de clasificación juntos."
+    },
+    "cta": {
+      "title1": "¿Listo para unirte",
+      "title2": "al",
+      "titleHighlight": "ESCUADRÓN?",
+      "subtitle": "Únete a miles de gamers que están haciendo match, chateando y ganando juntos ahora mismo."
+    },
+    "phone": {
+      "live": "EN VIVO",
+      "profileDesc": "Jugador Inmortal 3 de Valorant. Buscando duo o trío relajado. Sin toxicidad por favor.",
+      "rankMatch": "Match de Rango",
+      "topPlayer": "Jugador Top 0.1%",
+      "newMessage": "Nuevo Mensaje",
+      "duoMessage": "\"¿Duo para ranked?\""
+    }
   }
 }
-

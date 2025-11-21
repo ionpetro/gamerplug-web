@@ -66,7 +66,7 @@ export default function VideoModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full h-full max-w-4xl max-h-full flex items-center justify-center p-4">
+      <div className="relative w-full h-full max-w-full max-h-full flex items-center justify-center p-4">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -103,10 +103,10 @@ export default function VideoModal({
         )}
 
         {/* Video Container */}
-        <div className="relative w-full max-w-3xl aspect-video bg-black rounded-lg overflow-hidden">
+        <div className="relative h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] aspect-[9/16] max-w-[calc(100vw-3rem)] bg-black rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
           <video
             ref={videoRef}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
             controls
             autoPlay
             playsInline

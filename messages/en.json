@@ -1,8 +1,8 @@
 {
   "nav": {
-    "games": "Games",
+    "games": "GAMES",
     "contact": "Contact Us",
-    "gamesLabelMobile": "Games",
+    "gamesLabelMobile": "GAMES",
     "switchTo": {
       "en": "EN",
       "es": "ES"
@@ -13,11 +13,17 @@
     "viewAll": "View All Games"
   },
   "footer": {
-    "tagline": "Connecting gamers, building communities, creating legends.",
-    "privacy": "Privacy Policy",
+    "tagline": "The ultimate social platform for gamers. Find your squad, build your community, and never game alone again.",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "careers": "Careers",
+    "blog": "Blog",
+    "pressKit": "Press Kit",
+    "support": "Support",
     "terms": "Terms of Service",
-    "contact": "Contact",
-    "copyright": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookies",
+    "copyright": "GamerPlug Inc.",
     "patentPending": "Patent Pending"
   },
   "home": {
@@ -45,8 +51,8 @@
     "ctaFoot": "Free to download"
   },
   "download": {
-    "iosButton": "Download on iOS",
-    "androidButton": "Download on Android"
+    "iosButton": "Download for iOS",
+    "androidButton": "Download for Android"
   },
   "games": {
     "title": "Popular Games",
@@ -79,6 +85,64 @@
     "age": "Age: {age}",
     "altProfile": "Profile",
     "altClipThumb": "Clip thumbnail"
+  },
+  "landing": {
+    "header": {
+      "features": "Features",
+      "howItWorks": "How it Works",
+      "downloadApp": "Download App",
+      "downloadNow": "Download Now"
+    },
+    "hero": {
+      "badge": "The #1 Real Social App for Gamers",
+      "title1": "SWIPE.",
+      "title2": "MATCH.",
+      "title3": "GAME ON.",
+      "subtitle": "Get your ideal player plugged in.",
+      "gamersOnline": "gamers online now"
+    },
+    "features": {
+      "sectionLabel": "Key Features",
+      "title": "Level Up Your",
+      "titleHighlight": "Lobby",
+      "subtitle": "We've packed GamerPlug with everything you need to dominate the competition and find your people.",
+      "aiMatching": "AI-Powered Matching",
+      "aiMatchingDesc": "Our algorithm analyzes KD, win rate, and playstyle to pair you with teammates who actually complement your gameplay.",
+      "platformSync": "Platform Sync",
+      "platformSyncDesc": "Seamlessly connect your Steam, PSN, and Xbox accounts to show off your verified stats and ranks.",
+      "squadBuilder": "Squad Builder",
+      "squadBuilderDesc": "Create permanent parties, organize tournament teams, or just find a 5th for a quick ranked session.",
+      "toxicFree": "Toxic-Free Zone",
+      "toxicFreeDesc": "Community driven reputation system ensures you play with chill people. Zero tolerance for rage-quitters.",
+      "lowLatency": "Low-Latency Voice",
+      "lowLatencyDesc": "Plan your strategies before you even launch the game with our built-in high fidelity voice and text chat.",
+      "tournaments": "Weekly Tournaments",
+      "tournamentsDesc": "Join exclusive community tournaments directly through the app. Win prizes, skins, and bragging rights."
+    },
+    "howItWorks": {
+      "title1": "How It",
+      "title2": "Works",
+      "subtitle": "Three simple steps to stop playing with randoms and start winning with a coordinated team.",
+      "step1Title": "Create Profile",
+      "step1Desc": "Link your stats, set your schedule, and choose your titles.",
+      "step2Title": "Swipe & Match",
+      "step2Desc": "Browse tailored recommendations. Swipe right to squad up.",
+      "step3Title": "Dominate",
+      "step3Desc": "Chat, party up, and climb the leaderboards together."
+    },
+    "cta": {
+      "title1": "Ready to join",
+      "title2": "the",
+      "titleHighlight": "SQUAD?",
+      "subtitle": "Join thousands of gamers who are matching, chatting, and winning together right now."
+    },
+    "phone": {
+      "live": "LIVE",
+      "profileDesc": "Immortal 3 Valorant player. Looking for a laid back duo or trio. No toxicity pls.",
+      "rankMatch": "Rank Match",
+      "topPlayer": "Top 0.1% Player",
+      "newMessage": "New Message",
+      "duoMessage": "\"Duo for ranked?\""
+    }
   }
 }
-

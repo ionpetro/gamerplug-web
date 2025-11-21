@@ -6,9 +6,84 @@ import { useParams } from 'next/navigation';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
 import VideoModal from '@/components/VideoModal';
 import { Footer } from '@/components/Footer';
+import { AlertTriangle, ArrowLeft } from 'lucide-react';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
+}
+
+const SkeletonLine = ({ className = "" }: { className?: string }) => (
+  <div className={`bg-white/10 rounded ${className}`} />
+);
+
+function ProfileSkeleton() {
+  const clipSkeletons = Array.from({ length: 9 });
+  const gameSkeletons = Array.from({ length: 3 });
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="w-full bg-black flex-1">
+        <div className="container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-4 xl:col-span-3">
+              <div className="flex flex-col items-center mb-5 lg:items-start lg:sticky lg:top-8 w-full">
+                <div className="mb-4 lg:mb-6 animate-pulse">
+                  <div className="w-[100px] h-[100px] lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full bg-white/10" />
+                </div>
+                <div className="text-center lg:text-left w-full space-y-3 animate-pulse">
+                  <SkeletonLine className="h-6 w-2/3 mx-auto lg:mx-0" />
+                  <SkeletonLine className="h-4 w-1/3 mx-auto lg:mx-0" />
+                  <SkeletonLine className="h-4 w-1/2 mx-auto lg:mx-0" />
+                  <SkeletonLine className="h-20 w-full mx-auto lg:mx-0" />
+                </div>
+
+                <div className="hidden lg:block w-full mt-8 space-y-3">
+                  <div className="py-4 px-4 bg-white/5 rounded-lg animate-pulse">
+                    <SkeletonLine className="h-5 w-1/2" />
+                    <SkeletonLine className="h-4 w-1/3 mt-2" />
+                  </div>
+                  {gameSkeletons.map((_, idx) => (
+                    <div key={`sidebar-game-${idx}`} className="p-4 bg-white/5 rounded-lg animate-pulse">
+                      <SkeletonLine className="h-4 w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-8 xl:col-span-9">
+              <div className="mb-5 lg:hidden space-y-3">
+                <div className="py-4 px-4 bg-white/5 rounded-lg animate-pulse">
+                  <SkeletonLine className="h-5 w-1/3" />
+                  <SkeletonLine className="h-4 w-1/4 mt-2" />
+                </div>
+                {gameSkeletons.map((_, idx) => (
+                  <div key={`mobile-game-${idx}`} className="p-4 bg-white/5 rounded-lg animate-pulse">
+                    <SkeletonLine className="h-4 w-1/2" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex-1">
+                <SkeletonLine className="h-6 w-20 mb-4 lg:mb-6 animate-pulse" />
+                <div className="grid grid-cols-3 gap-2 lg:grid-cols-5 xl:grid-cols-6 lg:gap-4">
+                  {clipSkeletons.map((_, idx) => (
+                    <div
+                      key={`clip-skeleton-${idx}`}
+                      className="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden relative animate-pulse"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
 }
 
 export default function UserProfilePage() {
@@ -145,33 +220,37 @@ export default function UserProfilePage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF3B30] mb-4"></div>
-            <p className="text-white/70">Loading profile...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   if (error || !user) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">😔</div>
-            <h2 className="text-2xl font-bold mb-2">User not found</h2>
-            <p className="text-white/70 mb-6">{error || 'The user you\'re looking for doesn\'t exist.'}</p>
-            <button
-              onClick={() => window.history.back()}
-              className="bg-[#FF3B30] text-white px-6 py-3 rounded-lg hover:bg-[#FF3B30]/80 transition-colors"
-            >
-              Go Back
-            </button>
+      <div className="relative min-h-screen bg-black text-white flex flex-col overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
+          <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
+        </div>
+
+        <div className="relative flex-1 flex items-center justify-center px-6 py-24">
+          <div className="relative max-w-md w-full">
+            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-primary/25 via-transparent to-accent/20 blur-2xl"></div>
+            <div className="relative rounded-[2rem] border border-white/10 bg-card/70 backdrop-blur-xl p-10 text-center shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
+              <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/40 bg-primary/10 text-primary shadow-[0_0_30px_rgba(220,38,38,0.35)]">
+                <AlertTriangle size={36} strokeWidth={1.5} />
+              </div>
+              <h2 className="text-3xl font-black uppercase tracking-tight mb-3">User Not Found</h2>
+              <p className="text-white/70 leading-relaxed mb-8">
+                {error || 'The gamer profile you\'re looking for hasn\'t joined the lobby yet.'}
+              </p>
+              <button
+                onClick={() => window.history.back()}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-semibold tracking-wide uppercase shadow-[0_15px_40px_rgba(220,38,38,0.45)] transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                <ArrowLeft size={18} />
+                Go Back
+              </button>
+            </div>
           </div>
         </div>
         <Footer />
@@ -183,7 +262,7 @@ export default function UserProfilePage() {
     <div className="min-h-screen bg-black text-white flex flex-col">
       <div className="w-full bg-black flex-1">
         
-        <div className="pt-12 px-12 pb-12 lg:px-12 lg:pb-12 max-w-screen-xl mx-auto">
+        <div className="container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Profile Info */}
             <div className="lg:col-span-4 xl:col-span-3">
@@ -231,44 +310,54 @@ export default function UserProfilePage() {
 
                 {/* Games Section - Desktop Sidebar */}
                 <div className="hidden lg:block w-full mt-8">
-                  <div className="w-full flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg mb-3">
-                    <div className="flex items-center">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="mr-3">
-                        <rect x="2" y="7" width="20" height="10" rx="2"/>
-                        <path d="M6 12h4"/>
-                        <path d="M8 10v4"/>
-                        <circle cx="16" cy="12" r="1"/>
-                        <circle cx="18" cy="10" r="1"/>
-                        <circle cx="18" cy="14" r="1"/>
-                      </svg>
-                      <div className="text-left">
-                        <div className="text-base font-semibold text-white">Games</div>
-                        <div className="text-sm text-white/70">{user.user_games?.length || 0} games</div>
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-5 py-4 mb-4">
+                    <div className="absolute inset-0 opacity-40 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
+                    <div className="relative flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/40 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(220,38,38,0.35)]">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="2" y="7" width="20" height="10" rx="2"/>
+                          <path d="M6 12h4"/>
+                          <path d="M8 10v4"/>
+                          <circle cx="16" cy="12" r="1"/>
+                          <circle cx="18" cy="10" r="1"/>
+                          <circle cx="18" cy="14" r="1"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-white/60">Games</p>
+                        <p className="text-xl font-semibold text-white">{user.user_games?.length || 0} in rotation</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Games List */}
                   {user.user_games && user.user_games.length > 0 && (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {user.user_games.slice(0, 5).map((userGame) => (
-                        <div key={userGame.id} className="flex items-center p-3 bg-white/5 rounded-lg">
-                          <div className="w-8 h-8 bg-white/10 rounded mr-3 flex items-center justify-center">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2">
-                              <rect x="2" y="7" width="20" height="10" rx="2"/>
-                              <path d="M6 12h4"/>
-                              <path d="M8 10v4"/>
-                              <circle cx="16" cy="12" r="1"/>
-                              <circle cx="18" cy="10" r="1"/>
-                              <circle cx="18" cy="14" r="1"/>
-                            </svg>
+                        <div
+                          key={userGame.id}
+                          className="relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 px-4 py-3 flex items-center justify-between hover:bg-white/10 transition-colors"
+                        >
+                          <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-primary/10 to-transparent" />
+                          <div className="relative flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-primary">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="2" y="7" width="20" height="10" rx="2"/>
+                                <path d="M6 12h4"/>
+                                <path d="M8 10v4"/>
+                                <circle cx="16" cy="12" r="1"/>
+                                <circle cx="18" cy="10" r="1"/>
+                                <circle cx="18" cy="14" r="1"/>
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="text-white font-medium">{userGame.games.display_name}</p>
+                            </div>
                           </div>
-                          <span className="text-white text-sm">{userGame.games.display_name}</span>
                         </div>
                       ))}
                       {user.user_games.length > 5 && (
-                        <div className="text-center text-white/50 text-sm">
-                          +{user.user_games.length - 5} more games
+                        <div className="text-center text-white/60 text-sm">
+                          +{user.user_games.length - 5} more loading up
                         </div>
                       )}
                     </div>
@@ -281,47 +370,55 @@ export default function UserProfilePage() {
             <div className="lg:col-span-8 xl:col-span-9">
               {/* Games Section - Mobile Only */}
               <div className="mb-5 lg:hidden">
-                <div className="w-full flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg mb-3 hover:bg-white/10 transition-colors">
-                  <div className="flex items-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="mr-3">
-                      <rect x="2" y="7" width="20" height="10" rx="2"/>
-                      <path d="M6 12h4"/>
-                      <path d="M8 10v4"/>
-                      <circle cx="16" cy="12" r="1"/>
-                      <circle cx="18" cy="10" r="1"/>
-                      <circle cx="18" cy="14" r="1"/>
-                    </svg>
-                    <div className="text-left">
-                      <div className="text-base font-semibold text-white">Games</div>
-                      <div className="text-sm text-white/70">{user.user_games?.length || 0} games</div>
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-4 py-4 mb-3">
+                  <div className="absolute inset-0 opacity-30 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
+                  <div className="relative flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="2" y="7" width="20" height="10" rx="2"/>
+                          <path d="M6 12h4"/>
+                          <path d="M8 10v4"/>
+                          <circle cx="16" cy="12" r="1"/>
+                          <circle cx="18" cy="10" r="1"/>
+                          <circle cx="18" cy="14" r="1"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/60">Games</p>
+                        <p className="text-lg font-semibold text-white">{user.user_games?.length || 0} squads</p>
+                      </div>
                     </div>
                   </div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2">
-                    <path d="m9 18 6-6-6-6"/>
-                  </svg>
                 </div>
 
-                {/* Games List - Mobile */}
                 {user.user_games && user.user_games.length > 0 && (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {user.user_games.slice(0, 3).map((userGame) => (
-                      <div key={userGame.id} className="flex items-center p-3 bg-white/5 rounded-lg">
-                        <div className="w-8 h-8 bg-white/10 rounded mr-3 flex items-center justify-center">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2">
-                            <rect x="2" y="7" width="20" height="10" rx="2"/>
-                            <path d="M6 12h4"/>
-                            <path d="M8 10v4"/>
-                            <circle cx="16" cy="12" r="1"/>
-                            <circle cx="18" cy="10" r="1"/>
-                            <circle cx="18" cy="14" r="1"/>
-                          </svg>
+                      <div
+                        key={userGame.id}
+                        className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="2" y="7" width="20" height="10" rx="2"/>
+                              <path d="M6 12h4"/>
+                              <path d="M8 10v4"/>
+                              <circle cx="16" cy="12" r="1"/>
+                              <circle cx="18" cy="10" r="1"/>
+                              <circle cx="18" cy="14" r="1"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-white text-sm font-medium">{userGame.games.display_name}</p>
+                          </div>
                         </div>
-                        <span className="text-white text-sm">{userGame.games.display_name}</span>
                       </div>
                     ))}
                     {user.user_games.length > 3 && (
-                      <div className="text-center text-white/50 text-sm">
-                        +{user.user_games.length - 3} more games
+                      <div className="text-center text-white/60 text-xs">
+                        +{user.user_games.length - 3} more queued up
                       </div>
                     )}
                   </div>
