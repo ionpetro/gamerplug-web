@@ -218,7 +218,7 @@ const Hero = () => {
             {t.landing.hero.subtitle}
           </p>
 
-          <div className="flex flex-col items-center gap-4 w-full">
+          <div className="flex flex-row justify-center gap-4">
             <DownloadButton />
           </div>
         </motion.div>
@@ -492,7 +492,7 @@ const CTASection = () => {
               <p className="text-muted-foreground text-xl mb-10">
                 {t.landing.cta.subtitle}
               </p>
-              <div className="flex flex-col items-center gap-4 w-full">
+              <div className="flex flex-row justify-center gap-4">
                 <DownloadButton />
               </div>
             </div>
