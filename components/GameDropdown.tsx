@@ -14,7 +14,8 @@ export function GameDropdown() {
   const [loading, setLoading] = useState(true)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const pathname = usePathname()
-  const { t } = useI18n()
+  const context = useI18n()
+  const t = context?.t || {}
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -70,7 +71,7 @@ export function GameDropdown() {
         href={hrefWithLocale("/games")}
         className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors"
       >
-        <span>{t.nav.games}</span>
+        <span>{t.nav?.games || 'Games'}</span>
         <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </Link>
 
@@ -84,7 +85,7 @@ export function GameDropdown() {
         <div className="absolute top-full left-0 mt-2 bg-card/95 backdrop-blur-lg border border-border/50 rounded-lg shadow-xl min-w-[280px] z-50 animate-in fade-in-0 zoom-in-95 duration-200">
           <div className="p-4">
             <div className="text-sm font-semibold text-muted-foreground mb-3 px-2">
-              {t.dropdown.popular}
+              {t.dropdown?.popular || 'Popular Games'}
             </div>
             
             {loading ? (
@@ -136,7 +137,7 @@ export function GameDropdown() {
                 href={hrefWithLocale("/games")}
                 className="block text-sm text-primary hover:text-primary/80 transition-colors font-medium"
               >
-                {t.dropdown.viewAll} →
+                {t.dropdown?.viewAll || 'View All Games'} →
               </Link>
             </div>
           </div>
