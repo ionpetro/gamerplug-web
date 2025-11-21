@@ -67,7 +67,7 @@ export default function WaitlistForm() {
           autoComplete="off"
         />
         
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
           <div className="flex-1">
             <input
               type="email"

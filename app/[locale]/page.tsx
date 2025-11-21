@@ -492,7 +492,7 @@ const CTASection = () => {
               <p className="text-muted-foreground text-xl mb-10">
                 {t.landing.cta.subtitle}
               </p>
-              <div className="flex flex-row gap-4 w-full">
+              <div className="flex flex-row gap-4 w-full justify-center">
                 <DownloadButton />
               </div>
             </div>
