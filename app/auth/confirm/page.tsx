@@ -14,15 +14,25 @@ function AuthConfirmContent() {
   useEffect(() => {
     const handleEmailConfirmation = async () => {
       const urlParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+
       const code = urlParams.get('code');
-      const error = urlParams.get('error');
-      const error_description = urlParams.get('error_description');
+      const error = urlParams.get('error') || hashParams.get('error');
+      const error_description = urlParams.get('error_description') || hashParams.get('error_description');
+      const access_token = hashParams.get('access_token');
 
       // Check for errors
       if (error) {
         setStatus('error');
         const decodedDescription = error_description ? decodeURIComponent(error_description) : '';
         setMessage(`Authentication failed: ${error}${decodedDescription ? ` - ${decodedDescription}` : ''}`);
+        return;
+      }
+
+      // Check if we already have tokens in the hash (Supabase already verified)
+      if (access_token) {
+        setStatus('success');
+        setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
         return;
       }
 
@@ -51,7 +61,7 @@ function AuthConfirmContent() {
         return;
       }
 
-      // No valid code parameter
+      // No valid parameters
       setStatus('error');
       setMessage('Invalid confirmation link. Please request a new confirmation email.');
     };
