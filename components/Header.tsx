@@ -13,7 +13,8 @@ export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { t } = useI18n()
+  const context = useI18n()
+  const t = context?.t || {}
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -82,7 +83,7 @@ export const Header = () => {
             href={hrefWithLocale("/contact")}
             className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
-            {t.nav.contact}
+            {t.nav?.contact || 'Contact'}
           </Link>
 
           {/* Language Selector */}
@@ -134,7 +135,7 @@ export const Header = () => {
                 How it Works
               </Link>
               <div>
-                <div className="text-muted-foreground font-medium mb-2">{t.nav.games}</div>
+                <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
                 <MobileGameMenu onClose={() => setIsMobileMenuOpen(false)} />
               </div>
               <Link
