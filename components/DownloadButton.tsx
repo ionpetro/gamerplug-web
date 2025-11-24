@@ -24,7 +24,7 @@ export default function DownloadButton() {
   }
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full justify-center">
       {/* Mobile: Single button to /download page */}
       <Link href={hrefWithLocale("/download")} className="sm:hidden w-full">
         <Button
@@ -35,7 +35,7 @@ export default function DownloadButton() {
       </Link>
 
       {/* Desktop: iOS and Android store buttons */}
-      <div className="hidden sm:flex flex-row gap-4">
+      <div className="hidden sm:flex flex-row gap-4 justify-center">
         <a
           href="https://apps.apple.com/us/app/gamerplug/id6752116866"
           target="_blank"
