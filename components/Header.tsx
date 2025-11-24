@@ -152,7 +152,13 @@ export const Header = () => {
               >
                 {locale === 'en' ? 'ES' : 'EN'}
               </Link>
-              <button className="w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200">Download Now</button>
+              <Link
+                href={hrefWithLocale("/download")}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
+              >
+                Download Now
+              </Link>
             </div>
           </motion.div>
         )}

@@ -94,7 +94,7 @@ export function GameDropdown() {
               </div>
             ) : (
               <div className="space-y-1">
-                {games.map((game) => (
+                {games.slice(0, 3).map((game) => (
                   <Link
                     key={game.id}
                     href={hrefWithLocale(`/games/${game.slug}`)}
@@ -193,7 +193,7 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
           <div className="text-xs font-semibold text-muted-foreground px-2 mt-3 mb-2">
             Popular Games
           </div>
-          {games.slice(0, 6).map((game) => (
+          {games.slice(0, 3).map((game) => (
             <Link
               key={game.id}
               href={hrefWithLocale(`/games/${game.slug}`)}
