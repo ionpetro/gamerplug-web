@@ -121,7 +121,7 @@ const Hero = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GAME ON.</span>
           </h1>
 
-          <p className="text-muted-foreground text-lg mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-6">
+          <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-6">
             Get your ideal player plugged in.
           </p>
 

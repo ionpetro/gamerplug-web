@@ -28,7 +28,7 @@ export default function DownloadButton() {
       {/* Mobile: Single button to /download page */}
       <Link href={hrefWithLocale("/download")} className="sm:hidden w-full">
         <Button
-          className="w-full gradient-accent text-white font-sans font-extrabold tracking-tight px-8 py-[14px] whitespace-nowrap h-[60px] hover:opacity-90 hover:scale-105 transition-all duration-200 cursor-pointer flex justify-center items-center"
+          className="w-full text-lg gradient-accent text-white font-sans font-extrabold tracking-tight px-8 py-[14px] whitespace-nowrap h-[60px] hover:opacity-90 hover:scale-105 transition-all duration-200 cursor-pointer flex justify-center items-center"
         >
           {downloadText.downloadNow}
         </Button>

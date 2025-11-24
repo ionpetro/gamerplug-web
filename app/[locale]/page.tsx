@@ -208,13 +208,13 @@ const Hero = () => {
             {t.landing.hero.badge}
           </motion.div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
+          <h1 className="text-8xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
             {t.landing.hero.title1}<br />
             {t.landing.hero.title2}<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{t.landing.hero.title3}</span>
           </h1>
 
-          <p className="text-muted-foreground text-sm md:text-base lg:text-lg mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
+          <p className="text-muted-foreground text-lg mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
             {t.landing.hero.subtitle}
           </p>
 
@@ -228,7 +228,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, type: "spring", bounce: 0.2 }}
-          className="relative flex justify-center z-10 scale-[0.6] sm:scale-75 lg:scale-90"
+          className="relative flex justify-center z-10 scale-90 sm:scale-75 lg:scale-90"
         >
           <div className="relative w-[340px] h-[680px] bg-background border-[8px] border-secondary rounded-[3rem] shadow-2xl overflow-hidden animate-float">
             {/* Notch */}
