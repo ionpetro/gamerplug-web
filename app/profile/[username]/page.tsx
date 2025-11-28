@@ -7,6 +7,7 @@ import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
 import VideoModal from '@/components/VideoModal';
 import { Footer } from '@/components/Footer';
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import LoLStats from '@/components/LoLStats';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
@@ -22,8 +23,13 @@ function ProfileSkeleton() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="w-full bg-black flex-1">
-        <div className="container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
+      <div className="relative w-full flex-1">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
+          <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
+        </div>
+        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-4 xl:col-span-3">
               <div className="flex flex-col items-center mb-5 lg:items-start lg:sticky lg:top-8 w-full">
@@ -260,9 +266,13 @@ export default function UserProfilePage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="w-full bg-black flex-1">
-        
-        <div className="container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
+      <div className="relative w-full flex-1">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
+          <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
+        </div>
+        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Profile Info */}
             <div className="lg:col-span-4 xl:col-span-3">
@@ -291,7 +301,7 @@ export default function UserProfilePage() {
                   <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-3">
                     @{user.gamertag}
                   </h2>
-                  {user.platform && user.platform.length > 0 && (
+                  {user.platform && Array.isArray(user.platform) && user.platform.length > 0 && (
                     <div className="flex gap-2 justify-center lg:justify-start flex-wrap mb-3">
                       {user.platform.map((platform) => (
                         <span
@@ -319,54 +329,81 @@ export default function UserProfilePage() {
                 <div className="hidden lg:block w-full mt-8">
                   <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-5 py-4 mb-4">
                     <div className="absolute inset-0 opacity-40 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
-                    <div className="relative flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/40 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(220,38,38,0.35)]">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="2" y="7" width="20" height="10" rx="2"/>
-                          <path d="M6 12h4"/>
-                          <path d="M8 10v4"/>
-                          <circle cx="16" cy="12" r="1"/>
-                          <circle cx="18" cy="10" r="1"/>
-                          <circle cx="18" cy="14" r="1"/>
-                        </svg>
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/40 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(220,38,38,0.35)]">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="2" y="7" width="20" height="10" rx="2"/>
+                            <path d="M6 12h4"/>
+                            <path d="M8 10v4"/>
+                            <circle cx="16" cy="12" r="1"/>
+                            <circle cx="18" cy="10" r="1"/>
+                            <circle cx="18" cy="14" r="1"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm uppercase tracking-[0.3em] text-white/60">Games</p>
+                          <p className="text-xl font-semibold text-white">{user.user_games?.length || 0} in rotation</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-white/60">Games</p>
-                        <p className="text-xl font-semibold text-white">{user.user_games?.length || 0} in rotation</p>
-                      </div>
+                      {user.user_games && user.user_games.length > 0 && (
+                        <div className="grid grid-cols-4 gap-2">
+                          {user.user_games.map((userGame) => {
+                            const iconName = userGame.games.icon_name || userGame.games.name;
+                            const normalized = iconName.toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-');
+                            const imageMap: Record<string, string> = {
+                              'rocket-league': 'rocket-league.jpg',
+                              'rocketleague': 'rocketleague.webp',
+                              'battlefield-6': 'battlefield-6.jpg',
+                              'marvel-rivals': 'marvel-rivals.jpg',
+                              'call-of-duty': 'call-of-duty.png',
+                              'apex-legends': 'apex-legends.jpg',
+                              'apex': 'apex.webp',
+                              'overwatch-2': 'overwatch2.webp',
+                              'league-of-legends': 'lol.webp',
+                              'lol': 'lol.webp',
+                              'pubg': 'pubg.webp',
+                              'fortnite': 'fortnite.jpg',
+                              'cs2': 'cs2.webp',
+                              'counter-strike-2': 'cs2.webp',
+                              'valorant': 'valorant.webp',
+                            };
+                            const imagePath = imageMap[normalized] || `${normalized}.webp`;
+                            const imageUrl = `/images/games/${imagePath}`;
+
+                            return (
+                              <div key={userGame.id} className="relative group aspect-square">
+                                <div className="w-full h-full rounded-xl overflow-hidden border border-white/10 hover:border-primary/40 transition-all duration-200 hover:scale-105">
+                                  <Image
+                                    src={imageUrl}
+                                    alt={userGame.games.display_name}
+                                    width={80}
+                                    height={80}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl pointer-events-none" />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {user.user_games && user.user_games.length > 0 && (
-                    <div className="space-y-3">
-                      {user.user_games.slice(0, 5).map((userGame) => (
-                        <div
-                          key={userGame.id}
-                          className="relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 px-4 py-3 flex items-center justify-between hover:bg-white/10 transition-colors"
-                        >
-                          <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-primary/10 to-transparent" />
-                          <div className="relative flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-primary">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="2" y="7" width="20" height="10" rx="2"/>
-                                <path d="M6 12h4"/>
-                                <path d="M8 10v4"/>
-                                <circle cx="16" cy="12" r="1"/>
-                                <circle cx="18" cy="10" r="1"/>
-                                <circle cx="18" cy="14" r="1"/>
-                              </svg>
+                    <div className="space-y-4">
+                      {user.user_games.map((userGame) => {
+                        const isLoL = userGame.games.name === 'league-of-legends';
+                        if (isLoL && userGame.player_id) {
+                          return (
+                            <div key={`lol-stats-${userGame.id}`}>
+                              <LoLStats playerId={userGame.player_id} />
                             </div>
-                            <div>
-                              <p className="text-white font-medium">{userGame.games.display_name}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      {user.user_games.length > 5 && (
-                        <div className="text-center text-white/60 text-sm">
-                          +{user.user_games.length - 5} more loading up
-                        </div>
-                      )}
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
                   )}
                 </div>
@@ -379,8 +416,8 @@ export default function UserProfilePage() {
               <div className="mb-5 lg:hidden">
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-4 py-4 mb-3">
                   <div className="absolute inset-0 opacity-30 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
-                  <div className="relative flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <rect x="2" y="7" width="20" height="10" rx="2"/>
@@ -396,38 +433,63 @@ export default function UserProfilePage() {
                         <p className="text-lg font-semibold text-white">{user.user_games?.length || 0} squads</p>
                       </div>
                     </div>
+                    {user.user_games && user.user_games.length > 0 && (
+                      <div className="flex gap-1.5 overflow-x-auto">
+                        {user.user_games.map((userGame) => {
+                          const iconName = userGame.games.icon_name || userGame.games.name;
+                          const normalized = iconName.toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-');
+                          const imageMap: Record<string, string> = {
+                            'rocket-league': 'rocket-league.jpg',
+                            'rocketleague': 'rocketleague.webp',
+                            'battlefield-6': 'battlefield-6.jpg',
+                            'marvel-rivals': 'marvel-rivals.jpg',
+                            'call-of-duty': 'call-of-duty.png',
+                            'apex-legends': 'apex-legends.jpg',
+                            'apex': 'apex.webp',
+                            'overwatch-2': 'overwatch2.webp',
+                            'league-of-legends': 'lol.webp',
+                            'lol': 'lol.webp',
+                            'pubg': 'pubg.webp',
+                            'fortnite': 'fortnite.jpg',
+                            'cs2': 'cs2.webp',
+                            'counter-strike-2': 'cs2.webp',
+                            'valorant': 'valorant.webp',
+                          };
+                          const imagePath = imageMap[normalized] || `${normalized}.webp`;
+                          const imageUrl = `/images/games/${imagePath}`;
+
+                          return (
+                            <div key={userGame.id} className="relative flex-shrink-0">
+                              <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/10">
+                                <Image
+                                  src={imageUrl}
+                                  alt={userGame.games.display_name}
+                                  width={48}
+                                  height={48}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {user.user_games && user.user_games.length > 0 && (
-                  <div className="space-y-3">
-                    {user.user_games.slice(0, 3).map((userGame) => (
-                      <div
-                        key={userGame.id}
-                        className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-primary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="2" y="7" width="20" height="10" rx="2"/>
-                              <path d="M6 12h4"/>
-                              <path d="M8 10v4"/>
-                              <circle cx="16" cy="12" r="1"/>
-                              <circle cx="18" cy="10" r="1"/>
-                              <circle cx="18" cy="14" r="1"/>
-                            </svg>
+                  <div className="space-y-4">
+                    {user.user_games.map((userGame) => {
+                      const isLoL = userGame.games.name === 'league-of-legends';
+                      if (isLoL && userGame.player_id) {
+                        return (
+                          <div key={`lol-stats-mobile-${userGame.id}`}>
+                            <LoLStats playerId={userGame.player_id} />
                           </div>
-                          <div>
-                            <p className="text-white text-sm font-medium">{userGame.games.display_name}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    {user.user_games.length > 3 && (
-                      <div className="text-center text-white/60 text-xs">
-                        +{user.user_games.length - 3} more queued up
-                      </div>
-                    )}
+                        );
+                      }
+                      return null;
+                    })}
                   </div>
                 )}
               </div>
