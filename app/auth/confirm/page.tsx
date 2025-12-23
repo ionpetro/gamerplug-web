@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { AppInstallPrompt } from '@/components/AppInstallPrompt';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 function AuthConfirmContent() {
@@ -12,6 +13,7 @@ function AuthConfirmContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
     const handleEmailConfirmation = async () => {
@@ -22,6 +24,8 @@ function AuthConfirmContent() {
       const error = urlParams.get('error') || hashParams.get('error');
       const error_description = urlParams.get('error_description') || hashParams.get('error_description');
       const access_token = hashParams.get('access_token');
+      const refresh_token = hashParams.get('refresh_token');
+      const type = urlParams.get('type') || hashParams.get('type');
 
       // Check for errors
       if (error) {
@@ -31,10 +35,42 @@ function AuthConfirmContent() {
         return;
       }
 
-      // Check if we already have tokens in the hash (Supabase already verified)
-      if (access_token) {
+      // Collect all query parameters to preserve in deep link
+      const allParams = new URLSearchParams();
+      
+      // Add all query parameters
+      urlParams.forEach((value, key) => {
+        allParams.append(key, value);
+      });
+      
+      // Add hash parameters if present (for implicit flow)
+      if (hashParams.toString()) {
+        hashParams.forEach((value, key) => {
+          allParams.append(key, value);
+        });
+      }
+
+      // Check if we already have tokens in the hash (Supabase already verified - implicit flow)
+      if (access_token && refresh_token) {
         setStatus('success');
-        setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
+        setMessage('Email confirmed successfully! Opening the Gamerplug app...');
+        
+        // Build deep link with hash parameters (implicit flow)
+        const hashParams = new URLSearchParams();
+        hashParams.set('access_token', access_token);
+        hashParams.set('refresh_token', refresh_token);
+        if (type) hashParams.set('type', type);
+        
+        const deepLink = `gamerplug://auth/callback#${hashParams.toString()}`;
+        
+        // Attempt to redirect to app
+        window.location.href = deepLink;
+        
+        // Show install prompt after timeout if app didn't open
+        setTimeout(() => {
+          setShowInstallPrompt(true);
+          setMessage('Email confirmed successfully! If the app didn\'t open, download it below.');
+        }, 2500);
         return;
       }
 
@@ -51,7 +87,19 @@ function AuthConfirmContent() {
 
           if (data.session) {
             setStatus('success');
-            setMessage('Email confirmed successfully! Please return to the Gamerplug mobile app to continue.');
+            setMessage('Email confirmed successfully! Opening the Gamerplug app...');
+            
+            // Build deep link with all query parameters (PKCE flow)
+            const deepLink = `gamerplug://auth/callback?${allParams.toString()}`;
+            
+            // Attempt to redirect to app
+            window.location.href = deepLink;
+            
+            // Show install prompt after timeout if app didn't open
+            setTimeout(() => {
+              setShowInstallPrompt(true);
+              setMessage('Email confirmed successfully! If the app didn\'t open, download it below.');
+            }, 2500);
           } else {
             setStatus('error');
             setMessage('Failed to confirm email');
@@ -113,6 +161,7 @@ function AuthConfirmContent() {
                   <p className="text-white/70 leading-relaxed">
                     {message}
                   </p>
+                  {showInstallPrompt && <AppInstallPrompt />}
                 </>
               )}
 
