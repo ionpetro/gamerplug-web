@@ -21,17 +21,45 @@ function AuthConfirmContent() {
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
 
       const code = urlParams.get('code');
+      const token = urlParams.get('token'); // PKCE verification token (if Supabase redirects before verification)
       const error = urlParams.get('error') || hashParams.get('error');
       const error_description = urlParams.get('error_description') || hashParams.get('error_description');
       const access_token = hashParams.get('access_token');
       const refresh_token = hashParams.get('refresh_token');
       const type = urlParams.get('type') || hashParams.get('type');
 
-      // Check for errors
+      // Debug logging (remove in production if needed)
+      console.log('Auth confirmation params:', {
+        code: code ? 'present' : 'missing',
+        token: token ? 'present' : 'missing',
+        error,
+        error_description,
+        type,
+        hasAccessToken: !!access_token,
+        url: window.location.href.substring(0, 100) + '...',
+      });
+
+      // Check for errors first
       if (error) {
         setStatus('error');
         const decodedDescription = error_description ? decodeURIComponent(error_description) : '';
-        setMessage(`Authentication failed: ${error}${decodedDescription ? ` - ${decodedDescription}` : ''}`);
+        let errorMessage = `Authentication failed: ${error}`;
+        if (decodedDescription) {
+          errorMessage += ` - ${decodedDescription}`;
+        }
+        
+        // Provide more helpful error messages
+        if (error === 'access_denied') {
+          if (decodedDescription?.includes('expired')) {
+            errorMessage = 'This confirmation link has expired. Please request a new confirmation email from the app.';
+          } else if (decodedDescription?.includes('invalid')) {
+            errorMessage = 'This confirmation link is invalid. Please request a new confirmation email from the app.';
+          } else {
+            errorMessage = 'This confirmation link is invalid or has expired. Please request a new confirmation email from the app.';
+          }
+        }
+        
+        setMessage(errorMessage);
         return;
       }
 
@@ -74,23 +102,63 @@ function AuthConfirmContent() {
         return;
       }
 
-      // Handle PKCE flow with code parameter
+      // Handle PKCE flow with code parameter (after Supabase verification)
+      // IMPORTANT: With PKCE, the web page cannot exchange the code because it doesn't have
+      // the code_verifier (which is stored in the mobile app). Instead, we pass the code
+      // directly to the mobile app via deep link, and the app will exchange it.
       if (code) {
-        try {
-          const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        setStatus('success');
+        setMessage('Email confirmed successfully! Opening the Gamerplug app...');
+        
+        // Build deep link with all query parameters (PKCE flow)
+        // The mobile app will exchange the code using its stored code_verifier
+        const deepLink = `gamerplug://auth/callback?${allParams.toString()}`;
+        
+        // Attempt to redirect to app
+        window.location.href = deepLink;
+        
+        // Show install prompt after timeout if app didn't open
+        setTimeout(() => {
+          setShowInstallPrompt(true);
+          setMessage('Email confirmed successfully! If the app didn\'t open, download it below.');
+        }, 2500);
+        return;
+      }
 
-          if (exchangeError) {
+      // Handle PKCE token parameter (if Supabase redirects with token parameter)
+      // This happens when Supabase's verify endpoint redirects before fully verifying
+      // Use verifyOtp which doesn't require code_verifier
+      if (token) {
+        const tokenType = type === 'signup' ? 'signup' : type === 'email' ? 'email' : 'signup';
+        
+        try {
+          console.log('Verifying token with verifyOtp:', { token: token.substring(0, 20) + '...', type: tokenType });
+          
+          // Use verifyOtp to verify the token - this works without code_verifier
+          const { data, error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash: token,
+            type: tokenType,
+          });
+
+          if (verifyError) {
+            console.error('Token verification error:', verifyError);
             setStatus('error');
-            setMessage(exchangeError.message || 'Invalid or expired confirmation link');
+            setMessage(verifyError.message || 'Invalid or expired confirmation link');
             return;
           }
 
           if (data.session) {
+            console.log('Token verified successfully, redirecting to app');
             setStatus('success');
             setMessage('Email confirmed successfully! Opening the Gamerplug app...');
             
-            // Build deep link with all query parameters (PKCE flow)
-            const deepLink = `gamerplug://auth/callback?${allParams.toString()}`;
+            // Build deep link with session tokens
+            const hashParams = new URLSearchParams();
+            hashParams.set('access_token', data.session.access_token);
+            hashParams.set('refresh_token', data.session.refresh_token);
+            hashParams.set('type', tokenType);
+            
+            const deepLink = `gamerplug://auth/callback#${hashParams.toString()}`;
             
             // Attempt to redirect to app
             window.location.href = deepLink;
@@ -101,10 +169,12 @@ function AuthConfirmContent() {
               setMessage('Email confirmed successfully! If the app didn\'t open, download it below.');
             }, 2500);
           } else {
+            console.error('No session returned from verifyOtp');
             setStatus('error');
             setMessage('Failed to confirm email');
           }
         } catch (err) {
+          console.error('Exception during token verification:', err);
           setStatus('error');
           setMessage('An error occurred while confirming your email');
         }
@@ -113,7 +183,7 @@ function AuthConfirmContent() {
 
       // No valid parameters
       setStatus('error');
-      setMessage('Invalid confirmation link. Please request a new confirmation email.');
+      setMessage('Invalid confirmation link. Please request a new confirmation email from the app.');
     };
 
     handleEmailConfirmation();
@@ -173,11 +243,19 @@ function AuthConfirmContent() {
                   <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-6">
                     Connection Failed
                   </h1>
-                  <p className="text-white/70 leading-relaxed mb-10">
+                  <p className="text-white/70 leading-relaxed mb-6">
                     {message}
                   </p>
+                  <div className="text-sm text-white/50 space-y-2 mb-6">
+                    <p>This can happen if:</p>
+                    <ul className="list-disc list-inside space-y-1 text-left max-w-md mx-auto">
+                      <li>The confirmation link has expired (links expire after 1 hour)</li>
+                      <li>The link was already used</li>
+                      <li>Your email provider prefetched the link</li>
+                    </ul>
+                  </div>
                   <div className="text-sm text-white/50">
-                    <p>Having trouble? Try opening the Gamerplug app directly from your home screen.</p>
+                    <p>Please request a new confirmation email from the Gamerplug app.</p>
                   </div>
                 </>
               )}
