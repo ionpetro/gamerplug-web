@@ -112,13 +112,11 @@ const Hero = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6 uppercase tracking-wider"
           >
             <Flame size={12} />
-            The #1 Social App for Gamers
+            only real gamers
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
-            SWIPE.<br />
-            MATCH.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GAME ON.</span>
+            <span className="text-primary">NO</span> MORE RANDOMS.
           </h1>
 
           <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-6">

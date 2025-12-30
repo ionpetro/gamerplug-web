@@ -37,7 +37,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href={hrefWithLocale("/")} className="flex items-center">
             <Image
-              src="/logo-new.png"
+              src="/logo.png"
               alt="Gamerplug Logo"
               width={32}
               height={32}
