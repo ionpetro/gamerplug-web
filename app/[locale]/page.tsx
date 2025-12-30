@@ -63,7 +63,7 @@ const Header = () => {
         <Link href={hrefWithLocale("/")} className="flex items-center gap-3 group cursor-pointer">
           <div className="relative w-10 h-10 transform group-hover:scale-110 transition-transform duration-300">
             <Image
-              src="/logo-new.png"
+              src="/logo.png"
               alt="Gamerplug Logo"
               width={40}
               height={40}
@@ -209,9 +209,7 @@ const Hero = () => {
           </motion.div>
 
           <h1 className="text-8xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
-            {t.landing.hero.title1}<br />
-            {t.landing.hero.title2}<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{t.landing.hero.title3}</span>
+            <span className="text-primary">{t.landing.hero.title1}</span> {t.landing.hero.title2}
           </h1>
 
           <p className="text-muted-foreground text-lg mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
@@ -516,7 +514,7 @@ export default function LocalizedHome() {
         url: 'https://gamerplug.app',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://gamerplug.app/logo-new.png',
+          url: 'https://gamerplug.app/logo.png',
           width: 512,
           height: 512,
         },

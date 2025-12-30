@@ -36,7 +36,7 @@ export function Footer() {
             <Link href={`/${locale}`} className="flex items-center gap-3 group cursor-pointer mb-6">
               <div className="relative w-8 h-8 transform group-hover:scale-110 transition-transform duration-300">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.png"
                   alt="Gamerplug Logo"
                   width={32}
                   height={32}
