@@ -61,7 +61,7 @@ export const Header = () => {
               className="rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)]"
             />
           </div>
-          <span className="font-sans font-extrabold text-2xl tracking-tight italic">GAMER<span style={{ color: '#FF0034' }}>PLUG</span></span>
+          <span className="hidden md:inline font-sans font-extrabold text-2xl tracking-tight italic">GAMER<span style={{ color: '#FF0034' }}>PLUG</span></span>
         </Link>
 
         {/* Desktop Nav */}

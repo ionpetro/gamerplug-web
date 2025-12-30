@@ -179,7 +179,7 @@ const Hero = () => {
   const { t } = useI18n()
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-background">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-background overflow-x-hidden">
       {/* Background Elements */}
       <div className="absolute top-[10%] left-[10%] w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px]"></div>
       <div className="absolute bottom-[10%] right-[10%] w-[700px] h-[700px] bg-accent/20 rounded-full blur-[150px]"></div>
@@ -196,7 +196,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="z-10"
+          className="z-10 min-w-0"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -208,8 +208,11 @@ const Hero = () => {
             {t.landing.hero.badge}
           </motion.div>
 
-          <h1 className="text-8xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
-            <span className="text-primary">{t.landing.hero.title1}</span> {t.landing.hero.title2}
+          <h1 className="flex flex-col text-6xl sm:text-7xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
+            <span className="text-primary">{t.landing.hero.title1}</span>
+            {t.landing.hero.title2.split(' ').map((word: string, index: number) => (
+              <span key={index}>{word}</span>
+            ))}
           </h1>
 
           <p className="text-muted-foreground text-lg mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
