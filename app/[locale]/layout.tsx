@@ -6,10 +6,10 @@ import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
   title: {
-    default: "GamerPlug - Find Your Perfect Gaming Squad | Match with Gamers",
+    default: "GamerPlug - Find Your Perfect Gaming Squad",
     template: "%s | GamerPlug"
   },
-  description: "GamerPlug matches you with gamers who share your playstyle, skill level, and preferences. Find your perfect duo or squad for Valorant, Apex Legends, Fortnite & more. Connect across PC, PlayStation, Xbox & mobile.",
+  description: "GamerPlug matches you with gamers who share your playstyle, skill level, and preferences. Find your perfect duo or squad for Valorant, Apex Legends, Fortnite & more.",
   keywords: ["gaming", "gamers", "LFG", "looking for group", "gaming squad", "gaming teammates", "valorant lfg", "apex legends lfg", "fortnite squad", "gaming friends", "esports", "competitive gaming"],
   authors: [{ name: "GamerPlug" }],
   creator: "GamerPlug",
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
     languages: {
+      'x-default': 'https://gamerplug.app/en',
       'en': '/en',
       'es': '/es',
     },
@@ -59,7 +60,11 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/logo-new.ico",
+    icon: [
+      { url: "/logo-new.ico" },
+      { url: "/logo-new.png", type: "image/png" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/logo-new.ico",
     apple: "/gamerplug.png",
   },
