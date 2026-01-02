@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Zap, Users, Shield, Crosshair, Trophy, MessageCircle } from 'lucide-react'
 import { FeatureCard } from './FeatureCardClient'
 import { useI18n } from "@/components/I18nProvider"
@@ -15,29 +14,15 @@ export const Features = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
-          >
+          <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">
             {t.landing.features.sectionLabel}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
-          >
+          </span>
+          <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase italic">
             {t.landing.features.title} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{t.landing.features.titleHighlight}</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-muted-foreground max-w-2xl mx-auto text-lg"
-          >
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
             {t.landing.features.subtitle}
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -85,4 +70,3 @@ export const Features = () => {
     </section>
   )
 }
-
