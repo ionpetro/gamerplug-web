@@ -11,20 +11,20 @@
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.08 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.55 0.22 25); /* Vibrant red primary */
+  --primary: #FF0034; /* Vibrant red primary */
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.15 0 0); /* Dark gray secondary */
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.25 0 0); /* Muted dark gray */
   --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.6 0.25 15); /* Bright orange-red accent */
+  --accent: #FF0034; /* Bright red accent */
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.55 0.22 25);
+  --destructive: #FF0034;
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.2 0 0);
   --input: oklch(0.12 0 0);
-  --ring: oklch(0.55 0.22 25);
-  --chart-1: oklch(0.55 0.22 25);
+  --ring: #FF0034;
+  --chart-1: #FF0034;
   --chart-2: oklch(0.6 0.25 15);
   --chart-3: oklch(0.98 0 0);
   --chart-4: oklch(0.05 0 0);
@@ -32,12 +32,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.08 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.55 0.22 25);
+  --sidebar-primary: #FF0034;
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.15 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.2 0 0);
-  --sidebar-ring: oklch(0.55 0.22 25);
+  --sidebar-ring: #FF0034;
 }
 
 .dark {
@@ -47,32 +47,32 @@
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.06 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.6 0.25 25); /* Brighter red in dark mode */
+  --primary: #FF0034; /* Brighter red in dark mode */
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.12 0 0);
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.18 0 0);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.65 0.28 15);
+  --accent: #FF0034;
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.6 0.25 25);
+  --destructive: #FF0034;
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.15 0 0);
   --input: oklch(0.1 0 0);
-  --ring: oklch(0.6 0.25 25);
-  --chart-1: oklch(0.6 0.25 25);
+  --ring: #FF0034;
+  --chart-1: #FF0034;
   --chart-2: oklch(0.65 0.28 15);
   --chart-3: oklch(0.98 0 0);
   --chart-4: oklch(0.03 0 0);
   --chart-5: oklch(0.35 0 0);
   --sidebar: oklch(0.06 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.6 0.25 25);
+  --sidebar-primary: #FF0034;
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.12 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.15 0 0);
-  --sidebar-ring: oklch(0.6 0.25 25);
+  --sidebar-ring: #FF0034;
 }
 
 @theme inline {
@@ -127,7 +127,7 @@
 
 /* Added custom gradient backgrounds for gaming aesthetic */
 .gradient-hero {
-  background: linear-gradient(135deg, oklch(0.03 0 0) 0%, oklch(0.15 0.1 25) 50%, oklch(0.05 0 0) 100%);
+  background: linear-gradient(135deg, oklch(0.03 0 0) 0%, oklch(0.15 0.1 18) 50%, oklch(0.05 0 0) 100%);
 }
 
 .hero-background {
@@ -138,11 +138,11 @@
 }
 
 .gradient-card {
-  background: linear-gradient(145deg, oklch(0.08 0 0) 0%, oklch(0.12 0.05 25) 100%);
+  background: linear-gradient(145deg, oklch(0.08 0 0) 0%, oklch(0.12 0.05 18) 100%);
 }
 
 .gradient-accent {
-  background: linear-gradient(90deg, oklch(0.55 0.22 25) 0%, oklch(0.6 0.25 15) 100%);
+  background: linear-gradient(90deg, #FF0034 0%, #FF0034 100%);
 }
 
 /* Navbar specific styles */
@@ -180,11 +180,11 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.55 0.22 25);
+  background: #FF0034;
 }
 
 /* Selection */
 ::selection {
-  background: oklch(0.55 0.22 25);
+  background: #FF0034;
   color: oklch(0.98 0 0);
 }

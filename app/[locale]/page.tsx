@@ -176,7 +176,9 @@ const Header = () => {
 }
 
 const Hero = () => {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
+  
+  const hrefWithLocale = (path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-background overflow-x-hidden">
@@ -190,6 +192,20 @@ const Hero = () => {
 
       {/* Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#202020_1px,transparent_1px),linear-gradient(to_bottom,#202020_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+
+      {/* QR Code - Bottom Left (Desktop Only) */}
+      <Link 
+        href={hrefWithLocale("/download")}
+        className="hidden md:block absolute bottom-8 left-8 z-20 hover:scale-105 transition-transform duration-300"
+      >
+        <Image
+          src="/qr.png"
+          alt="Download QR Code"
+          width={100}
+          height={100}
+          className="rounded-lg shadow-2xl"
+        />
+      </Link>
 
       <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-16 items-center pt-32 md:pt-40 pb-20 md:pb-32 lg:py-0">
         <motion.div
@@ -209,7 +225,7 @@ const Hero = () => {
           </motion.div>
 
           <h1 className="flex flex-col text-6xl sm:text-7xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
-            <span className="text-primary">{t.landing.hero.title1}</span>
+            <span style={{ color: '#FF0034' }}>{t.landing.hero.title1}</span>
             {t.landing.hero.title2.split(' ').map((word: string, index: number) => (
               <span key={index}>{word}</span>
             ))}
@@ -219,7 +235,8 @@ const Hero = () => {
             {t.landing.hero.subtitle}
           </p>
 
-          <div className="flex flex-row gap-4 w-full">
+          {/* Buttons - Mobile Only */}
+          <div className="flex flex-row gap-4 w-full md:hidden">
             <DownloadButton />
           </div>
         </motion.div>
