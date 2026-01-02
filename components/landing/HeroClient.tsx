@@ -119,7 +119,7 @@ export const Hero = () => {
                   </div>
                   {/* Username */}
                   <div className="flex flex-col">
-                    <span className="text-white text-xs font-semibold leading-tight font-space-mono">@iiribit</span>
+                    <span className="text-white text-base leading-tight font-space-mono">@iiribit</span>
                   </div>
                 </div>
               </div>

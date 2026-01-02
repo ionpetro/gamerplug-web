@@ -125,6 +125,11 @@ export default function LocalizedGames({ params }: { params: Promise<{ locale: s
                         alt={game.display_name}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        unoptimized
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/placeholder.svg';
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                     </div>

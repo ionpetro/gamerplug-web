@@ -1,4 +1,5 @@
 import { supabase, Game, TABLES } from './supabase';
+import { getGameAssetUrl } from './assets';
 
 // Enhanced game interface with additional display properties
 export interface GameWithDetails extends Game {
@@ -55,11 +56,10 @@ export async function getGameBySlug(slug: string): Promise<GameWithDetails | nul
 // Transform game data to include display properties
 function transformGameForDisplay(game: Game): GameWithDetails {
   const slug = game.name;
-  const iconName = game.icon_name || game.name;
+  const displayName = game.display_name;
 
-  // Try multiple image formats (webp, jpg, png)
-  // The actual format will be determined at runtime
-  const image = getGameImagePath(iconName);
+  // Use CDN asset URL for game icons
+  const image = getGameAssetUrl(displayName);
 
   // Game-specific data (this could be moved to database in the future)
   const gameDetails = getGameDisplayDetails(game.name);
@@ -73,35 +73,6 @@ function transformGameForDisplay(game: Game): GameWithDetails {
     rating: gameDetails.rating,
     genres: gameDetails.genres,
   };
-}
-
-// Helper function to get the correct image path with format fallback
-function getGameImagePath(iconName: string): string {
-  const normalized = iconName
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/_/g, '-');
-
-  // Try multiple image formats (webp, jpg, png)
-  // The actual format will be determined at runtime
-  const imageMap: Record<string, string> = {
-    'rocket-league': 'rocket-league.jpg',
-    'rocketleague': 'rocketleague.webp',
-    'battlefield-6': 'battlefield-6.jpg',
-    'marvel-rivals': 'marvel-rivals.jpg',
-    'call-of-duty': 'call-of-duty.png',
-    'apex-legends': 'apex-legends.jpg',
-    'overwatch-2': 'overwatch2.webp',
-    'league-of-legends': 'lol.webp',
-    'pubg': 'pubg.webp',
-    'fortnite': 'fortnite.jpg',
-    'cs2': 'cs2.webp',
-    'counter-strike-2': 'cs2.webp',
-    'valorant': 'valorant.webp',
-  };
-
-  const imagePath = imageMap[normalized] || `${normalized}.webp`;
-  return `/images/games/${imagePath}`;
 }
 
 // Game-specific details (could be moved to database)
@@ -187,7 +158,7 @@ export function createSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
 
-// Get game icon URL
-export function getGameIconUrl(iconName: string): string {
-  return getGameImagePath(iconName);
+// Get game icon URL (uses CDN)
+export function getGameIconUrl(gameName: string): string {
+  return getGameAssetUrl(gameName);
 }

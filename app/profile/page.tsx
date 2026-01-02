@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Footer } from '@/components/Footer';
+import { getPlatformAssetUrl } from '@/lib/assets';
 
 interface User {
   id: string;
@@ -123,19 +124,36 @@ export default function ProfilePage() {
             </div>
             
             <div className="text-center">
-              <h2 className="text-lg font-medium text-white lg:text-xl mb-3">
+              <h2 className="text-lg font-medium text-white lg:text-xl mb-3 font-space-mono">
                 @{user.gamertag}
               </h2>
               {user.platform && user.platform.length > 0 && (
                 <div className="flex gap-2 justify-center flex-wrap">
-                  {user.platform.map((platform) => (
-                    <span
-                      key={platform}
-                      className="px-3 py-1 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-1.5"
-                    >
-                      {platform}
-                    </span>
-                  ))}
+                  {user.platform.map((platform) => {
+                    const platformIconUrl = getPlatformAssetUrl(platform);
+                    return (
+                      <div
+                        key={platform}
+                        className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-2"
+                      >
+                        {platformIconUrl && (
+                          <Image
+                            src={platformIconUrl}
+                            alt={platform}  
+                            width={16}
+                            height={16}
+                            className="w-4 h-4 object-contain rounded-[4px]"
+                            unoptimized
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
+                          />
+                        )}
+                        <span>{platform}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
