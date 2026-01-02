@@ -45,10 +45,6 @@ export default async function GamesPage() {
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       unoptimized
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute top-4 right-4 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
