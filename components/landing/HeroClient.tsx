@@ -1,15 +1,18 @@
 'use client'
 
-import { Flame, Trophy, MessageCircle } from 'lucide-react'
+import { Flame, Trophy, MessageCircle, Volume2, Info, Dices, User } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import DownloadButton from "@/components/DownloadButton"
 import { useI18n } from "@/components/I18nProvider"
+import { useMemo, useCallback } from "react"
 
 export const Hero = () => {
   const { t, locale } = useI18n()
   
-  const hrefWithLocale = (path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`
+  const hrefWithLocale = useCallback((path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`, [locale])
+  
+  const titleWords = useMemo(() => t.landing.hero.title2.split(' '), [t.landing.hero.title2])
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-background overflow-x-hidden">
@@ -47,7 +50,7 @@ export const Hero = () => {
 
           <h1 className="flex flex-col text-7xl sm:text-8xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight text-white">
             <span style={{ color: '#FF0034' }}>{t.landing.hero.title1}</span>
-            {t.landing.hero.title2.split(' ').map((word: string, index: number) => (
+            {titleWords.map((word: string, index: number) => (
               <span key={index}>{word}</span>
             ))}
           </h1>
@@ -70,13 +73,70 @@ export const Hero = () => {
 
             {/* Screen Content */}
             <div className="relative w-full h-full bg-card flex flex-col">
-              {/* Profile Card */}
-              <div className="flex-1 relative overflow-hidden">
-                {/* Card Stack Effect */}
-                <div className="absolute top-6 inset-x-8 h-full bg-secondary/20 rounded-3xl scale-95 -z-10"></div>
-                <div className="absolute top-4 inset-x-6 h-full bg-secondary/40 rounded-3xl scale-95 -z-10"></div>
+              {/* Gameplay View - Full Height */}
+              <div className="relative flex-1 overflow-hidden pb-14">
+                {/* Gameplay Video Background */}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  disablePictureInPicture
+                  className="absolute inset-0 w-full h-full object-cover"
+                  src="https://d11fcxbq4rxmpu.cloudfront.net/users/3f53dd99-e3d1-4fc9-ba04-a48e5a7115fe/clips/ae1807ff-e6d9-4ea9-b537-943f151620eb/video.mov"
+                />
 
-                <div className="h-full w-full bg-black overflow-hidden shadow-2xl relative group p-3 rounded-2xl">
+                {/* Gradient Overlay for Text Visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-[1]"></div>
+
+                {/* Speaker Icon - Right Side */}
+                <div className="absolute right-2 bottom-28 z-10">
+                  <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                    <Volume2 size={14} className="text-white" />
+                  </div>
+                </div>
+
+                {/* Info Icon - Right Side (below speaker) */}
+                <div className="absolute right-2 bottom-28 translate-y-10 z-10">
+                  <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
+                    <Info size={14} className="text-black" />
+                  </div>
+                </div>
+
+                {/* Player Info Overlay - Bottom Left (above nav bar) */}
+                <div className="absolute bottom-20 left-2 z-10 flex items-center gap-2">
+                  {/* Profile Picture */}
+                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white/50">
+                    <Image
+                      src="https://defdpaewkfkpvdzyhvsr.supabase.co/storage/v1/object/public/profile-images/3f53dd99-e3d1-4fc9-ba04-a48e5a7115fe/profile-1760629423680.jpg"
+                      alt="Player"
+                      width={36}
+                      height={36}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Username */}
+                  <div className="flex flex-col">
+                    <span className="text-white text-xs font-semibold leading-tight font-space-mono">@iiribit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Navigation Bar */}
+              <div className="absolute bottom-0 left-0 right-0 h-14 bg-black/95 backdrop-blur-sm border-t border-white/10 z-30 flex items-center justify-around px-4">
+                {/* Dices Icon - Left (Active) */}
+                <div className="flex flex-col items-center gap-1">
+                  <Dices size={22} className="text-primary" />
+                </div>
+                {/* Message Icon - Center */}
+                <div className="flex flex-col items-center gap-1">
+                  <MessageCircle size={22} className="text-white/60" />
+                </div>
+                {/* Person Icon - Right */}
+                <div className="flex flex-col items-center gap-1">
+                  <User size={22} className="text-white/60" />
                 </div>
               </div>
             </div>
