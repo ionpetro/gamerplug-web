@@ -77,12 +77,6 @@ export const Header = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <Link
-            href={`${hrefWithLocale("/")}#features`}
-            className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
-          >
-            Features
-          </Link>
-          <Link
             href={`${hrefWithLocale("/")}#how-it-works`}
             className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
@@ -124,13 +118,6 @@ export const Header = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-card border-b border-border overflow-hidden">
           <div className="flex flex-col p-6 gap-4">
-            <Link
-              href={`${hrefWithLocale("/")}#features`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-            >
-              Features
-            </Link>
             <Link
               href={`${hrefWithLocale("/")}#how-it-works`}
               onClick={() => setIsMobileMenuOpen(false)}
