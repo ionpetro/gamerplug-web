@@ -130,6 +130,11 @@
     content-visibility: auto;
     contain-intrinsic-size: 0 800px;
   }
+  
+  /* Space Mono font utility */
+  .font-space-mono {
+    font-family: var(--font-space-mono);
+  }
 }
 
 /* Added custom gradient backgrounds for gaming aesthetic */
