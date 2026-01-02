@@ -26,7 +26,7 @@ export default function LocalizedHome() {
         ],
         contactPoint: {
           '@type': 'ContactPoint',
-          email: 'support@gamerplug.app',
+          telephone: '+306988617790',
           contactType: 'customer support',
         },
       },

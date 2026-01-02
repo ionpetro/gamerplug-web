@@ -45,7 +45,7 @@ export const Hero = () => {
             {t.landing.hero.badge}
           </div>
 
-          <h1 className="flex flex-col text-6xl sm:text-7xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
+          <h1 className="flex flex-col text-7xl sm:text-8xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight text-white">
             <span style={{ color: '#FF0034' }}>{t.landing.hero.title1}</span>
             {t.landing.hero.title2.split(' ').map((word: string, index: number) => (
               <span key={index}>{word}</span>
@@ -76,17 +76,7 @@ export const Hero = () => {
                 <div className="absolute top-6 inset-x-8 h-full bg-secondary/20 rounded-3xl scale-95 -z-10"></div>
                 <div className="absolute top-4 inset-x-6 h-full bg-secondary/40 rounded-3xl scale-95 -z-10"></div>
 
-                <div className="h-full w-full bg-black overflow-hidden shadow-2xl relative group p-3">
-                  <Image
-                    src="/phone-profile.png"
-                    alt="Profile"
-                    fill
-                    sizes="(max-width: 768px) 280px, 340px"
-                    loading="lazy"
-                    quality={85}
-                    priority={false}
-                    className="object-cover rounded-2xl"
-                  />
+                <div className="h-full w-full bg-black overflow-hidden shadow-2xl relative group p-3 rounded-2xl">
                 </div>
               </div>
             </div>
