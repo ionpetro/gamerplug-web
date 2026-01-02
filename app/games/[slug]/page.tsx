@@ -138,7 +138,7 @@ export default function GamePage({ params }: GamePageProps) {
                 LFG - Looking for Group
               </motion.div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
+              <h1 className="text-7xl font-extrabold leading-[0.9] mb-6 tracking-tight">
                 {details.hero.titleHighlight ? (
                   <>
                     {details.hero.title.includes('.') ? (
@@ -189,12 +189,12 @@ export default function GamePage({ params }: GamePageProps) {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative flex justify-center"
             >
-              <div className="relative max-w-lg mx-auto">
+              <div className="relative max-w-sm mx-auto">
                 <Image
                   src={game.image || '/placeholder.svg'}
                   alt={game.display_name}
-                  width={600}
-                  height={800}
+                  width={300}
+                  height={400}
                   className="rounded-3xl shadow-2xl w-full h-auto"
                   style={{ objectFit: 'contain' }}
                   unoptimized
