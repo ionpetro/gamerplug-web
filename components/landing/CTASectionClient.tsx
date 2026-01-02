@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import DownloadButton from "@/components/DownloadButton"
 import { useI18n } from "@/components/I18nProvider"
 
@@ -10,12 +9,7 @@ export const CTASection = () => {
   return (
     <section className="py-24 px-4">
       <div className="container mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative rounded-[2.5rem] overflow-hidden"
-        >
+        <div className="relative rounded-[2.5rem] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent"></div>
           <div className="absolute inset-[2px] bg-background rounded-[2.4rem]"></div>
 
@@ -37,9 +31,8 @@ export const CTASection = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
 }
-

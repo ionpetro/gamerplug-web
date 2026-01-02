@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useI18n } from "@/components/I18nProvider"
 
 export const HowItWorks = () => {
@@ -26,12 +25,8 @@ export const HowItWorks = () => {
 
         <div className="grid md:grid-cols-3 gap-8 relative z-10">
           {steps.map((step, idx) => (
-            <motion.div
+            <div
               key={step.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.2 }}
               className="relative group"
             >
               <div className="bg-card border border-border p-10 rounded-3xl h-full hover:border-primary transition-colors duration-500 relative overflow-hidden">
@@ -47,11 +42,10 @@ export const HowItWorks = () => {
                 <h3 className="text-2xl font-bold mb-4 text-foreground">{step.title}</h3>
                 <p className="text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
     </section>
   )
 }
-

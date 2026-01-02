@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Flame, Trophy, MessageCircle } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
@@ -40,21 +39,11 @@ export const Hero = () => {
       </Link>
 
       <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-16 items-center pt-32 md:pt-40 pb-20 md:pb-32 lg:py-0">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="z-10 min-w-0"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6 uppercase tracking-wider"
-          >
+        <div className="z-10 min-w-0">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6 uppercase tracking-wider">
             <Flame size={12} />
             {t.landing.hero.badge}
-          </motion.div>
+          </div>
 
           <h1 className="flex flex-col text-6xl sm:text-7xl md:text-6xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
             <span style={{ color: '#FF0034' }}>{t.landing.hero.title1}</span>
@@ -71,16 +60,11 @@ export const Hero = () => {
           <div className="flex flex-row gap-4 w-full md:hidden">
             <DownloadButton />
           </div>
-        </motion.div>
+        </div>
 
         {/* Phone Graphic */}
-        <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, type: "spring", bounce: 0.2 }}
-          className="relative flex justify-center z-10 scale-90 sm:scale-75 lg:scale-90"
-        >
-          <div className="relative w-[340px] h-[680px] bg-background border-[8px] border-secondary rounded-[3rem] shadow-2xl overflow-hidden animate-float">
+        <div className="relative flex justify-center z-10 scale-90 sm:scale-75 lg:scale-90">
+          <div className="relative w-[340px] h-[680px] bg-background border-[8px] border-secondary rounded-[3rem] shadow-2xl overflow-hidden">
             {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-secondary rounded-b-2xl z-20"></div>
 
@@ -109,11 +93,7 @@ export const Hero = () => {
           </div>
 
           {/* Floating UI Elements around Phone */}
-          <motion.div
-            animate={{ y: [0, 15, 0] }}
-            transition={{ repeat: Infinity, duration: 4, delay: 1 }}
-            className="absolute top-32 -right-8 bg-card/95 backdrop-blur p-4 rounded-xl border border-border flex items-center gap-3 shadow-2xl z-20 max-w-[200px]"
-          >
+          <div className="absolute top-32 -right-8 bg-card/95 backdrop-blur p-4 rounded-xl border border-border flex items-center gap-3 shadow-2xl z-20 max-w-[200px]">
             <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/30">
               <Trophy size={20} className="text-primary" />
             </div>
@@ -121,13 +101,9 @@ export const Hero = () => {
               <div className="text-xs text-muted-foreground uppercase font-bold">{t.landing.phone.rankMatch}</div>
               <div className="text-sm font-bold text-foreground">{t.landing.phone.topPlayer}</div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            animate={{ y: [0, -15, 0] }}
-            transition={{ repeat: Infinity, duration: 5, delay: 1 }}
-            className="absolute bottom-40 -left-12 bg-card/95 backdrop-blur p-4 rounded-xl border border-border flex items-center gap-3 shadow-2xl z-20"
-          >
+          <div className="absolute bottom-40 -left-12 bg-card/95 backdrop-blur p-4 rounded-xl border border-border flex items-center gap-3 shadow-2xl z-20">
             <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center border border-accent/30">
               <MessageCircle size={20} className="text-accent" />
             </div>
@@ -135,10 +111,9 @@ export const Hero = () => {
               <div className="text-xs text-muted-foreground uppercase font-bold">{t.landing.phone.newMessage}</div>
               <div className="text-sm font-bold text-foreground">{t.landing.phone.duoMessage}</div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   )
 }
-

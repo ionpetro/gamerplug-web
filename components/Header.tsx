@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Download, X, Menu } from 'lucide-react'
+import { X, Menu } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -122,58 +121,51 @@ export const Header = () => {
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-card border-b border-border overflow-hidden"
-          >
-            <div className="flex flex-col p-6 gap-4">
-              <Link
-                href={`${hrefWithLocale("/")}#features`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-              >
-                Features
-              </Link>
-              <Link
-                href={`${hrefWithLocale("/")}#how-it-works`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-              >
-                How it Works
-              </Link>
-              <div>
-                <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
-                <MobileGameMenu onClose={() => setIsMobileMenuOpen(false)} />
-              </div>
-              <Link
-                href={hrefWithLocale("/contact")}
-                className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
-              </Link>
-              <Link
-                href={switchLocaleHref}
-                className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {locale === 'en' ? 'ES' : 'EN'}
-              </Link>
-              <Link
-                href={hrefWithLocale("/download")}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
-              >
-                Download Now
-              </Link>
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-card border-b border-border overflow-hidden">
+          <div className="flex flex-col p-6 gap-4">
+            <Link
+              href={`${hrefWithLocale("/")}#features`}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+            >
+              Features
+            </Link>
+            <Link
+              href={`${hrefWithLocale("/")}#how-it-works`}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+            >
+              How it Works
+            </Link>
+            <div>
+              <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
+              <MobileGameMenu onClose={() => setIsMobileMenuOpen(false)} />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Link
+              href={hrefWithLocale("/contact")}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
+            </Link>
+            <Link
+              href={switchLocaleHref}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {locale === 'en' ? 'ES' : 'EN'}
+            </Link>
+            <Link
+              href={hrefWithLocale("/download")}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
+            >
+              Download Now
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
