@@ -68,14 +68,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-D83F82KSGK"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-D83F82KSGK');
+            try {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-D83F82KSGK');
+            } catch (e) {
+              // Gracefully handle private mode or localStorage restrictions
+              console.warn('Google Analytics initialization failed:', e);
+            }
           `}
         </Script>
       </head>
