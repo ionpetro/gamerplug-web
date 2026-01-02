@@ -197,6 +197,11 @@ export default function GamePage({ params }: GamePageProps) {
                   height={800}
                   className="rounded-3xl shadow-2xl w-full h-auto"
                   style={{ objectFit: 'contain' }}
+                  unoptimized
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder.svg';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
               </div>

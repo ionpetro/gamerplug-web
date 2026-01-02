@@ -8,6 +8,7 @@ import VideoModal from '@/components/VideoModal';
 import { Footer } from '@/components/Footer';
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
 import LoLStats from '@/components/LoLStats';
+import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
@@ -22,14 +23,14 @@ function ProfileSkeleton() {
   const gameSkeletons = Array.from({ length: 3 });
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="relative w-full flex-1">
-        <div className="pointer-events-none absolute inset-0">
+    <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
+      <div className="relative w-full flex-1 overflow-x-hidden">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
           <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
         </div>
-        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
+        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16 max-w-full">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-4 xl:col-span-3">
               <div className="flex flex-col items-center mb-5 lg:items-start lg:sticky lg:top-8 w-full">
@@ -231,8 +232,8 @@ export default function UserProfilePage() {
 
   if (error || !user) {
     return (
-      <div className="relative min-h-screen bg-black text-white flex flex-col overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
+      <div className="relative min-h-screen bg-black text-white flex flex-col overflow-hidden overflow-x-hidden">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
           <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
@@ -265,14 +266,14 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="relative w-full flex-1">
-        <div className="pointer-events-none absolute inset-0">
+    <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
+      <div className="relative w-full flex-1 overflow-x-hidden">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
           <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
         </div>
-        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16">
+        <div className="relative container mx-auto pt-28 pb-16 px-6 md:px-10 lg:px-12 xl:px-16 max-w-full">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             {/* Left Column - Profile Info */}
             <div className="lg:col-span-4 xl:col-span-3">
@@ -298,19 +299,36 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-3">
+                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-3 font-space-mono">
                     @{user.gamertag}
                   </h2>
                   {user.platform && Array.isArray(user.platform) && user.platform.length > 0 && (
                     <div className="flex gap-2 justify-center lg:justify-start flex-wrap mb-3">
-                      {user.platform.map((platform) => (
-                        <span
-                          key={platform}
-                          className="px-3 py-1 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-1.5"
-                        >
-                          {platform}
-                        </span>
-                      ))}
+                      {user.platform.map((platform) => {
+                        const platformIconUrl = getPlatformAssetUrl(platform);
+                        return (
+                          <div
+                            key={platform}
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-white/90 bg-[#1a1a1a] border border-[#2a2a2a] rounded-md lg:text-sm lg:px-4 lg:py-2"
+                          >
+                            {platformIconUrl && (
+                              <Image
+                                src={platformIconUrl}
+                                alt={platform}
+                                width={16}
+                                height={16}
+                                className="w-4 h-4 object-contain rounded-[4px]"
+                                unoptimized
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                      target.style.display = 'none';
+                                }}
+                              />
+                            )}
+                            <span>{platform}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   {user.age && (
@@ -349,27 +367,7 @@ export default function UserProfilePage() {
                       {user.user_games && user.user_games.length > 0 && (
                         <div className="grid grid-cols-4 gap-2">
                           {user.user_games.map((userGame) => {
-                            const iconName = userGame.games.icon_name || userGame.games.name;
-                            const normalized = iconName.toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-');
-                            const imageMap: Record<string, string> = {
-                              'rocket-league': 'rocket-league.jpg',
-                              'rocketleague': 'rocketleague.webp',
-                              'battlefield-6': 'battlefield-6.jpg',
-                              'marvel-rivals': 'marvel-rivals.jpg',
-                              'call-of-duty': 'call-of-duty.png',
-                              'apex-legends': 'apex-legends.jpg',
-                              'apex': 'apex.webp',
-                              'overwatch-2': 'overwatch2.webp',
-                              'league-of-legends': 'lol.webp',
-                              'lol': 'lol.webp',
-                              'pubg': 'pubg.webp',
-                              'fortnite': 'fortnite.jpg',
-                              'cs2': 'cs2.webp',
-                              'counter-strike-2': 'cs2.webp',
-                              'valorant': 'valorant.webp',
-                            };
-                            const imagePath = imageMap[normalized] || `${normalized}.webp`;
-                            const imageUrl = `/images/games/${imagePath}`;
+                            const imageUrl = getGameAssetUrl(userGame.games.display_name);
 
                             return (
                               <div key={userGame.id} className="relative group aspect-square">
@@ -380,6 +378,11 @@ export default function UserProfilePage() {
                                     width={80}
                                     height={80}
                                     className="w-full h-full object-cover"
+                                    unoptimized
+                                    onError={(e) => {
+                                      const target = e.target as HTMLImageElement;
+                                      target.src = '/placeholder.svg';
+                                    }}
                                   />
                                 </div>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl pointer-events-none" />
@@ -434,29 +437,9 @@ export default function UserProfilePage() {
                       </div>
                     </div>
                     {user.user_games && user.user_games.length > 0 && (
-                      <div className="flex gap-1.5 overflow-x-auto">
+                      <div className="flex gap-1.5 overflow-x-auto -mx-4 px-4">
                         {user.user_games.map((userGame) => {
-                          const iconName = userGame.games.icon_name || userGame.games.name;
-                          const normalized = iconName.toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-');
-                          const imageMap: Record<string, string> = {
-                            'rocket-league': 'rocket-league.jpg',
-                            'rocketleague': 'rocketleague.webp',
-                            'battlefield-6': 'battlefield-6.jpg',
-                            'marvel-rivals': 'marvel-rivals.jpg',
-                            'call-of-duty': 'call-of-duty.png',
-                            'apex-legends': 'apex-legends.jpg',
-                            'apex': 'apex.webp',
-                            'overwatch-2': 'overwatch2.webp',
-                            'league-of-legends': 'lol.webp',
-                            'lol': 'lol.webp',
-                            'pubg': 'pubg.webp',
-                            'fortnite': 'fortnite.jpg',
-                            'cs2': 'cs2.webp',
-                            'counter-strike-2': 'cs2.webp',
-                            'valorant': 'valorant.webp',
-                          };
-                          const imagePath = imageMap[normalized] || `${normalized}.webp`;
-                          const imageUrl = `/images/games/${imagePath}`;
+                          const imageUrl = getGameAssetUrl(userGame.games.display_name);
 
                           return (
                             <div key={userGame.id} className="relative flex-shrink-0">
@@ -467,6 +450,11 @@ export default function UserProfilePage() {
                                   width={48}
                                   height={48}
                                   className="w-full h-full object-cover"
+                                  unoptimized
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/placeholder.svg';
+                                  }}
                                 />
                               </div>
                             </div>
