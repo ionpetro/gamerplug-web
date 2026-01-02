@@ -41,13 +41,24 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
+    let ticking = false
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20)
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-background/90 backdrop-blur-md border-border py-3' : 'bg-transparent border-transparent py-6'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-background/95 md:backdrop-blur-md border-border py-3' : 'bg-transparent border-transparent py-6'}`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
         <Link href={hrefWithLocale("/")} className="flex items-center gap-3 group cursor-pointer">
           <div className="relative w-8 h-8 transform group-hover:scale-110 transition-transform duration-300">
