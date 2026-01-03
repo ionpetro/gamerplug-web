@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Gamepad2, Users, Zap, MessageCircle, Download, Trophy, Shield, Flame, Smartphone, Crosshair, X, Menu } from 'lucide-react'
+import { Gamepad2, Users, Zap, MessageCircle, Download, Trophy, Shield, Flame, Smartphone, Crosshair, X, Menu, CheckCircle2 } from 'lucide-react'
+import Image from 'next/image'
 import { Footer } from "@/components/Footer"
 import WaitlistForm from "@/components/WaitlistForm"
+import { getAllGames } from '@/lib/games'
+import type { GameWithDetails } from '@/lib/games'
 
 // --- Types ---
 interface FeatureCardProps {
@@ -38,7 +41,7 @@ const Header = () => {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          {['Features', 'How it Works', 'Community'].map((item) => (
+          {['Features', 'Our Promise', 'Community'].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
@@ -69,7 +72,7 @@ const Header = () => {
             className="md:hidden bg-card border-b border-border overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
-              {['Features', 'How it Works', 'Community'].map((item) => (
+              {['Features', 'Our Promise', 'Community'].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
@@ -343,53 +346,147 @@ const Features = () => {
   )
 }
 
-const HowItWorks = () => {
-  const steps = [
-    { id: "01", title: "Create Profile", desc: "Link your stats, set your schedule, and choose your titles." },
-    { id: "02", title: "Swipe & Match", desc: "Browse tailored recommendations. Swipe right to squad up." },
-    { id: "03", title: "Dominate", desc: "Chat, party up, and climb the leaderboards together." }
+const OurPromise = () => {
+  const promises = [
+    {
+      gif: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGowcWRxcjh1OGtla2sydTQ4dW41cmlkbG4yd2MxMXo2MTg4YTZpYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tczJoRU7XwBS8/giphy.gif",
+      title: "no NPCs",
+      description: "Every profile is monitored to keep the platform real and legit."
+    },
+    {
+      gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2M2Y2ZkMjM1bHA0bXBpYzV5dmw0emcwOTRtemhvcndrM2NnZzlhaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o85xpckLTpHHRnnBS/giphy.gif",
+      title: "only gamers",
+      description: "No bots. No spam. Just real gamers who actually want to play."
+    },
+    {
+      gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGg0Mzc5OXY0ZGoxMnh6MGNycG44M3Q3ZnJnZTVlNTY4bmQ0amptdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4oMoIbIQrvCjm/giphy.gif",
+      title: "good vibes",
+      description: "A healthy, respectful community where gaming is fun again."
+    }
   ]
 
   return (
-    <section id="how-it-works" className="py-32 bg-secondary/20 relative overflow-hidden">
+    <section id="our-promise" className="py-32 bg-secondary/20 relative overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-          <div>
-            <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">
-              How It <br/><span className="text-primary">Works</span>
-            </h2>
-          </div>
-          <p className="text-muted-foreground max-w-md pb-2">
-            Three simple steps to stop playing with randoms and start winning with a coordinated team.
-          </p>
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none font-space-mono">
+            Our <br/><span className="text-primary">Promise</span>
+          </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 relative z-10">
-          {steps.map((step, idx) => (
+          {promises.map((promise, idx) => (
             <motion.div
-              key={step.id}
+              key={promise.title}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.2 }}
-              className="relative group"
+              className="relative"
             >
-              <div className="bg-card border border-border p-10 rounded-3xl h-full hover:border-primary transition-colors duration-500 relative overflow-hidden">
-                {/* Big Number BG */}
-                <span className="absolute -bottom-4 -right-4 text-9xl font-black text-secondary/40 group-hover:text-primary/10 transition-colors select-none">
-                  {step.id}
-                </span>
-
-                <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-primary font-bold border border-border mb-8 group-hover:bg-primary group-hover:text-white transition-colors">
-                  {step.id}
+              <div className="bg-card border border-border p-6 rounded-3xl h-full relative overflow-hidden">
+                {/* GIF */}
+                <div className="w-full aspect-video mb-4 rounded-xl overflow-hidden bg-secondary">
+                  <Image
+                    src={promise.gif}
+                    alt={promise.title}
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover"
+                    unoptimized
+                  />
                 </div>
 
-                <h3 className="text-2xl font-bold mb-4 text-foreground">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed relative z-10">{step.desc}</p>
+                <h3 className="text-2xl font-bold mb-2 text-foreground font-space-mono">{promise.title}</h3>
+                <p className="text-muted-foreground leading-relaxed relative z-10">{promise.description}</p>
               </div>
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  )
+}
+
+const SupportedGamesPlatforms = () => {
+  const [games, setGames] = useState<GameWithDetails[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const allGames = await getAllGames()
+        setGames(allGames)
+      } catch (error) {
+        console.error('Error fetching games:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchGames()
+  }, [])
+
+  return (
+    <section className="py-20 bg-background relative overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-12">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold mb-4 text-foreground"
+          >
+            Supported Games & Platforms
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+          >
+            From competitive esports titles to casual favorites, connect with gamers across all major platforms and games.
+          </motion.p>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 gap-6 max-w-7xl mx-auto"
+          >
+            {games.map((game, idx) => (
+              <motion.div
+                key={game.id || idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.03 }}
+                className="flex items-center justify-center group"
+              >
+                <div className="relative w-full aspect-square bg-card border border-border rounded-xl md:rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                  <Image
+                    src={game.image || '/placeholder.svg'}
+                    alt={game.display_name}
+                    fill
+                    className="object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                    unoptimized
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   )
@@ -461,9 +558,10 @@ export default function GamerplugLanding() {
       <Header />
       <main>
         <Hero />
+        <SupportedGamesPlatforms />
         <GameTicker />
         <Features />
-        <HowItWorks />
+        <OurPromise />
         <CTASection />
       </main>
       <Footer />

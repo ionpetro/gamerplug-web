@@ -28,18 +28,28 @@ export const Hero = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#202020_1px,transparent_1px),linear-gradient(to_bottom,#202020_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
 
       {/* QR Code - Bottom Left (Desktop Only) */}
-      <Link 
-        href={hrefWithLocale("/download")}
-        className="hidden md:block absolute bottom-8 left-8 z-20 hover:scale-105 transition-transform duration-300"
-      >
-        <Image
-          src="/qr.png"
-          alt="Download QR Code"
-          width={100}
-          height={100}
-          className="rounded-lg shadow-2xl"
-        />
-      </Link>
+      <div className="hidden md:block absolute bottom-8 left-8 z-20">
+        <Link 
+          href={hrefWithLocale("/download")}
+          className="relative hover:scale-105 transition-transform duration-300 inline-block"
+        >
+          <Image
+            src="/qr.png"
+            alt="Download QR Code"
+            width={100}
+            height={100}
+            className="rounded-lg shadow-2xl"
+          />
+          {/* Handwritten "scan me" text */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
+            <span className="font-handwritten text-2xl text-muted-foreground font-semibold" style={{ 
+              transform: 'rotate(-8deg)'
+            }}>
+              scan me
+            </span>
+          </div>
+        </Link>
+      </div>
 
       <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-16 items-center pt-32 md:pt-40 pb-20 md:pb-32 lg:py-0">
         <div className="z-10 min-w-0">

@@ -77,3 +77,4 @@ export const getPlatformAssetUrl = (platformName: string): string => {
   return `https://${CLOUDFRONT_DOMAIN}/assets/${fileName}`;
 };
 
+
