@@ -126,7 +126,7 @@
   
   /* Content Visibility API for below-fold sections */
   #features,
-  #how-it-works {
+  #our-promise {
     content-visibility: auto;
     contain-intrinsic-size: 0 800px;
   }
@@ -134,6 +134,11 @@
   /* Space Mono font utility */
   .font-space-mono {
     font-family: var(--font-space-mono);
+  }
+  
+  /* Handwritten font utility */
+  .font-handwritten {
+    font-family: "Caveat", cursive;
   }
 }
 

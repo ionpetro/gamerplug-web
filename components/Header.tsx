@@ -77,10 +77,10 @@ export const Header = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <Link
-            href={`${hrefWithLocale("/")}#how-it-works`}
+            href={`${hrefWithLocale("/")}#our-promise`}
             className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
-            How it Works
+            Our Promise
           </Link>
           <GameDropdown />
           <Link
@@ -119,11 +119,11 @@ export const Header = () => {
         <div className="md:hidden bg-card border-b border-border overflow-hidden">
           <div className="flex flex-col p-6 gap-4">
             <Link
-              href={`${hrefWithLocale("/")}#how-it-works`}
+              href={`${hrefWithLocale("/")}#our-promise`}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
             >
-              How it Works
+              Our Promise
             </Link>
             <div>
               <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
