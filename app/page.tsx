@@ -126,6 +126,25 @@ const Hero = () => {
             Get your ideal player plugged in.
           </p>
 
+          <div className="mb-10 relative z-10">
+            <a 
+              href="https://peerlist.io/ionpetro/project/gamerplug--no-more-randoms" 
+              target="_blank" 
+              rel="noreferrer"
+              className="inline-block"
+            >
+              <img
+                src="https://peerlist.io/api/v1/projects/embed/PRJHA9EGDGGRQPRGR2AAEEDN7EEPE6?showUpvote=true&theme=light"
+                alt="GamerPlug - No more randoms."
+                style={{ width: 'auto', height: '72px', minWidth: '300px', display: 'block' }}
+                className="h-[72px] w-auto"
+                onError={(e) => {
+                  console.error('Peerlist embed failed to load');
+                }}
+              />
+            </a>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <WaitlistForm />
           </div>

@@ -65,9 +65,28 @@ export const Hero = () => {
             ))}
           </h1>
 
-          <p className="text-muted-foreground text-lg mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
+          <p className="text-muted-foreground text-lg mb-6 max-w-lg leading-relaxed border-l-2 border-border pl-4 md:pl-6">
             {t.landing.hero.subtitle}
           </p>
+
+          <div className="mb-8 md:mb-10 relative z-10">
+            <a 
+              href="https://peerlist.io/ionpetro/project/gamerplug--no-more-randoms" 
+              target="_blank" 
+              rel="noreferrer"
+              className="inline-block"
+            >
+              <img
+                src="https://peerlist.io/api/v1/projects/embed/PRJHA9EGDGGRQPRGR2AAEEDN7EEPE6?showUpvote=true&theme=light"
+                alt="GamerPlug - No more randoms."
+                style={{ width: 'auto', height: '72px', minWidth: '300px', display: 'block' }}
+                className="h-[72px] w-auto"
+                onError={(e) => {
+                  console.error('Peerlist embed failed to load');
+                }}
+              />
+            </a>
+          </div>
 
           {/* Buttons - Mobile Only */}
           <div className="flex flex-row gap-4 w-full md:hidden">
