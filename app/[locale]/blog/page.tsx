@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 import { BlogListClient } from "./BlogListClient"
 import { getAllBlogPosts } from "@/lib/blog"
 
@@ -129,7 +130,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
         }}
       />
 
-      <BlogListClient posts={blogPosts} locale={locale} />
+      <Suspense fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      }>
+        <BlogListClient posts={blogPosts} locale={locale} />
+      </Suspense>
     </>
   )
 }
