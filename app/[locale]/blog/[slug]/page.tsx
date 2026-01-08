@@ -35,9 +35,7 @@ export async function generateMetadata(
 
   const localePrefix = locale === 'es' ? '/es' : '/en'
   const url = `${baseUrl}${localePrefix}/blog/${slug}`
-  const ogImage = post.image.startsWith('http') 
-    ? post.image 
-    : `${baseUrl}${post.image}`
+  const ogImage = `${baseUrl}/og.jpg`
 
   // Format date for article metadata
   const publishedTime = new Date(post.date).toISOString()
@@ -64,7 +62,7 @@ export async function generateMetadata(
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: 'GamerPlug - Find Your Gaming Squad',
           type: 'image/jpeg',
         },
       ],
