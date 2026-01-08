@@ -1,9 +1,11 @@
 import { MetadataRoute } from 'next'
 import { getAllGames } from '@/lib/games'
+import { getAllBlogPosts } from '@/lib/blog'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://gamerplug.app'
   const games = await getAllGames()
+  const blogPosts = getAllBlogPosts()
 
   // Static pages
   const staticPages = [
@@ -35,6 +37,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/es/games`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/en/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/es/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
       priority: 0.9,
     },
     {
@@ -79,5 +93,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ])
 
-  return [...staticPages, ...gamePages]
+  // Blog post pages for both locales
+  const blogPages = blogPosts.flatMap(post => [
+    {
+      url: `${baseUrl}/en/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/es/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+  ])
+
+  return [...staticPages, ...gamePages, ...blogPages]
 }

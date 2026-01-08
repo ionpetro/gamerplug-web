@@ -70,32 +70,16 @@ export const Hero = () => {
           </p>
 
           <div className="mb-8 md:mb-10 relative z-10 flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
-            <a 
-              href="https://peerlist.io/ionpetro/project/gamerplug--no-more-randoms" 
-              target="_blank" 
-              rel="noreferrer"
-              className="inline-block"
-            >
-              <img
-                src="https://peerlist.io/api/v1/projects/embed/PRJHA9EGDGGRQPRGR2AAEEDN7EEPE6?showUpvote=true&theme=light"
-                alt="GamerPlug - No more randoms."
-                style={{ width: 'auto', height: '54px', display: 'block' }}
-                className="h-[48px] sm:h-[54px] w-auto max-w-full"
-                onError={(e) => {
-                  console.error('Peerlist embed failed to load');
-                }}
-              />
-            </a>
-            <a 
-              href="https://www.producthunt.com/products/gamerplug?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-gamerplug" 
-              target="_blank" 
+            <a
+              href="https://www.producthunt.com/products/gamerplug?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-gamerplug"
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-block"
             >
-              <img 
-                alt="Gamerplug - No more randoms. | Product Hunt" 
-                width="250" 
-                height="54" 
+              <img
+                alt="Gamerplug - No more randoms. | Product Hunt"
+                width="250"
+                height="54"
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1056202&theme=dark&t=1767713259591"
                 className="h-[48px] sm:h-[54px] w-auto max-w-full"
               />
