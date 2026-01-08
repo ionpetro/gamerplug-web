@@ -1,6 +1,7 @@
 {
   "nav": {
     "games": "GAMES",
+    "blog": "Blog",
     "contact": "Contact Us",
     "gamesLabelMobile": "GAMES",
     "switchTo": {
@@ -60,6 +61,18 @@
     "notFound": "No games found. Please check back later.",
     "players": "Players",
     "active": "Active Community"
+  },
+  "blog": {
+    "badge": "Yapping",
+    "title": "BLOG",
+    "subtitle": "Gaming tips, strategies, and news. Everything you need to level up your game and find your perfect squad.",
+    "readMore": "Read More",
+    "stayUpdated": "Stay Updated",
+    "dontMiss": "Don't Miss",
+    "out": "Out",
+    "newsletterDesc": "Subscribe to get the latest gaming news, tips, and updates delivered straight to your inbox.",
+    "emailPlaceholder": "Your email address",
+    "subscribe": "Subscribe"
   },
   "contact": {
     "badge": "Get In Touch",

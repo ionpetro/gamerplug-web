@@ -84,6 +84,12 @@ export const Header = () => {
           </Link>
           <GameDropdown />
           <Link
+            href={hrefWithLocale("/blog")}
+            className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
+          >
+            {t.nav?.blog || 'Blog'}
+          </Link>
+          <Link
             href={hrefWithLocale("/contact")}
             className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
@@ -129,6 +135,13 @@ export const Header = () => {
               <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
               <MobileGameMenu onClose={() => setIsMobileMenuOpen(false)} />
             </div>
+            <Link
+              href={hrefWithLocale("/blog")}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {t.nav?.blog || 'Blog'}
+            </Link>
             <Link
               href={hrefWithLocale("/contact")}
               className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"

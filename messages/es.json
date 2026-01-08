@@ -1,6 +1,7 @@
 {
   "nav": {
     "games": "JUEGOS",
+    "blog": "Blog",
     "contact": "Contáctanos",
     "gamesLabelMobile": "JUEGOS",
     "switchTo": {
@@ -60,6 +61,18 @@
     "notFound": "No se encontraron juegos. Vuelve más tarde.",
     "players": "Jugadores",
     "active": "Comunidad activa"
+  },
+  "blog": {
+    "badge": "Yapping",
+    "title": "BLOG",
+    "subtitle": "Consejos, estrategias y noticias del mundo gaming. Todo lo que necesitas para mejorar tu juego y encontrar tu escuadrón perfecto.",
+    "readMore": "Leer más",
+    "stayUpdated": "Mantente actualizado",
+    "dontMiss": "No te pierdas",
+    "out": "nada",
+    "newsletterDesc": "Suscríbete para recibir las últimas noticias, consejos y actualizaciones directamente en tu bandeja de entrada.",
+    "emailPlaceholder": "Tu correo electrónico",
+    "subscribe": "Suscribirse"
   },
   "contact": {
     "badge": "Ponte en contacto",
