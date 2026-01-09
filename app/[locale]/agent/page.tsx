@@ -1,7 +1,7 @@
 'use client'
 
 import { useConversation } from '@elevenlabs/react'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { Orb, type AgentState } from '@/components/ui/orb'
 import { Button } from '@/components/ui/button'
 import { Mic, MicOff, PhoneOff, Phone } from 'lucide-react'
@@ -12,6 +12,9 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
   const [micPermissionGranted, setMicPermissionGranted] = useState(false)
   const [volume, setVolume] = useState(0.8)
   const [micMuted, setMicMuted] = useState(false)
+  
+  // Dynamic colors ref for Orb - Red to Rose base (#ef4444 to #fb7185)
+  const orbColorsRef = useRef<[string, string]>(['#ef4444', '#fb7185'])
 
   const conversation = useConversation({
     micMuted,
@@ -33,6 +36,23 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
     }
     return null
   }, [status, isSpeaking])
+
+  // Update Orb colors based on agent state - Red to Rose variations
+  useEffect(() => {
+    if (agentState === 'talking') {
+      // Dynamic speaking state - energetic animations, brighter colors
+      orbColorsRef.current = ['#ef4444', '#fb7185'] // Bright red to rose
+    } else if (agentState === 'listening') {
+      // Active listening state - responsive movements, base colors
+      orbColorsRef.current = ['#ef4444', '#fb7185'] // Red to rose
+    } else if (agentState === 'thinking') {
+      // Processing state - contemplative motion, softer colors
+      orbColorsRef.current = ['#dc2626', '#f87171'] // Darker red to softer rose
+    } else {
+      // Idle state - calm, slow-moving animations, muted colors
+      orbColorsRef.current = ['#dc2626', '#f87171'] // Muted red to rose
+    }
+  }, [agentState])
 
   useEffect(() => {
     async function loadData() {
@@ -90,7 +110,6 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
   if (isLoading) return null
 
   const isConnected = status === 'connected'
-  const isDisconnected = status === 'disconnected'
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -102,7 +121,7 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
               agentState={agentState}
               getInputVolume={getInputVolume}
               getOutputVolume={getOutputVolume}
-              colors={['#FF6B6B', '#DC2626']}
+              colorsRef={orbColorsRef}
               volumeMode="auto"
             />
           </div>
@@ -112,8 +131,8 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
         <div className="flex flex-col items-center space-y-4">
           {/* Microphone Permission Warning */}
           {!micPermissionGranted && (
-            <div className="w-full max-w-md p-3 rounded-lg bg-yellow-500/10">
-              <p className="text-sm text-yellow-400 text-center">
+            <div className="w-full max-w-md p-4 rounded-lg bg-card border border-primary/20">
+              <p className="text-sm text-foreground text-center">
                 Microphone permission is required to use the agent. Please grant microphone access.
               </p>
             </div>
@@ -131,6 +150,8 @@ export default function LocalizedAgent({ params }: { params: Promise<{ locale: s
             >
               {isConnected ? (
                 <PhoneOff className="h-8 w-8" />
+              ) : status === 'connecting' ? (
+                <span className="text-lg font-bold">calling...</span>
               ) : (
                 <span className="text-lg font-bold">Talk to Billy</span>
               )}
