@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX, Mail } from 'lucide-react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -204,6 +204,18 @@ export default function TeamPage() {
     if (char) setSelectedCharacter(char)
   }, [selectedCharacterId])
 
+  const handlePrevious = () => {
+    const currentIndex = characters.findIndex(c => c.id === selectedCharacterId)
+    const newIndex = currentIndex === 0 ? characters.length - 1 : currentIndex - 1
+    setSelectedCharacterId(characters[newIndex].id)
+  }
+
+  const handleNext = () => {
+    const currentIndex = characters.findIndex(c => c.id === selectedCharacterId)
+    const newIndex = currentIndex === characters.length - 1 ? 0 : currentIndex + 1
+    setSelectedCharacterId(characters[newIndex].id)
+  }
+
   // Initialize background music
   useEffect(() => {
     if (!backgroundMusicRef.current) {
@@ -404,36 +416,54 @@ export default function TeamPage() {
             </div>
           </div>
 
-          {/* Center Panel - 3D Viewport (Full Width on Desktop) */}
-          <div className="w-full flex items-center justify-center">
-            <div className="w-full aspect-[25/9] overflow-hidden">
+          {/* Center Panel - 3D Viewport */}
+          <div className="w-full flex items-center justify-center relative">
+            {/* 3D Model - Larger on mobile */}
+            <div className="w-full aspect-[3/4] md:aspect-[25/9] overflow-hidden">
               <FBXViewer
                 modelPath={selectedCharacter.modelPath || "/models/ion.fbx"}
                 characterId={selectedCharacter.id}
               />
             </div>
+
+            {/* Navigation Buttons - Mobile only */}
+            <button
+              onClick={handlePrevious}
+              className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              aria-label="Previous character"
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              aria-label="Next character"
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
           </div>
 
           {/* Right Panel - Character Info (Floating on Desktop) */}
-          <div className="mt-8 lg:mt-0 lg:absolute lg:right-16 lg:top-0 lg:h-full lg:flex lg:items-center lg:z-10 lg:w-80 lg:pr-8">
-            <div className="space-y-6 p-6 rounded-lg w-full">
+          <div className="mt-4 lg:mt-0 lg:absolute lg:right-16 lg:top-0 lg:h-full lg:flex lg:items-center lg:z-10 lg:w-80 lg:pr-8">
+            <div className="space-y-3 lg:space-y-6 p-4 lg:p-6 rounded-lg w-full">
               {/* Character Name and Title */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-1 whitespace-nowrap">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight mb-1">
                   {selectedCharacter.name}
                 </h2>
-                <p className="text-sm md:text-base text-white/70 uppercase tracking-wide whitespace-nowrap">
+                <p className="text-xs md:text-sm lg:text-base text-white/70 uppercase tracking-wide">
                   {selectedCharacter.class}
                 </p>
               </div>
 
-              {/* Stats Bars */}
-              <div className="space-y-3 w-full">
+              {/* Stats Bars - 2 rows on mobile */}
+              <div className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3 w-full">
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Technical</span>
+                    <span className="text-[10px] md:text-xs text-white/70 uppercase tracking-wide">Technical</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
+                  <div className="h-1.5 lg:h-2 bg-white/10 rounded-full overflow-hidden w-full">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -446,9 +476,9 @@ export default function TeamPage() {
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Leadership</span>
+                    <span className="text-[10px] md:text-xs text-white/70 uppercase tracking-wide">Leadership</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
+                  <div className="h-1.5 lg:h-2 bg-white/10 rounded-full overflow-hidden w-full">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -461,9 +491,9 @@ export default function TeamPage() {
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Vision</span>
+                    <span className="text-[10px] md:text-xs text-white/70 uppercase tracking-wide">Vision</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
+                  <div className="h-1.5 lg:h-2 bg-white/10 rounded-full overflow-hidden w-full">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -476,9 +506,9 @@ export default function TeamPage() {
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Execution</span>
+                    <span className="text-[10px] md:text-xs text-white/70 uppercase tracking-wide">Execution</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
+                  <div className="h-1.5 lg:h-2 bg-white/10 rounded-full overflow-hidden w-full">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -567,13 +597,30 @@ export default function TeamPage() {
           </div>
         </div>
 
-        {/* Bottom Section - Character Grid */}
-        <div className="mt-auto">
-          <div className="py-4">
+        {/* Bottom Section - Character Grid (Hidden on mobile) */}
+        <div className="mt-auto hidden md:block">
+          <div className="py-4 relative">
+            {/* Desktop Navigation Arrows */}
+            <button
+              onClick={handlePrevious}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              aria-label="Previous character"
+            >
+              <ChevronLeft className="w-5 h-5 text-white" />
+            </button>
+
             <CharacterGrid
               selectedId={selectedCharacterId}
               onSelect={(char) => setSelectedCharacterId(char.id)}
             />
+
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              aria-label="Next character"
+            >
+              <ChevronRight className="w-5 h-5 text-white" />
+            </button>
           </div>
         </div>
         </div>
