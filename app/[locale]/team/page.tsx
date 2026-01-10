@@ -29,6 +29,12 @@ interface Character {
   color: string
   modelPath?: string
   texturePath?: string
+  stats: {
+    technical: number
+    leadership: number
+    vision: number
+    execution: number
+  }
 }
 
 const characters: Character[] = [
@@ -42,9 +48,15 @@ const characters: Character[] = [
     tactical: { name: 'Y-COMBINATOR FINALIST', description: 'Y-Combinator AI hackathon finalist' },
     ultimate: { name: 'TECHNICAL LEADERSHIP', description: 'Expert in building scalable technical solutions' },
     rolePerks: ['AI DEVELOPMENT', 'SYSTEM ARCHITECTURE'],
-    color: '#D64045',
+    color: '#FF1053',
     modelPath: '/models/ion.fbx',
-    texturePath: '/models/ion_texture.png'
+    texturePath: '/models/ion_texture.png',
+    stats: {
+      technical: 95,
+      leadership: 80,
+      vision: 75,
+      execution: 90
+    }
   },
   {
     id: 'abed-hamami',
@@ -55,9 +67,15 @@ const characters: Character[] = [
     tactical: { name: 'Y-COMBINATOR FINALIST', description: 'Y-Combinator AI hackathon finalist' },
     ultimate: { name: 'RAPID PROTOTYPING', description: 'Expert in turning ideas into working products' },
     rolePerks: ['APP DEVELOPMENT', 'TECHNICAL EXECUTION'],
-    color: '#D64045',
+    color: '#FF1053',
     modelPath: '/models/abed.fbx',
-    texturePath: '/models/abed_texture.png'
+    texturePath: '/models/abed_texture.png',
+    stats: {
+      technical: 95,
+      leadership: 80,
+      vision: 85,
+      execution: 85
+    }
   },
   // Product
   {
@@ -71,7 +89,13 @@ const characters: Character[] = [
     tactical: { name: 'COMMUNITY FOCUS', description: 'Obsessed with gaming community' },
     ultimate: { name: 'PRODUCT INSIGHT', description: 'Deep understanding of gamer needs and preferences' },
     rolePerks: ['GAMER PERSPECTIVE', 'PRODUCT STRATEGY'],
-    color: '#9ED8DB'
+    color: '#66C7F4',
+    stats: {
+      technical: 75,
+      leadership: 80,
+      vision: 100,
+      execution: 85
+    }
   },
   // Board
   {
@@ -83,9 +107,15 @@ const characters: Character[] = [
     tactical: { name: 'STARTUP SUCCESS', description: 'Successful startup exits' },
     ultimate: { name: 'STRATEGIC LEADERSHIP', description: 'Expert in scaling AI and tech companies' },
     rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
-    color: '#1D3354',
+    color: '#6C6EA0',
     modelPath: '/models/stephan.fbx',
-    texturePath: '/models/stephan_texture.png'
+    texturePath: '/models/stephan_texture.png',
+    stats: {
+      technical: 90,
+      leadership: 98,
+      vision: 95,
+      execution: 95
+    }
   },
   {
     id: 'bill-klehm',
@@ -96,9 +126,15 @@ const characters: Character[] = [
     tactical: { name: 'SCALING EXPERT', description: 'Expert in scaling niche businesses' },
     ultimate: { name: 'STRATEGIC VISION', description: 'Proven track record in business growth' },
     rolePerks: ['BUSINESS DEVELOPMENT', 'STRATEGIC PLANNING'],
-    color: '#1D3354',
+    color: '#6C6EA0',
     modelPath: '/models/bill.fbx',
-    texturePath: '/models/bill_texture.png'
+    texturePath: '/models/bill_texture.png',
+    stats: {
+      technical: 85,
+      leadership: 95,
+      vision: 98,
+      execution: 95
+    }
   },
   // Operations
   {
@@ -110,18 +146,24 @@ const characters: Character[] = [
     tactical: { name: 'STRATEGIC THINKING', description: 'Expert in technology strategy' },
     ultimate: { name: 'OPERATIONAL EXCELLENCE', description: 'Proven ability to execute complex initiatives' },
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
-    color: '#467599',
+    color: '#C1CAD6',
     modelPath: '/models/billy.fbx',
-    texturePath: '/models/billy_texture.png'
+    texturePath: '/models/billy_texture.png',
+    stats: {
+      technical: 95,
+      leadership: 92,
+      vision: 90,
+      execution: 98
+    }
   }
 ]
 
 const roleColors: Record<Role, string> = {
-  'Engineers': '#D64045',
-  'Product': '#9ED8DB',
-  'Board': '#1D3354',
-  'Operations': '#467599',
-  'Marketing': '#E9FFF9'
+  'Engineers': '#FF1053',
+  'Product': '#66C7F4',
+  'Board': '#6C6EA0',
+  'Operations': '#C1CAD6',
+  'Marketing': '#FFFFFF'
 }
 
 export default function TeamPage() {
@@ -363,7 +405,7 @@ export default function TeamPage() {
                 <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-1 whitespace-nowrap">
                   {selectedCharacter.name}
                 </h2>
-                <p className="text-sm md:text-base text-white/70 uppercase tracking-wide">
+                <p className="text-sm md:text-base text-white/70 uppercase tracking-wide whitespace-nowrap">
                   {selectedCharacter.class}
                 </p>
               </div>
@@ -372,38 +414,62 @@ export default function TeamPage() {
               <div className="space-y-3 w-full">
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Damage</span>
-                    <span className="text-xs text-white/50">85%</span>
+                    <span className="text-xs text-white/70 uppercase tracking-wide">Technical</span>
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
-                    <div className="h-full rounded-full" style={{ width: '85%', backgroundColor: roleColors[selectedCharacter.role] }}></div>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${selectedCharacter.stats.technical}%`,
+                        backgroundColor: roleColors[selectedCharacter.role],
+                        transition: 'width 0.6s ease-out 0.1s, background-color 0.3s ease-out'
+                      }}
+                    ></div>
                   </div>
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Toughness</span>
-                    <span className="text-xs text-white/50">50%</span>
+                    <span className="text-xs text-white/70 uppercase tracking-wide">Leadership</span>
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
-                    <div className="h-full rounded-full" style={{ width: '50%', backgroundColor: roleColors[selectedCharacter.role] }}></div>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${selectedCharacter.stats.leadership}%`,
+                        backgroundColor: roleColors[selectedCharacter.role],
+                        transition: 'width 0.6s ease-out 0.2s, background-color 0.3s ease-out'
+                      }}
+                    ></div>
                   </div>
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Utility</span>
-                    <span className="text-xs text-white/50">70%</span>
+                    <span className="text-xs text-white/70 uppercase tracking-wide">Vision</span>
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
-                    <div className="h-full rounded-full" style={{ width: '70%', backgroundColor: roleColors[selectedCharacter.role] }}></div>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${selectedCharacter.stats.vision}%`,
+                        backgroundColor: roleColors[selectedCharacter.role],
+                        transition: 'width 0.6s ease-out 0.3s, background-color 0.3s ease-out'
+                      }}
+                    ></div>
                   </div>
                 </div>
                 <div className="w-full">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/70 uppercase tracking-wide">Difficulty</span>
-                    <span className="text-xs text-white/50">90%</span>
+                    <span className="text-xs text-white/70 uppercase tracking-wide">Execution</span>
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden w-full">
-                    <div className="h-full rounded-full" style={{ width: '90%', backgroundColor: roleColors[selectedCharacter.role] }}></div>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${selectedCharacter.stats.execution}%`,
+                        backgroundColor: roleColors[selectedCharacter.role],
+                        transition: 'width 0.6s ease-out 0.4s, background-color 0.3s ease-out'
+                      }}
+                    ></div>
                   </div>
                 </div>
               </div>

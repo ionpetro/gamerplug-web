@@ -38,7 +38,7 @@ const characters: Character[] = [
     tactical: { name: 'D.O.C HEAL DRONE', description: 'Deploy a drone that heals nearby teammates over time' },
     ultimate: { name: 'CARE PACKAGE', description: 'Call in a care package with high-tier defensive gear' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   },
   {
     id: 'wraith',
@@ -49,7 +49,7 @@ const characters: Character[] = [
     tactical: { name: 'INTO THE VOID', description: 'Reposition quickly through the safety of void space' },
     ultimate: { name: 'DIMENSIONAL RIFT', description: 'Link two locations with portals for 60 seconds' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#9ED8DB'
+    color: '#66C7F4'
   },
   {
     id: 'bloodhound',
@@ -60,7 +60,7 @@ const characters: Character[] = [
     tactical: { name: 'EYE OF THE ALLFATHER', description: 'Briefly reveal hidden enemies, traps, and clues' },
     ultimate: { name: 'BEAST OF THE HUNT', description: 'Transform into the ultimate hunter' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#1D3354'
+    color: '#6C6EA0'
   },
   {
     id: 'gibraltar',
@@ -71,7 +71,7 @@ const characters: Character[] = [
     tactical: { name: 'DOME OF PROTECTION', description: 'Throw down a dome shield that blocks attacks' },
     ultimate: { name: 'DEFENSIVE BOMBARDMENT', description: 'Call in a concentrated mortar strike' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   },
   {
     id: 'pathfinder',
@@ -82,7 +82,7 @@ const characters: Character[] = [
     tactical: { name: 'GRAPPLING HOOK', description: 'Grapple to get to out-of-reach places quickly' },
     ultimate: { name: 'ZIPLINE GUN', description: 'Create a zipline for everyone to use' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#1D3354'
+    color: '#6C6EA0'
   },
   {
     id: 'bangalore',
@@ -93,7 +93,7 @@ const characters: Character[] = [
     tactical: { name: 'SMOKE LAUNCHER', description: 'Fire a high-velocity smoke canister that explodes into a smoke wall' },
     ultimate: { name: 'ROLLING THUNDER', description: 'Call in an artillery strike that slowly creeps across the landscape' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'caustic',
@@ -104,7 +104,7 @@ const characters: Character[] = [
     tactical: { name: 'NOX GAS TRAP', description: 'Place up to 6 canisters that release deadly Nox gas when shot or triggered' },
     ultimate: { name: 'NOX GAS GRENADE', description: 'Blanket a large area in Nox gas' },
     rolePerks: ['RING CONSOLE', 'CARE PACKAGE INSIGHT'],
-    color: '#E9FFF9'
+    color: '#FFFFFF'
   },
   {
     id: 'mirage',
@@ -115,7 +115,7 @@ const characters: Character[] = [
     tactical: { name: 'PSYCHE OUT', description: 'Send out a holographic decoy to confuse the enemy' },
     ultimate: { name: 'LIFE OF THE PARTY', description: 'Deploy a team of controllable decoys to distract enemies' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   },
   {
     id: 'octane',
@@ -126,7 +126,7 @@ const characters: Character[] = [
     tactical: { name: 'STIM', description: 'Move 30% faster for 6 seconds. Costs health to use' },
     ultimate: { name: 'LAUNCH PAD', description: 'Deploy a jump pad that launches teammates through the air' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#9ED8DB'
+    color: '#66C7F4'
   },
   {
     id: 'wattson',
@@ -137,7 +137,7 @@ const characters: Character[] = [
     tactical: { name: 'PERIMETER SECURITY', description: 'Create electrified fences that damage and slow enemies' },
     ultimate: { name: 'INTERCEPTION PYLON', description: 'Place an electrified pylon that destroys incoming ordnance' },
     rolePerks: ['RING CONSOLE', 'CARE PACKAGE INSIGHT'],
-    color: '#E9FFF9'
+    color: '#FFFFFF'
   },
   {
     id: 'crypto',
@@ -148,7 +148,7 @@ const characters: Character[] = [
     tactical: { name: 'SURVEILLANCE DRONE', description: 'Deploy an aerial camera drone' },
     ultimate: { name: 'DRONE EMP', description: 'Charge your drone to blast nearby enemies' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#1D3354'
+    color: '#6C6EA0'
   },
   {
     id: 'revenant',
@@ -159,7 +159,7 @@ const characters: Character[] = [
     tactical: { name: 'SILENCE', description: 'Throw a device that damages and disables enemy abilities' },
     ultimate: { name: 'DEATH TOTEM', description: 'Drop a totem that protects you from death' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'loba',
@@ -170,7 +170,7 @@ const characters: Character[] = [
     tactical: { name: 'BURGLAR\'S BEST FRIEND', description: 'Teleport to hard-to-reach places or escape trouble' },
     ultimate: { name: 'BLACK MARKET BOUTIQUE', description: 'Place a device that allows you to teleport nearby loot' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   },
   {
     id: 'rampart',
@@ -181,7 +181,7 @@ const characters: Character[] = [
     tactical: { name: 'AMPED COVER', description: 'Build a crouch-cover wall that deploys a full-cover amped wall' },
     ultimate: { name: 'EMPLACED MINIGUN "SHEILA"', description: 'Wield a mounted machine gun' },
     rolePerks: ['RING CONSOLE', 'CARE PACKAGE INSIGHT'],
-    color: '#E9FFF9'
+    color: '#FFFFFF'
   },
   {
     id: 'horizon',
@@ -192,7 +192,7 @@ const characters: Character[] = [
     tactical: { name: 'GRAVITY LIFT', description: 'Create a lift that launches players upward' },
     ultimate: { name: 'BLACK HOLE', description: 'Deploy N.E.W.T. to create a micro black hole' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#9ED8DB'
+    color: '#66C7F4'
   },
   {
     id: 'fuse',
@@ -203,7 +203,7 @@ const characters: Character[] = [
     tactical: { name: 'KNUCKLE CLUSTER', description: 'Launch a cluster bomb that continuously expels airburst explosives' },
     ultimate: { name: 'THE MOTHERLODE', description: 'Launch a bombardment that encircles a target in a wall of flame' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'valkyrie',
@@ -214,7 +214,7 @@ const characters: Character[] = [
     tactical: { name: 'MISSILE SWARM', description: 'Fire a swarm of mini-rockets that damage and disorient the enemy' },
     ultimate: { name: 'SKYWARD DIVE', description: 'Launch into the air and redeploy' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#9ED8DB'
+    color: '#66C7F4'
   },
   {
     id: 'seer',
@@ -225,7 +225,7 @@ const characters: Character[] = [
     tactical: { name: 'FOCUS OF ATTENTION', description: 'Summon micro-drones to reveal and interrupt enemies' },
     ultimate: { name: 'EXHIBIT', description: 'Create a sphere that reveals enemies moving quickly' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#1D3354'
+    color: '#6C6EA0'
   },
   {
     id: 'ash',
@@ -236,7 +236,7 @@ const characters: Character[] = [
     tactical: { name: 'ARC SNARE', description: 'Throw a spinning snare that damages and tethers enemies' },
     ultimate: { name: 'PHASE BREACH', description: 'Tear open a one-way portal to a targeted location' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'mad-maggie',
@@ -247,7 +247,7 @@ const characters: Character[] = [
     tactical: { name: 'RIOT DRILL', description: 'Fire a drill that attaches to an enemy and burns them' },
     ultimate: { name: 'WRECKING BALL', description: 'Throw a ball that releases speed-boosting pads and detonates near enemies' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'newcastle',
@@ -258,7 +258,7 @@ const characters: Character[] = [
     tactical: { name: 'MOBILE SHIELD', description: 'Throw a controllable drone that creates a moving energy shield' },
     ultimate: { name: 'CASTLE WALL', description: 'Leap to an ally or target area and slam down, creating a fortified stronghold' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   },
   {
     id: 'vantage',
@@ -269,7 +269,7 @@ const characters: Character[] = [
     tactical: { name: 'ECHO RELOCATION', description: 'Send out Echo to a location and launch toward him' },
     ultimate: { name: 'SNIPER\'S MARK', description: 'Fire a bullet that marks targets for increased damage' },
     rolePerks: ['SURVEY BEACONS', 'CARE PACKAGE INSIGHT'],
-    color: '#1D3354'
+    color: '#6C6EA0'
   },
   {
     id: 'catalyst',
@@ -280,7 +280,7 @@ const characters: Character[] = [
     tactical: { name: 'PIERCING SPIKES', description: 'Throw out a patch of ferrofluid that turns into spikes when enemies are near' },
     ultimate: { name: 'DARK VEIL', description: 'Raise a permeable wall of ferrofluid that blocks vision and slows enemies' },
     rolePerks: ['RING CONSOLE', 'CARE PACKAGE INSIGHT'],
-    color: '#E9FFF9'
+    color: '#FFFFFF'
   },
   {
     id: 'ballistic',
@@ -291,7 +291,7 @@ const characters: Character[] = [
     tactical: { name: 'WHISTLER', description: 'Shoot a projectile that heats up an enemy\'s weapon' },
     ultimate: { name: 'TEMPERED PLATING', description: 'Grants infinite ammo and faster reloads' },
     rolePerks: ['EXTENDED SUPPLY BINS', 'SMALL STACK'],
-    color: '#D64045'
+    color: '#FF1053'
   },
   {
     id: 'conduit',
@@ -302,16 +302,16 @@ const characters: Character[] = [
     tactical: { name: 'RADIANT TRANSFER', description: 'Transfer shields to teammates' },
     ultimate: { name: 'ENERGY BARricade', description: 'Deploy energy jammers that damage and slow enemies' },
     rolePerks: ['ACCESS EXTENDED SUPPLY BINS', 'CRAFT ALLY BANNERS'],
-    color: '#467599'
+    color: '#C1CAD6'
   }
 ]
 
 const roleColors: Record<Role, string> = {
-  'Engineers': '#D64045',
-  'Product': '#9ED8DB',
-  'Board': '#1D3354',
-  'Operations': '#467599',
-  'Streamers': '#E9FFF9'
+  'Engineers': '#FF1053',
+  'Product': '#66C7F4',
+  'Board': '#6C6EA0',
+  'Operations': '#C1CAD6',
+  'Streamers': '#FFFFFF'
 }
 
 const roleIcons: Record<Role, typeof Sword> = {
