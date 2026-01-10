@@ -1,38 +1,82 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
-import { AnimationMixer, Box3, Vector3, TextureLoader } from 'three'
+import { AnimationMixer, Box3, Vector3 } from 'three'
 import * as THREE from 'three'
 
 interface FBXModelProps {
   url: string
-  texturePath?: string
 }
 
-function setGroupOpacity(group: THREE.Object3D, opacity: number) {
+type FadeMat = {
+  mat: THREE.Material & {
+    opacity?: number
+    transparent?: boolean
+    depthWrite?: boolean
+    depthTest?: boolean
+  }
+  originalOpacity: number
+  originalTransparent: boolean
+  originalDepthWrite: boolean
+}
+
+function prepareFadeGroup(group: THREE.Object3D) {
+  const mats: FadeMat[] = []
+  const meshes: THREE.Mesh[] = []
+
   group.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) return
+    meshes.push(child)
 
     const material = child.material
-    const apply = (m: THREE.Material) => {
-      const mat = m as THREE.MeshStandardMaterial
-      // Ensure opacity actually works
-      mat.transparent = true
-      mat.opacity = opacity
-      // Helps avoid harsh sorting artifacts during fades
-      mat.depthWrite = opacity >= 0.999
+    const collect = (m: THREE.Material) => {
+      const mat = m as FadeMat['mat']
+      mats.push({
+        mat,
+        originalOpacity: typeof mat.opacity === 'number' ? mat.opacity : 1,
+        originalTransparent: !!mat.transparent,
+        originalDepthWrite: typeof mat.depthWrite === 'boolean' ? mat.depthWrite : true,
+      })
+    }
+
+    if (Array.isArray(material)) material.forEach(collect)
+    else if (material) collect(material)
+  })
+
+  group.userData.__fadeMats = mats
+  group.userData.__fadeMeshes = meshes
+}
+
+function applyFade(group: THREE.Object3D, fade01: number, renderOrder = 0) {
+  const mats = group.userData.__fadeMats as FadeMat[] | undefined
+  const meshes = group.userData.__fadeMeshes as THREE.Mesh[] | undefined
+  if (!mats || !meshes) return
+
+  group.renderOrder = renderOrder
+  for (const mesh of meshes) mesh.renderOrder = renderOrder
+
+  const isFullyOpaque = fade01 >= 0.999
+
+  for (const entry of mats) {
+    const mat = entry.mat
+
+    if (typeof mat.opacity === 'number') mat.opacity = entry.originalOpacity * fade01
+    if (typeof mat.depthTest === 'boolean') mat.depthTest = true
+
+    // Only toggle transparency at thresholds (avoids per-frame shader/sort churn)
+    const targetTransparent = entry.originalTransparent || !isFullyOpaque
+    if (typeof mat.transparent === 'boolean' && mat.transparent !== targetTransparent) {
+      mat.transparent = targetTransparent
       mat.needsUpdate = true
     }
 
-    if (Array.isArray(material)) {
-      material.forEach(apply)
-    } else if (material) {
-      apply(material)
-    }
-  })
+    // During fades, disable depthWrite to avoid z-fighting artifacts.
+    const targetDepthWrite = isFullyOpaque ? entry.originalDepthWrite : false
+    if (typeof mat.depthWrite === 'boolean') mat.depthWrite = targetDepthWrite
+  }
 }
 
 function disposeGroup(group: THREE.Object3D) {
@@ -51,13 +95,13 @@ function disposeGroup(group: THREE.Object3D) {
   })
 }
 
-function FBXModel({ url, texturePath }: FBXModelProps) {
-  const modelRef = useRef<THREE.Group>(null)
+function FBXModel({ url }: FBXModelProps) {
+  const rootRef = useRef<THREE.Group>(null)
   const currentMixerRef = useRef<AnimationMixer | null>(null)
   const nextMixerRef = useRef<AnimationMixer | null>(null)
 
-  const [currentModel, setCurrentModel] = useState<THREE.Group | null>(null)
-  const [nextModel, setNextModel] = useState<THREE.Group | null>(null)
+  const currentModelRef = useRef<THREE.Group | null>(null)
+  const nextModelRef = useRef<THREE.Group | null>(null)
   // Keep transition progress in a ref to avoid per-frame React state updates (smoother fades).
   const transitionTRef = useRef(1) // 0..1 (1 means "not transitioning")
 
@@ -69,7 +113,10 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
     loader.load(
       url,
       (fbx) => {
-        if (cancelled) return
+        if (cancelled) {
+          disposeGroup(fbx)
+          return
+        }
 
         // Center the model
         const box = new Box3().setFromObject(fbx)
@@ -82,76 +129,21 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
         const scale = 4 / maxDim  // Increased from 3 to 5 for closer zoom
         fbx.scale.multiplyScalar(scale)
 
-        // Make sure we can fade it in/out (even before texture load)
-        setGroupOpacity(fbx, 0)
+        prepareFadeGroup(fbx)
+        // Make sure we can fade it in/out (start invisible)
+        applyFade(fbx, 0, 1)
 
-        // Apply texture if provided
-        if (texturePath) {
-          const textureLoader = new TextureLoader()
-          textureLoader.load(
-            texturePath,
-            (texture) => {
-              if (cancelled) return
-
-              texture.flipY = true // Rodin AI textures typically need to be flipped
-              texture.wrapS = THREE.RepeatWrapping
-              texture.wrapT = THREE.RepeatWrapping
-              
-              // Traverse all meshes and apply texture
-              fbx.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                  const material = new THREE.MeshStandardMaterial({
-                    map: texture,
-                    side: THREE.DoubleSide,
-                    color: 0xffffff // Ensure full color intensity
-                  })
-                  child.material = material
-                }
-              })
-
-              // Ensure new materials can fade
-              setGroupOpacity(fbx, 0)
-
-              // Set up animations if they exist
-              if (fbx.animations && fbx.animations.length > 0) {
-                const mixer = new AnimationMixer(fbx)
-                nextMixerRef.current = mixer
-                const action = mixer.clipAction(fbx.animations[0])
-                action.play()
-              }
-
-              // If this is the first model, show it immediately (no blank state).
-              transitionTRef.current = 0
-              setNextModel(fbx)
-            },
-            undefined,
-            (error) => {
-              console.error('Error loading texture:', error)
-              if (cancelled) return
-
-              if (fbx.animations && fbx.animations.length > 0) {
-                const mixer = new AnimationMixer(fbx)
-                nextMixerRef.current = mixer
-                const action = mixer.clipAction(fbx.animations[0])
-                action.play()
-              }
-
-              transitionTRef.current = 0
-              setNextModel(fbx)
-            }
-          )
-        } else {
-          // Set up animations if they exist
-          if (fbx.animations && fbx.animations.length > 0) {
-            const mixer = new AnimationMixer(fbx)
-            nextMixerRef.current = mixer
-            const action = mixer.clipAction(fbx.animations[0])
-            action.play()
-          }
-
-          transitionTRef.current = 0
-          setNextModel(fbx)
+        // Set up animations if they exist
+        if (fbx.animations && fbx.animations.length > 0) {
+          const mixer = new AnimationMixer(fbx)
+          nextMixerRef.current = mixer
+          const action = mixer.clipAction(fbx.animations[0])
+          action.play()
         }
+
+        transitionTRef.current = 0
+        rootRef.current?.add(fbx)
+        nextModelRef.current = fbx
       },
       (xhr) => {
         // Intentionally no UI spinners / progress logs
@@ -164,33 +156,70 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
 
     return () => {
       cancelled = true
+
+      // Clean up scene objects on unmount/url change
+      const current = currentModelRef.current
+      const next = nextModelRef.current
+      if (current) {
+        rootRef.current?.remove(current)
+        disposeGroup(current)
+      }
+      if (next) {
+        rootRef.current?.remove(next)
+        disposeGroup(next)
+      }
+      currentModelRef.current = null
+      nextModelRef.current = null
     }
-  }, [url, texturePath])
+  }, [url])
 
   useFrame((state, delta) => {
     // Drive both mixers during a transition
     currentMixerRef.current?.update(delta)
     nextMixerRef.current?.update(delta)
 
+    const currentModel = currentModelRef.current
+    const nextModel = nextModelRef.current
     if (!nextModel) return
 
-    // Faster + smoother fade:
-    // - Use a short duration (in seconds), not a linear "speed" (less error-prone)
-    // - Ease with smoothstep for a more natural crossfade
+    // Sequential fade: fade out current first, then fade in next
+    // This avoids overlapping transparent models which cause z-fighting
     const hasCurrent = !!currentModel
-    const durationSec = hasCurrent ? 0.22 : 0.14
-    const nextTLinear = Math.min(1, transitionTRef.current + delta / durationSec)
-    transitionTRef.current = nextTLinear
-    const easedT = nextTLinear * nextTLinear * (3 - 2 * nextTLinear) // smoothstep
+    const fadeOutDuration = 0.15
+    const fadeInDuration = 0.2
+    const totalDuration = hasCurrent ? fadeOutDuration + fadeInDuration : fadeInDuration
 
-    if (currentModel) setGroupOpacity(currentModel, 1 - easedT)
-    setGroupOpacity(nextModel, easedT)
+    const nextT = Math.min(1, transitionTRef.current + delta / totalDuration)
+    transitionTRef.current = nextT
 
-    if (nextTLinear >= 1) {
+    if (hasCurrent) {
+      // Sequential: first half fades out current, second half fades in next
+      const fadeOutProgress = Math.min(1, nextT * (totalDuration / fadeOutDuration))
+      const fadeInProgress = Math.max(0, (nextT * totalDuration - fadeOutDuration) / fadeInDuration)
+      
+      // Smooth easing
+      const fadeOutEased = 1 - (fadeOutProgress * fadeOutProgress)
+      const fadeInEased = fadeInProgress * fadeInProgress * (3 - 2 * fadeInProgress)
+      
+      applyFade(currentModel!, fadeOutEased, 0)
+      applyFade(nextModel, fadeInEased, 1)
+    } else {
+      // No current model, just fade in the next
+      const fadeInEased = nextT * nextT * (3 - 2 * nextT)
+      applyFade(nextModel, fadeInEased, 0)
+    }
+
+    if (nextT >= 1) {
       // Finalize the swap
-      const prev = currentModel
-      setCurrentModel(nextModel)
-      setNextModel(null)
+      const prev = currentModelRef.current
+      const next = nextModelRef.current
+      if (!next) return
+
+      // Ensure new one is fully opaque + restored.
+      applyFade(next, 1, 0)
+
+      currentModelRef.current = next
+      nextModelRef.current = null
       transitionTRef.current = 1
 
       // Move next mixer -> current mixer
@@ -199,7 +228,8 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
       nextMixerRef.current = null
 
       if (prev) {
-        // Avoid leaking GPU resources
+        // Remove from scene BEFORE dispose (prevents one-frame render of disposed resources)
+        rootRef.current?.remove(prev)
         disposeGroup(prev)
       }
     }
@@ -207,14 +237,11 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
 
   // Render both during the crossfade. Never render "nothing" during load.
   return (
-    <group ref={modelRef}>
-      {currentModel ? <primitive object={currentModel} /> : null}
-      {nextModel ? <primitive object={nextModel} /> : null}
-    </group>
+    <group ref={rootRef} />
   )
 }
 
-export default function FBXViewer({ modelPath, texturePath, characterId }: { modelPath: string; texturePath?: string; characterId?: string }) {
+export default function FBXViewer({ modelPath, characterId }: { modelPath: string; characterId?: string }) {
   // Camera positioned straight forward at chest height (waist to head view)
   const isBill = characterId === 'bill-klehm'
   const cameraY = isBill ? 1.0 : 1.8
@@ -243,10 +270,9 @@ export default function FBXViewer({ modelPath, texturePath, characterId }: { mod
           shadow-mapSize-height={2048}
         />
         <directionalLight position={[-5, 3, -5]} intensity={0.5} />
-        {/* <pointLight position={[0, 3, 0]} intensity={0.3} /> */}
 
         {/* Model */}
-        <FBXModel url={modelPath} texturePath={texturePath} />
+        <FBXModel url={modelPath} />
       </Canvas>
     </div>
   )

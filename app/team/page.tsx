@@ -331,13 +331,13 @@ const roleDescriptions: Record<Role, string> = {
 }
 
 // Map team member IDs to their 3D models
-const teamMemberModels: Record<string, { modelPath: string; texturePath: string }> = {
-  'ion-petropoulos': { modelPath: '/models/ion.fbx', texturePath: '/models/ion_texture.png' },
-  'abed-hamami': { modelPath: '/models/abed.fbx', texturePath: '/models/abed_texture.png' },
-  'hunter-klehm': { modelPath: '/models/hunter.fbx', texturePath: '/models/hunter_texture.png' },
-  'stephan-nicklow': { modelPath: '/models/stephan.fbx', texturePath: '/models/stephan_texture.png' },
-  'bill-klehm': { modelPath: '/models/bill.fbx', texturePath: '/models/bill_texture.png' },
-  'billy-edwards': { modelPath: '/models/billy.fbx', texturePath: '/models/billy_texture.png' },
+const teamMemberModels: Record<string, { modelPath: string }> = {
+  'ion-petropoulos': { modelPath: '/models/ion.fbx' },
+  'abed-hamami': { modelPath: '/models/abed.fbx' },
+  'hunter-klehm': { modelPath: '/models/hunter.fbx' },
+  'stephan-nicklow': { modelPath: '/models/stephan.fbx' },
+  'bill-klehm': { modelPath: '/models/bill.fbx' },
+  'billy-edwards': { modelPath: '/models/billy.fbx' },
 }
 
 export default function TeamPage() {
@@ -512,7 +512,6 @@ export default function TeamPage() {
             <div className="w-full aspect-[4/3] border-2 border-border rounded-lg bg-card/50 overflow-hidden">
               <FBXViewer
                 modelPath={teamMemberModels[selectedCharacterId]?.modelPath || '/models/stephan.fbx'}
-                texturePath={teamMemberModels[selectedCharacterId]?.texturePath || '/models/stephan_texture.png'}
                 characterId={selectedCharacterId}
               />
             </div>
