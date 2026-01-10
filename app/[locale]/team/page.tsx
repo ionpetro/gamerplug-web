@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX } from 'lucide-react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX, Mail } from 'lucide-react'
 
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -34,6 +34,13 @@ interface Character {
     vision: number
     execution: number
   }
+  socials?: {
+    twitter?: string
+    instagram?: string
+    youtube?: string
+    twitch?: string
+    email?: string
+  }
 }
 
 const characters: Character[] = [
@@ -54,6 +61,9 @@ const characters: Character[] = [
       leadership: 80,
       vision: 75,
       execution: 90
+    },
+    socials: {
+      twitter: 'https://x.com/ionpetropoulos'
     }
   },
   {
@@ -72,6 +82,9 @@ const characters: Character[] = [
       leadership: 80,
       vision: 85,
       execution: 85
+    },
+    socials: {
+      twitter: 'https://x.com/abed_hamami'
     }
   },
   // Product
@@ -91,25 +104,31 @@ const characters: Character[] = [
       leadership: 80,
       vision: 100,
       execution: 85
+    },
+    socials: {
+      twitch: 'https://twitch.tv/bearbiztv'
     }
   },
   // Board
   {
     id: 'stephan-nicklow',
     name: 'STEPHAN NICKLOW',
-    role: 'Board',
+    role: 'Operations',
     class: 'CEO',
     passive: { name: 'META EXPERIENCE', description: 'Ex-Meta, AI consulting leader' },
     tactical: { name: 'STARTUP SUCCESS', description: 'Successful startup exits' },
     ultimate: { name: 'STRATEGIC LEADERSHIP', description: 'Expert in scaling AI and tech companies' },
     rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
-    color: '#6C6EA0',
+    color: '#C1CAD6',
     modelPath: '/models/stephan.fbx',
     stats: {
       technical: 90,
       leadership: 98,
       vision: 95,
       execution: 95
+    },
+    socials: {
+      email: 'stephannicklow@gmail.com'
     }
   },
   {
@@ -128,25 +147,31 @@ const characters: Character[] = [
       leadership: 95,
       vision: 98,
       execution: 95
+    },
+    socials: {
+      email: 'bill.klehm@ebliss.global'
     }
   },
   // Operations
   {
     id: 'billy-edwards',
     name: 'BILLY EDWARDS',
-    role: 'Operations',
+    role: 'Board',
     class: 'TECHNOLOGIST & STRATEGIST',
     passive: { name: 'TECH TRANSFORMATION', description: 'Broad success transitioning technologies into businesses' },
     tactical: { name: 'STRATEGIC THINKING', description: 'Expert in technology strategy' },
     ultimate: { name: 'OPERATIONAL EXCELLENCE', description: 'Proven ability to execute complex initiatives' },
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
-    color: '#C1CAD6',
+    color: '#6C6EA0',
     modelPath: '/models/billy.fbx',
     stats: {
       technical: 95,
       leadership: 92,
       vision: 90,
       execution: 98
+    },
+    socials: {
+      email: 'billy.Edwards.TX@gmail.com'
     }
   }
 ]
@@ -466,20 +491,76 @@ export default function TeamPage() {
                 </div>
               </div>
 
-              {/* Ability Icons Row */}
+              {/* Social Icons Row */}
               <div className="flex gap-2">
-                {[Twitter, Instagram, Youtube, Twitch, Facebook].map((Icon, index) => (
-                  <div
-                    key={index}
+                {selectedCharacter.socials?.twitter && (
+                  <a
+                    href={selectedCharacter.socials.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-8 h-8 rounded-lg border flex items-center justify-center hover:opacity-80 transition-opacity"
-                    style={{ 
+                    style={{
                       backgroundColor: `${roleColors[selectedCharacter.role]}30`,
                       borderColor: `${roleColors[selectedCharacter.role]}50`
                     }}
                   >
-                    <Icon className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
-                  </div>
-                ))}
+                    <Twitter className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
+                  </a>
+                )}
+                {selectedCharacter.socials?.instagram && (
+                  <a
+                    href={selectedCharacter.socials.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg border flex items-center justify-center hover:opacity-80 transition-opacity"
+                    style={{
+                      backgroundColor: `${roleColors[selectedCharacter.role]}30`,
+                      borderColor: `${roleColors[selectedCharacter.role]}50`
+                    }}
+                  >
+                    <Instagram className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
+                  </a>
+                )}
+                {selectedCharacter.socials?.youtube && (
+                  <a
+                    href={selectedCharacter.socials.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg border flex items-center justify-center hover:opacity-80 transition-opacity"
+                    style={{
+                      backgroundColor: `${roleColors[selectedCharacter.role]}30`,
+                      borderColor: `${roleColors[selectedCharacter.role]}50`
+                    }}
+                  >
+                    <Youtube className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
+                  </a>
+                )}
+                {selectedCharacter.socials?.twitch && (
+                  <a
+                    href={selectedCharacter.socials.twitch}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg border flex items-center justify-center hover:opacity-80 transition-opacity"
+                    style={{
+                      backgroundColor: `${roleColors[selectedCharacter.role]}30`,
+                      borderColor: `${roleColors[selectedCharacter.role]}50`
+                    }}
+                  >
+                    <Twitch className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
+                  </a>
+                )}
+                {selectedCharacter.socials?.email && (
+                  <a
+                    href={`mailto:${selectedCharacter.socials.email}`}
+                    className="w-8 h-8 rounded-lg border flex items-center justify-center hover:opacity-80 transition-opacity"
+                    style={{
+                      backgroundColor: `${roleColors[selectedCharacter.role]}30`,
+                      borderColor: `${roleColors[selectedCharacter.role]}50`
+                    }}
+                  >
+                    <Mail className="w-4 h-4" style={{ color: roleColors[selectedCharacter.role] }} />
+                  </a>
+                )}
               </div>
 
             </div>
