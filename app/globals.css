@@ -77,7 +77,7 @@
 
 @theme inline {
   --font-sans: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --font-space-mono: "Space Mono", ui-monospace, SFMono-Regular, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  --font-space-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -123,23 +123,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  
-  /* Content Visibility API for below-fold sections */
-  #features,
-  #our-promise {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 800px;
-  }
-  
-  /* Space Mono font utility */
-  .font-space-mono {
-    font-family: var(--font-space-mono);
-  }
-  
-  /* Handwritten font utility */
-  .font-handwritten {
-    font-family: "Caveat", cursive;
-  }
 }
 
 /* Added custom gradient backgrounds for gaming aesthetic */
@@ -163,16 +146,9 @@
 }
 
 /* Navbar specific styles */
-/* Disable blur on mobile, enable only on desktop */
 .navbar-blur {
-  background: oklch(0.05 0 0 / 0.95); /* Solid by default */
-}
-
-@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
-  .navbar-blur {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Animations */
@@ -213,51 +189,12 @@
   color: oklch(0.98 0 0);
 }
 
-/* Blog Content Styling */
-.blog-content {
-  color: var(--foreground);
+/* Character Portrait Styles */
+.character-portrait {
+  @apply relative rounded-sm overflow-hidden cursor-pointer transition-all duration-200;
+  @apply hover:scale-105 hover:shadow-lg;
 }
 
-.blog-content h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--foreground);
-  line-height: 1.2;
-}
-
-.blog-content h2:first-of-type {
-  margin-top: 0;
-}
-
-.blog-content p {
-  margin-bottom: 1.5rem;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-}
-
-.blog-content p:last-child {
-  margin-bottom: 0;
-}
-
-.blog-content strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
-.blog-content a {
-  color: var(--primary);
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.blog-content a:hover {
-  color: var(--accent);
-}
-
-@media (max-width: 768px) {
-  .blog-content h2 {
-    font-size: 1.5rem;
-  }
+.character-portrait.selected {
+  @apply shadow-xl;
 }
