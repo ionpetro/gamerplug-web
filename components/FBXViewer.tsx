@@ -12,21 +12,65 @@ interface FBXModelProps {
   texturePath?: string
 }
 
+function setGroupOpacity(group: THREE.Object3D, opacity: number) {
+  group.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return
+
+    const material = child.material
+    const apply = (m: THREE.Material) => {
+      const mat = m as THREE.MeshStandardMaterial
+      // Ensure opacity actually works
+      mat.transparent = true
+      mat.opacity = opacity
+      // Helps avoid harsh sorting artifacts during fades
+      mat.depthWrite = opacity >= 0.999
+      mat.needsUpdate = true
+    }
+
+    if (Array.isArray(material)) {
+      material.forEach(apply)
+    } else if (material) {
+      apply(material)
+    }
+  })
+}
+
+function disposeGroup(group: THREE.Object3D) {
+  group.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return
+
+    child.geometry?.dispose?.()
+    const material = child.material
+    const dispose = (m: THREE.Material) => m.dispose?.()
+
+    if (Array.isArray(material)) {
+      material.forEach(dispose)
+    } else if (material) {
+      dispose(material)
+    }
+  })
+}
+
 function FBXModel({ url, texturePath }: FBXModelProps) {
   const modelRef = useRef<THREE.Group>(null)
-  const mixerRef = useRef<AnimationMixer | null>(null)
-  const [model, setModel] = useState<THREE.Group | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const currentMixerRef = useRef<AnimationMixer | null>(null)
+  const nextMixerRef = useRef<AnimationMixer | null>(null)
+
+  const [currentModel, setCurrentModel] = useState<THREE.Group | null>(null)
+  const [nextModel, setNextModel] = useState<THREE.Group | null>(null)
+  // Keep transition progress in a ref to avoid per-frame React state updates (smoother fades).
+  const transitionTRef = useRef(1) // 0..1 (1 means "not transitioning")
 
   useEffect(() => {
-    setIsLoading(true)
-    setModel(null)
-    
+    let cancelled = false
+
     const loader = new FBXLoader()
-    
+
     loader.load(
       url,
       (fbx) => {
+        if (cancelled) return
+
         // Center the model
         const box = new Box3().setFromObject(fbx)
         const center = box.getCenter(new Vector3())
@@ -35,8 +79,11 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
         // Scale the model to fit in view (zoomed in)
         const size = box.getSize(new Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
-        const scale = 5 / maxDim  // Increased from 3 to 5 for closer zoom
+        const scale = 4 / maxDim  // Increased from 3 to 5 for closer zoom
         fbx.scale.multiplyScalar(scale)
+
+        // Make sure we can fade it in/out (even before texture load)
+        setGroupOpacity(fbx, 0)
 
         // Apply texture if provided
         if (texturePath) {
@@ -44,6 +91,8 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
           textureLoader.load(
             texturePath,
             (texture) => {
+              if (cancelled) return
+
               texture.flipY = true // Rodin AI textures typically need to be flipped
               texture.wrapS = THREE.RepeatWrapping
               texture.wrapT = THREE.RepeatWrapping
@@ -59,74 +108,129 @@ function FBXModel({ url, texturePath }: FBXModelProps) {
                   child.material = material
                 }
               })
-              
-              setModel(fbx)
-              setIsLoading(false)
+
+              // Ensure new materials can fade
+              setGroupOpacity(fbx, 0)
+
+              // Set up animations if they exist
+              if (fbx.animations && fbx.animations.length > 0) {
+                const mixer = new AnimationMixer(fbx)
+                nextMixerRef.current = mixer
+                const action = mixer.clipAction(fbx.animations[0])
+                action.play()
+              }
+
+              // If this is the first model, show it immediately (no blank state).
+              transitionTRef.current = 0
+              setNextModel(fbx)
             },
             undefined,
             (error) => {
               console.error('Error loading texture:', error)
-              setModel(fbx)
-              setIsLoading(false)
+              if (cancelled) return
+
+              if (fbx.animations && fbx.animations.length > 0) {
+                const mixer = new AnimationMixer(fbx)
+                nextMixerRef.current = mixer
+                const action = mixer.clipAction(fbx.animations[0])
+                action.play()
+              }
+
+              transitionTRef.current = 0
+              setNextModel(fbx)
             }
           )
         } else {
-          setModel(fbx)
-          setIsLoading(false)
-        }
+          // Set up animations if they exist
+          if (fbx.animations && fbx.animations.length > 0) {
+            const mixer = new AnimationMixer(fbx)
+            nextMixerRef.current = mixer
+            const action = mixer.clipAction(fbx.animations[0])
+            action.play()
+          }
 
-        // Set up animations if they exist
-        if (fbx.animations && fbx.animations.length > 0) {
-          const mixer = new AnimationMixer(fbx)
-          mixerRef.current = mixer
-          const action = mixer.clipAction(fbx.animations[0])
-          action.play()
+          transitionTRef.current = 0
+          setNextModel(fbx)
         }
       },
       (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+        // Intentionally no UI spinners / progress logs
+        void xhr
       },
       (error) => {
         console.error('Error loading FBX:', error)
-        setIsLoading(false)
       }
     )
 
     return () => {
-      if (mixerRef.current) {
-        mixerRef.current.stopAllAction()
-      }
-      setIsLoading(true)
-      setModel(null)
+      cancelled = true
     }
   }, [url, texturePath])
 
   useFrame((state, delta) => {
-    if (mixerRef.current) {
-      mixerRef.current.update(delta)
-    }
-    if (modelRef.current) {
-      modelRef.current.rotation.y += 0.001
+    // Drive both mixers during a transition
+    currentMixerRef.current?.update(delta)
+    nextMixerRef.current?.update(delta)
+
+    if (!nextModel) return
+
+    // Faster + smoother fade:
+    // - Use a short duration (in seconds), not a linear "speed" (less error-prone)
+    // - Ease with smoothstep for a more natural crossfade
+    const hasCurrent = !!currentModel
+    const durationSec = hasCurrent ? 0.22 : 0.14
+    const nextTLinear = Math.min(1, transitionTRef.current + delta / durationSec)
+    transitionTRef.current = nextTLinear
+    const easedT = nextTLinear * nextTLinear * (3 - 2 * nextTLinear) // smoothstep
+
+    if (currentModel) setGroupOpacity(currentModel, 1 - easedT)
+    setGroupOpacity(nextModel, easedT)
+
+    if (nextTLinear >= 1) {
+      // Finalize the swap
+      const prev = currentModel
+      setCurrentModel(nextModel)
+      setNextModel(null)
+      transitionTRef.current = 1
+
+      // Move next mixer -> current mixer
+      currentMixerRef.current?.stopAllAction()
+      currentMixerRef.current = nextMixerRef.current
+      nextMixerRef.current = null
+
+      if (prev) {
+        // Avoid leaking GPU resources
+        disposeGroup(prev)
+      }
     }
   })
 
-  if (isLoading || !model) return null
-  
-  return <primitive ref={modelRef} object={model} />
+  // Render both during the crossfade. Never render "nothing" during load.
+  return (
+    <group ref={modelRef}>
+      {currentModel ? <primitive object={currentModel} /> : null}
+      {nextModel ? <primitive object={nextModel} /> : null}
+    </group>
+  )
 }
 
-export default function FBXViewer({ modelPath, texturePath }: { modelPath: string; texturePath?: string }) {
+export default function FBXViewer({ modelPath, texturePath, characterId }: { modelPath: string; texturePath?: string; characterId?: string }) {
+  // Camera positioned straight forward at chest height (waist to head view)
+  const isBill = characterId === 'bill-klehm'
+  const cameraY = isBill ? 1.0 : 1.8
+  const targetY = cameraY // Look straight ahead at same height
+  
   return (
     <div className="w-full h-full">
       <Canvas shadows>
-        <PerspectiveCamera makeDefault position={[1.5, 3.2, 2.5]} />
+        <PerspectiveCamera makeDefault position={[0, cameraY, 3.5]} />
         <OrbitControls
           enableZoom={true}
           enablePan={true}
           enableRotate={true}
           minDistance={1}
           maxDistance={5}
-          target={[0, 2.5, 0]}
+          target={[0, targetY, 0]}
         />
 
         {/* Lighting */}

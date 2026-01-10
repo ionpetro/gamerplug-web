@@ -1,11 +1,13 @@
 import { Code, Package, Users, Settings, Megaphone } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Character {
   id: string;
   name: string;
   class: "engineers" | "product" | "board" | "operations" | "marketing";
   avatar: string;
+  thumbnailPath?: string;
   selected?: boolean;
 }
 
@@ -36,15 +38,15 @@ const classBorderColors = {
 // Team member data
 const characters: Character[] = [
   // Engineers
-  { id: "ion-petropoulos", name: "Ion", class: "engineers", avatar: "" },
-  { id: "abed-hamami", name: "Abed", class: "engineers", avatar: "" },
+  { id: "ion-petropoulos", name: "Ion", class: "engineers", avatar: "", thumbnailPath: "/models/thumbnails/ion.png" },
+  { id: "abed-hamami", name: "Abed", class: "engineers", avatar: "", thumbnailPath: "/models/thumbnails/abed.png" },
   // Product
-  { id: "hunter-klehm", name: "Hunter", class: "product", avatar: "" },
+  { id: "hunter-klehm", name: "Hunter", class: "product", avatar: "", thumbnailPath: "/models/thumbnails/hunter.png" },
   // Board
-  { id: "stephan-nicklow", name: "Stephan", class: "board", avatar: "" },
-  { id: "bill-klehm", name: "Bill", class: "board", avatar: "" },
+  { id: "stephan-nicklow", name: "Stephan", class: "board", avatar: "", thumbnailPath: "/models/thumbnails/stephan.png" },
+  { id: "bill-klehm", name: "Bill", class: "board", avatar: "", thumbnailPath: "/models/thumbnails/bill.png" },
   // Operations
-  { id: "billy-edwards", name: "Billy", class: "operations", avatar: "", selected: true },
+  { id: "billy-edwards", name: "Billy", class: "operations", avatar: "", thumbnailPath: "/models/thumbnails/billy.png", selected: true },
 ];
 
 interface CharacterGridProps {
@@ -116,33 +118,48 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                   <button
                     key={character.id}
                     onClick={() => onSelect(character)}
-                    className={`character-portrait w-14 h-14 relative ${
+                    className={`character-portrait w-14 h-14 relative focus:outline-none overflow-hidden ${
                       selectedId === character.id ? "selected" : ""
                     }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
-                    <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]}`} />
+                    {/* Background gradient - only show if no thumbnail */}
+                    {!character.thumbnailPath && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
+                    )}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]} z-20`} />
+                    {/* Character thumbnail */}
+                    {character.thumbnailPath ? (
+                      <div className="absolute inset-0 z-0 opacity-60 grayscale">
+                        <Image
+                          src={character.thumbnailPath}
+                          alt={character.name}
+                          fill
+                          className="object-cover"
+                          sizes="56px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-xs z-10">
+                        {character.name.slice(0, 2)}
+                      </div>
+                    )}
                     {selectedId === character.id && (
                       <>
                         <div 
-                          className="absolute inset-0 border-2 rounded-sm"
+                          className="absolute inset-0 border-2 rounded-sm z-30"
                           style={{ 
                             borderColor: classBorderColors[classType],
                             boxShadow: `0 0 12px ${classBorderColors[classType]}80, inset 0 0 8px ${classBorderColors[classType]}40`
                           }}
                         />
                         <div 
-                          className="absolute -inset-1 border border-white/50 rounded-sm pointer-events-none"
+                          className="absolute -inset-1 rounded-sm pointer-events-none z-30"
                           style={{ 
                             boxShadow: `0 0 16px ${classBorderColors[classType]}60`
                           }}
                         />
                       </>
                     )}
-                    {/* Placeholder for avatar */}
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-xs">
-                      {character.name.slice(0, 2)}
-                    </div>
                   </button>
                 );
               })}
@@ -184,32 +201,48 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                   <button
                     key={character.id}
                     onClick={() => onSelect(character)}
-                    className={`character-portrait w-14 h-14 relative ${
+                    className={`character-portrait w-14 h-14 relative focus:outline-none overflow-hidden ${
                       selectedId === character.id ? "selected" : ""
                     }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
-                    <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]}`} />
+                    {/* Background gradient - only show if no thumbnail */}
+                    {!character.thumbnailPath && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
+                    )}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]} z-20`} />
+                    {/* Character thumbnail */}
+                    {character.thumbnailPath ? (
+                      <div className="absolute inset-0 z-0 opacity-60 grayscale">
+                        <Image
+                          src={character.thumbnailPath}
+                          alt={character.name}
+                          fill
+                          className="object-cover"
+                          sizes="56px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-xs z-10">
+                        {character.name.slice(0, 2)}
+                      </div>
+                    )}
                     {selectedId === character.id && (
                       <>
                         <div 
-                          className="absolute inset-0 border-2 rounded-sm"
+                          className="absolute inset-0 border-2 rounded-sm z-30"
                           style={{ 
                             borderColor: classBorderColors[classType],
                             boxShadow: `0 0 12px ${classBorderColors[classType]}80, inset 0 0 8px ${classBorderColors[classType]}40`
                           }}
                         />
                         <div 
-                          className="absolute -inset-1 border border-white/50 rounded-sm pointer-events-none"
+                          className="absolute -inset-1 rounded-sm pointer-events-none z-30"
                           style={{ 
                             boxShadow: `0 0 16px ${classBorderColors[classType]}60`
                           }}
                         />
                       </>
                     )}
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-xs">
-                      {character.name.slice(0, 2)}
-                    </div>
                   </button>
                 );
               })}
