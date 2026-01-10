@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo, Suspense, useEffect } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone } from 'lucide-react'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX } from 'lucide-react'
 
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -9,7 +9,10 @@ import { CharacterGrid } from '@/components/CharacterGrid'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
-const FBXViewer = dynamic(() => import('@/components/FBXViewer'), { ssr: false })
+const FBXViewer = dynamic(() => import('@/components/FBXViewer'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-black/30" />
+})
 
 // Team member categories
 type Role = 'Engineers' | 'Product' | 'Board' | 'Operations' | 'Marketing'
@@ -80,7 +83,9 @@ const characters: Character[] = [
     tactical: { name: 'STARTUP SUCCESS', description: 'Successful startup exits' },
     ultimate: { name: 'STRATEGIC LEADERSHIP', description: 'Expert in scaling AI and tech companies' },
     rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
-    color: '#1D3354'
+    color: '#1D3354',
+    modelPath: '/models/stephan.fbx',
+    texturePath: '/models/stephan_texture.png'
   },
   {
     id: 'bill-klehm',
@@ -91,7 +96,9 @@ const characters: Character[] = [
     tactical: { name: 'SCALING EXPERT', description: 'Expert in scaling niche businesses' },
     ultimate: { name: 'STRATEGIC VISION', description: 'Proven track record in business growth' },
     rolePerks: ['BUSINESS DEVELOPMENT', 'STRATEGIC PLANNING'],
-    color: '#1D3354'
+    color: '#1D3354',
+    modelPath: '/models/bill.fbx',
+    texturePath: '/models/bill_texture.png'
   },
   // Operations
   {
@@ -103,7 +110,9 @@ const characters: Character[] = [
     tactical: { name: 'STRATEGIC THINKING', description: 'Expert in technology strategy' },
     ultimate: { name: 'OPERATIONAL EXCELLENCE', description: 'Proven ability to execute complex initiatives' },
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
-    color: '#467599'
+    color: '#467599',
+    modelPath: '/models/billy.fbx',
+    texturePath: '/models/billy_texture.png'
   }
 ]
 
@@ -119,6 +128,11 @@ export default function TeamPage() {
   const pathname = usePathname()
   const [selectedCharacter, setSelectedCharacter] = useState<Character>(characters[0])
   const [selectedCharacterId, setSelectedCharacterId] = useState<string>('billy-edwards')
+  const [isMuted, setIsMuted] = useState(false)
+  const isInitialMount = useRef(true)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const backgroundMusicRef = useRef<HTMLAudioElement | null>(null)
+  const hasStartedMusic = useRef(false)
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -128,6 +142,96 @@ export default function TeamPage() {
   useEffect(() => {
     const char = characters.find(c => c.id === selectedCharacterId)
     if (char) setSelectedCharacter(char)
+  }, [selectedCharacterId])
+
+  // Initialize background music
+  useEffect(() => {
+    if (!backgroundMusicRef.current) {
+      backgroundMusicRef.current = new Audio('/choose-character.mp3')
+      backgroundMusicRef.current.loop = true
+      backgroundMusicRef.current.volume = 0.15 // Set background music volume to 15%
+      backgroundMusicRef.current.preload = 'auto'
+      
+      // Try to play background music (may be blocked by browser autoplay policy)
+      backgroundMusicRef.current.play().then(() => {
+        hasStartedMusic.current = true
+      }).catch((error) => {
+        console.log('Background music autoplay blocked:', error)
+      })
+    }
+
+    return () => {
+      // Cleanup on unmount
+      if (backgroundMusicRef.current) {
+        backgroundMusicRef.current.pause()
+        backgroundMusicRef.current = null
+      }
+    }
+  }, [])
+
+  // Start music on first user interaction
+  useEffect(() => {
+    const startMusicOnInteraction = () => {
+      if (backgroundMusicRef.current && !hasStartedMusic.current) {
+        backgroundMusicRef.current.play().then(() => {
+          hasStartedMusic.current = true
+        }).catch((error) => {
+          console.log('Failed to start music:', error)
+        })
+      }
+    }
+
+    // Try to start on any click
+    window.addEventListener('click', startMusicOnInteraction, { once: true })
+    window.addEventListener('keydown', startMusicOnInteraction, { once: true })
+    window.addEventListener('touchstart', startMusicOnInteraction, { once: true })
+
+    return () => {
+      window.removeEventListener('click', startMusicOnInteraction)
+      window.removeEventListener('keydown', startMusicOnInteraction)
+      window.removeEventListener('touchstart', startMusicOnInteraction)
+    }
+  }, [])
+
+  // Handle mute/unmute state (only for background music)
+  const handleMuteToggle = () => {
+    setIsMuted(!isMuted)
+    
+    // Try to start music if it hasn't started yet
+    if (backgroundMusicRef.current && !hasStartedMusic.current) {
+      backgroundMusicRef.current.play().then(() => {
+        hasStartedMusic.current = true
+      }).catch((error) => {
+        console.log('Failed to start music:', error)
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (backgroundMusicRef.current) {
+      backgroundMusicRef.current.muted = isMuted
+    }
+  }, [isMuted])
+
+  // Play sound effect when champion changes (but not on initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
+    // Create audio element if it doesn't exist
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/0110.MP3')
+      audioRef.current.volume = 0.5 // Set volume to 50%
+    }
+
+    // Play the sound
+    audioRef.current.currentTime = 0 // Reset to start
+    audioRef.current.play().catch((error) => {
+      // Handle autoplay restrictions (browsers may block autoplay)
+      console.log('Audio play failed:', error)
+    })
   }, [selectedCharacterId])
 
   useEffect(() => {
@@ -185,10 +289,23 @@ export default function TeamPage() {
         </div>
         
         <div className="relative pt-24 pb-8 px-4 md:px-6">
+        {/* Mute/Unmute Button */}
+        <button
+          onClick={handleMuteToggle}
+          className="fixed bottom-4 right-4 md:right-8 z-50 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+          aria-label={isMuted ? 'Unmute' : 'Mute'}
+        >
+          {isMuted ? (
+            <VolumeX className="w-5 h-5 text-white" />
+          ) : (
+            <Volume2 className="w-5 h-5 text-white" />
+          )}
+        </button>
+
         {/* Main Content */}
         <div className="container mx-auto relative mb-8">
           {/* Left Panel - Category Icons (Floating on Desktop) */}
-          <div className="hidden lg:flex lg:absolute lg:left-8 lg:top-1/2 lg:-translate-y-1/2 lg:z-10 lg:flex-col lg:gap-4">
+          <div className="hidden lg:flex lg:absolute lg:left-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-10 lg:flex-col lg:gap-4">
             <div className="flex flex-col gap-4">
               {[
                 { role: 'Engineers' as Role, icon: Code },
@@ -230,23 +347,16 @@ export default function TeamPage() {
           {/* Center Panel - 3D Viewport (Full Width on Desktop) */}
           <div className="w-full flex items-center justify-center">
             <div className="w-full aspect-[25/9] overflow-hidden">
-              <Suspense fallback={
-                <div className="w-full h-full flex flex-col items-center justify-center p-8">
-                  <p className="text-2xl font-black text-muted-foreground/30 uppercase mb-2">
-                    Loading 3D Model...
-                  </p>
-                </div>
-              }>
-                <FBXViewer 
-                  modelPath={selectedCharacter.modelPath || "/models/ion.fbx"} 
-                  texturePath={selectedCharacter.texturePath}
-                />
-              </Suspense>
+              <FBXViewer
+                modelPath={selectedCharacter.modelPath || "/models/ion.fbx"}
+                texturePath={selectedCharacter.texturePath}
+                characterId={selectedCharacter.id}
+              />
             </div>
           </div>
 
           {/* Right Panel - Character Info (Floating on Desktop) */}
-          <div className="mt-8 lg:mt-0 lg:absolute lg:right-0 lg:top-0 lg:h-full lg:flex lg:items-center lg:z-10 lg:w-80 lg:pr-8">
+          <div className="mt-8 lg:mt-0 lg:absolute lg:right-16 lg:top-0 lg:h-full lg:flex lg:items-center lg:z-10 lg:w-80 lg:pr-8">
             <div className="space-y-6 p-6 rounded-lg w-full">
               {/* Character Name and Title */}
               <div>
