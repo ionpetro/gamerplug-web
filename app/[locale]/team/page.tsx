@@ -28,7 +28,6 @@ interface Character {
   rolePerks: string[]
   color: string
   modelPath?: string
-  texturePath?: string
   stats: {
     technical: number
     leadership: number
@@ -50,7 +49,6 @@ const characters: Character[] = [
     rolePerks: ['AI DEVELOPMENT', 'SYSTEM ARCHITECTURE'],
     color: '#FF1053',
     modelPath: '/models/ion.fbx',
-    texturePath: '/models/ion_texture.png',
     stats: {
       technical: 95,
       leadership: 80,
@@ -69,7 +67,6 @@ const characters: Character[] = [
     rolePerks: ['APP DEVELOPMENT', 'TECHNICAL EXECUTION'],
     color: '#FF1053',
     modelPath: '/models/abed.fbx',
-    texturePath: '/models/abed_texture.png',
     stats: {
       technical: 95,
       leadership: 80,
@@ -82,7 +79,6 @@ const characters: Character[] = [
     id: 'hunter-klehm',
     name: 'HUNTER KLEHM',
     modelPath: '/models/hunter.fbx',
-    texturePath: '/models/hunter_texture.png',
     role: 'Product',
     class: 'PRODUCT SME',
     passive: { name: 'GAMING EXPERTISE', description: 'Top .07% Apex Legends player' },
@@ -109,7 +105,6 @@ const characters: Character[] = [
     rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
     color: '#6C6EA0',
     modelPath: '/models/stephan.fbx',
-    texturePath: '/models/stephan_texture.png',
     stats: {
       technical: 90,
       leadership: 98,
@@ -128,7 +123,6 @@ const characters: Character[] = [
     rolePerks: ['BUSINESS DEVELOPMENT', 'STRATEGIC PLANNING'],
     color: '#6C6EA0',
     modelPath: '/models/bill.fbx',
-    texturePath: '/models/bill_texture.png',
     stats: {
       technical: 85,
       leadership: 95,
@@ -148,7 +142,6 @@ const characters: Character[] = [
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
     color: '#C1CAD6',
     modelPath: '/models/billy.fbx',
-    texturePath: '/models/billy_texture.png',
     stats: {
       technical: 95,
       leadership: 92,
@@ -391,7 +384,6 @@ export default function TeamPage() {
             <div className="w-full aspect-[25/9] overflow-hidden">
               <FBXViewer
                 modelPath={selectedCharacter.modelPath || "/models/ion.fbx"}
-                texturePath={selectedCharacter.texturePath}
                 characterId={selectedCharacter.id}
               />
             </div>
