@@ -43,10 +43,10 @@ const characters: Character[] = [
   // Product
   { id: "hunter-klehm", name: "Hunter", class: "product", avatar: "", thumbnailPath: "/models/thumbnails/hunter.png" },
   // Board
-  { id: "stephan-nicklow", name: "Stephan", class: "board", avatar: "", thumbnailPath: "/models/thumbnails/stephan.png" },
   { id: "bill-klehm", name: "Bill", class: "board", avatar: "", thumbnailPath: "/models/thumbnails/bill.png" },
+  { id: "billy-edwards", name: "Billy", class: "board", avatar: "", thumbnailPath: "/models/thumbnails/billy.png" },
   // Operations
-  { id: "billy-edwards", name: "Billy", class: "operations", avatar: "", thumbnailPath: "/models/thumbnails/billy.png", selected: true },
+  { id: "stephan-nicklow", name: "Stephan", class: "operations", avatar: "", thumbnailPath: "/models/thumbnails/stephan.png", selected: true },
 ];
 
 interface CharacterGridProps {
