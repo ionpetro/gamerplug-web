@@ -451,7 +451,7 @@ export default function TeamPage() {
             <div className="space-y-3 lg:space-y-6 p-4 lg:p-6 rounded-lg w-full">
               {/* Character Name and Title */}
               <div>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight mb-1">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight mb-1 whitespace-nowrap">
                   {selectedCharacter.name}
                 </h2>
                 <p className="text-xs md:text-sm lg:text-base text-white/70 uppercase tracking-wide">
