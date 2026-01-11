@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, VolumeX, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -196,7 +196,8 @@ export default function TeamPage() {
   const pathname = usePathname()
   const [selectedCharacter, setSelectedCharacter] = useState<Character>(characters[0])
   const [selectedCharacterId, setSelectedCharacterId] = useState<string>(characters[0].id)
-  const [isMuted, setIsMuted] = useState(false)
+  const [volume, setVolume] = useState(0) // Start muted
+  const [previousVolume, setPreviousVolume] = useState(0.2) // Store previous volume for unmute
   const isInitialMount = useRef(true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const backgroundMusicRef = useRef<HTMLAudioElement | null>(null)
@@ -231,7 +232,7 @@ export default function TeamPage() {
     if (!backgroundMusicRef.current) {
       backgroundMusicRef.current = new Audio('/choose-character.mp3')
       backgroundMusicRef.current.loop = true
-      backgroundMusicRef.current.volume = 0.15 // Set background music volume to 15%
+      backgroundMusicRef.current.volume = 0 // Start muted
       backgroundMusicRef.current.preload = 'auto'
       
       // Try to play background music (may be blocked by browser autoplay policy)
@@ -275,10 +276,32 @@ export default function TeamPage() {
     }
   }, [])
 
-  // Handle mute/unmute state (only for background music)
-  const handleMuteToggle = () => {
-    setIsMuted(!isMuted)
-    
+  // Handle volume change (only for background music)
+  const handleVolumeChange = (newVolume: number) => {
+    if (newVolume > 0) {
+      setPreviousVolume(newVolume) // Store non-zero volume
+    }
+    setVolume(newVolume)
+
+    // Try to start music if it hasn't started yet
+    if (backgroundMusicRef.current && !hasStartedMusic.current) {
+      backgroundMusicRef.current.play().then(() => {
+        hasStartedMusic.current = true
+      }).catch((error) => {
+        console.log('Failed to start music:', error)
+      })
+    }
+  }
+
+  // Toggle mute/unmute when clicking the icon
+  const handleIconClick = () => {
+    if (volume > 0) {
+      setPreviousVolume(volume)
+      setVolume(0)
+    } else {
+      setVolume(previousVolume)
+    }
+
     // Try to start music if it hasn't started yet
     if (backgroundMusicRef.current && !hasStartedMusic.current) {
       backgroundMusicRef.current.play().then(() => {
@@ -291,9 +314,9 @@ export default function TeamPage() {
 
   useEffect(() => {
     if (backgroundMusicRef.current) {
-      backgroundMusicRef.current.muted = isMuted
+      backgroundMusicRef.current.volume = volume
     }
-  }, [isMuted])
+  }, [volume])
 
   // Play sound effect when champion changes (but not on initial mount)
   useEffect(() => {
@@ -377,18 +400,25 @@ export default function TeamPage() {
             <span className="font-semibold text-primary">Pro tip:</span> The desktop experience is optimal for exploring our team!
           </p>
         </div>
-        {/* Mute/Unmute Button */}
-        <button
-          onClick={handleMuteToggle}
-          className="fixed bottom-4 right-4 md:right-8 z-50 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
-          aria-label={isMuted ? 'Unmute' : 'Mute'}
-        >
-          {isMuted ? (
-            <VolumeX className="w-5 h-5 text-white" />
-          ) : (
-            <Volume2 className="w-5 h-5 text-white" />
-          )}
-        </button>
+        {/* Volume Slider */}
+        <div className="fixed bottom-4 right-4 md:right-8 z-50 flex items-center gap-2 px-3 py-2 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm">
+          <button
+            onClick={handleIconClick}
+            className="hover:opacity-70 transition-opacity"
+            aria-label={volume > 0 ? 'Mute' : 'Unmute'}
+          >
+            <Volume2 className="w-4 h-4 text-white flex-shrink-0" />
+          </button>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume * 100}
+            onChange={(e) => handleVolumeChange(Number(e.target.value) / 100)}
+            className="w-20 h-1 bg-white/20 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+            aria-label="Volume"
+          />
+        </div>
 
         {/* Main Content */}
         <div className="container mx-auto relative mb-8 hidden md:block">
@@ -445,18 +475,18 @@ export default function TeamPage() {
             {/* Navigation Buttons - Mobile only */}
             <button
               onClick={handlePrevious}
-              className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-md border-2 border-white/30 bg-gradient-to-b from-white/10 to-black/40 hover:from-white/20 hover:to-black/50 flex items-center justify-center transition-all hover:scale-105 backdrop-blur-sm shadow-lg"
               aria-label="Previous character"
             >
-              <ChevronLeft className="w-6 h-6 text-white" />
+              <ChevronLeft className="w-6 h-6 text-white" strokeWidth={3} />
             </button>
 
             <button
               onClick={handleNext}
-              className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-md border-2 border-white/30 bg-gradient-to-b from-white/10 to-black/40 hover:from-white/20 hover:to-black/50 flex items-center justify-center transition-all hover:scale-105 backdrop-blur-sm shadow-lg"
               aria-label="Next character"
             >
-              <ChevronRight className="w-6 h-6 text-white" />
+              <ChevronRight className="w-6 h-6 text-white" strokeWidth={3} />
             </button>
           </div>
 
@@ -617,14 +647,14 @@ export default function TeamPage() {
 
         {/* Desktop Character Grid */}
         <div className="mt-auto hidden md:block">
-          <div className="py-4 relative">
+          <div className="py-4 relative flex items-center gap-4 justify-center">
             {/* Desktop Navigation Arrows */}
             <button
               onClick={handlePrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              className="w-10 h-10 rounded-md border-2 border-white/30 bg-gradient-to-b from-white/10 to-black/40 hover:from-white/20 hover:to-black/50 flex items-center justify-center transition-all hover:scale-105 backdrop-blur-sm shadow-lg flex-shrink-0"
               aria-label="Previous character"
             >
-              <ChevronLeft className="w-5 h-5 text-white" />
+              <ChevronLeft className="w-6 h-6 text-white" strokeWidth={3} />
             </button>
 
             <CharacterGrid
@@ -634,10 +664,10 @@ export default function TeamPage() {
 
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full border border-white/20 bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all hover:scale-110 backdrop-blur-sm"
+              className="w-10 h-10 rounded-md border-2 border-white/30 bg-gradient-to-b from-white/10 to-black/40 hover:from-white/20 hover:to-black/50 flex items-center justify-center transition-all hover:scale-105 backdrop-blur-sm shadow-lg flex-shrink-0"
               aria-label="Next character"
             >
-              <ChevronRight className="w-5 h-5 text-white" />
+              <ChevronRight className="w-6 h-6 text-white" strokeWidth={3} />
             </button>
           </div>
         </div>
