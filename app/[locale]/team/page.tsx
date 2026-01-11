@@ -111,27 +111,6 @@ const characters: Character[] = [
   },
   // Board
   {
-    id: 'stephan-nicklow',
-    name: 'STEPHAN NICKLOW',
-    role: 'Operations',
-    class: 'CEO',
-    passive: { name: 'META EXPERIENCE', description: 'Ex-Meta, AI consulting leader' },
-    tactical: { name: 'STARTUP SUCCESS', description: 'Successful startup exits' },
-    ultimate: { name: 'STRATEGIC LEADERSHIP', description: 'Expert in scaling AI and tech companies' },
-    rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
-    color: '#C1CAD6',
-    modelPath: '/models/stephan.fbx',
-    stats: {
-      technical: 90,
-      leadership: 98,
-      vision: 95,
-      execution: 95
-    },
-    socials: {
-      email: 'stephannicklow@gmail.com'
-    }
-  },
-  {
     id: 'bill-klehm',
     name: 'BILL KLEHM',
     role: 'Board',
@@ -156,13 +135,13 @@ const characters: Character[] = [
   {
     id: 'billy-edwards',
     name: 'BILLY EDWARDS',
-    role: 'Board',
+    role: 'Operations',
     class: 'TECHNOLOGIST & STRATEGIST',
     passive: { name: 'TECH TRANSFORMATION', description: 'Broad success transitioning technologies into businesses' },
     tactical: { name: 'STRATEGIC THINKING', description: 'Expert in technology strategy' },
     ultimate: { name: 'OPERATIONAL EXCELLENCE', description: 'Proven ability to execute complex initiatives' },
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
-    color: '#6C6EA0',
+    color: '#C1CAD6',
     modelPath: '/models/billy.fbx',
     stats: {
       technical: 95,
@@ -172,6 +151,27 @@ const characters: Character[] = [
     },
     socials: {
       email: 'billy.Edwards.TX@gmail.com'
+    }
+  },
+  {
+    id: 'stephan-nicklow',
+    name: 'STEPHAN NICKLOW',
+    role: 'Operations',
+    class: 'CEO',
+    passive: { name: 'META EXPERIENCE', description: 'Ex-Meta, AI consulting leader' },
+    tactical: { name: 'STARTUP SUCCESS', description: 'Successful startup exits' },
+    ultimate: { name: 'STRATEGIC LEADERSHIP', description: 'Expert in scaling AI and tech companies' },
+    rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
+    color: '#C1CAD6',
+    modelPath: '/models/stephan.fbx',
+    stats: {
+      technical: 90,
+      leadership: 98,
+      vision: 95,
+      execution: 95
+    },
+    socials: {
+      email: 'stephannicklow@gmail.com'
     }
   }
 ]
@@ -187,7 +187,7 @@ const roleColors: Record<Role, string> = {
 export default function TeamPage() {
   const pathname = usePathname()
   const [selectedCharacter, setSelectedCharacter] = useState<Character>(characters[0])
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string>('billy-edwards')
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string>(characters[0].id)
   const [isMuted, setIsMuted] = useState(false)
   const isInitialMount = useRef(true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -205,12 +205,14 @@ export default function TeamPage() {
   }, [selectedCharacterId])
 
   const handlePrevious = () => {
+    // Navigate to previous character through all characters circularly
     const currentIndex = characters.findIndex(c => c.id === selectedCharacterId)
     const newIndex = currentIndex === 0 ? characters.length - 1 : currentIndex - 1
     setSelectedCharacterId(characters[newIndex].id)
   }
 
   const handleNext = () => {
+    // Navigate to next character through all characters circularly
     const currentIndex = characters.findIndex(c => c.id === selectedCharacterId)
     const newIndex = currentIndex === characters.length - 1 ? 0 : currentIndex + 1
     setSelectedCharacterId(characters[newIndex].id)
