@@ -8,6 +8,7 @@ import { Footer } from '@/components/Footer'
 import { CharacterGrid } from '@/components/CharacterGrid'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 
 const FBXViewer = dynamic(() => import('@/components/FBXViewer'), {
   ssr: false,
@@ -28,6 +29,7 @@ interface Character {
   rolePerks: string[]
   color: string
   modelPath?: string
+  thumbnailPath?: string
   stats: {
     technical: number
     leadership: number
@@ -56,6 +58,7 @@ const characters: Character[] = [
     rolePerks: ['AI DEVELOPMENT', 'SYSTEM ARCHITECTURE'],
     color: '#FF1053',
     modelPath: '/models/ion.fbx',
+    thumbnailPath: '/models/thumbnails/ion.png',
     stats: {
       technical: 95,
       leadership: 80,
@@ -77,6 +80,7 @@ const characters: Character[] = [
     rolePerks: ['APP DEVELOPMENT', 'TECHNICAL EXECUTION'],
     color: '#FF1053',
     modelPath: '/models/abed.fbx',
+    thumbnailPath: '/models/thumbnails/abed.png',
     stats: {
       technical: 95,
       leadership: 80,
@@ -92,6 +96,7 @@ const characters: Character[] = [
     id: 'hunter-klehm',
     name: 'HUNTER KLEHM',
     modelPath: '/models/hunter.fbx',
+    thumbnailPath: '/models/thumbnails/hunter.png',
     role: 'Product',
     class: 'PRODUCT SME',
     passive: { name: 'GAMING EXPERTISE', description: 'Top .07% Apex Legends player' },
@@ -121,6 +126,7 @@ const characters: Character[] = [
     rolePerks: ['BUSINESS DEVELOPMENT', 'STRATEGIC PLANNING'],
     color: '#6C6EA0',
     modelPath: '/models/bill.fbx',
+    thumbnailPath: '/models/thumbnails/bill.png',
     stats: {
       technical: 85,
       leadership: 95,
@@ -143,6 +149,7 @@ const characters: Character[] = [
     rolePerks: ['TECH STRATEGY', 'OPERATIONS MANAGEMENT'],
     color: '#C1CAD6',
     modelPath: '/models/billy.fbx',
+    thumbnailPath: '/models/thumbnails/billy.png',
     stats: {
       technical: 95,
       leadership: 92,
@@ -164,6 +171,7 @@ const characters: Character[] = [
     rolePerks: ['EXECUTIVE LEADERSHIP', 'BUSINESS STRATEGY'],
     color: '#C1CAD6',
     modelPath: '/models/stephan.fbx',
+    thumbnailPath: '/models/thumbnails/stephan.png',
     stats: {
       technical: 90,
       leadership: 98,
@@ -354,15 +362,21 @@ export default function TeamPage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
       <Header />
-      
+
       <div className="relative w-full flex-1 overflow-x-hidden">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-[-10%] left-[-20%] w-[420px] h-[420px] bg-primary/20 blur-[160px] rounded-full"></div>
           <div className="absolute bottom-[-15%] right-[-10%] w-[520px] h-[520px] bg-accent/25 blur-[180px] rounded-full"></div>
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-10"></div>
         </div>
-        
+
         <div className="relative pt-24 pb-8 px-4 md:px-6">
+        {/* Mobile Info Banner */}
+        <div className="md:hidden mb-4 p-3 rounded-lg border border-primary/30 bg-primary/10 backdrop-blur-sm">
+          <p className="text-xs text-center text-white/80">
+            <span className="font-semibold text-primary">Pro tip:</span> The desktop experience is optimal for exploring our team!
+          </p>
+        </div>
         {/* Mute/Unmute Button */}
         <button
           onClick={handleMuteToggle}
@@ -377,7 +391,7 @@ export default function TeamPage() {
         </button>
 
         {/* Main Content */}
-        <div className="container mx-auto relative mb-8">
+        <div className="container mx-auto relative mb-8 hidden md:block">
           {/* Left Panel - Category Icons (Floating on Desktop) */}
           <div className="hidden lg:flex lg:absolute lg:left-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-10 lg:flex-col lg:gap-4">
             <div className="flex flex-col gap-4">
@@ -599,7 +613,9 @@ export default function TeamPage() {
           </div>
         </div>
 
-        {/* Bottom Section - Character Grid (Hidden on mobile) */}
+        {/* Bottom Section - Character Grid */}
+
+        {/* Desktop Character Grid */}
         <div className="mt-auto hidden md:block">
           <div className="py-4 relative">
             {/* Desktop Navigation Arrows */}
@@ -623,6 +639,81 @@ export default function TeamPage() {
             >
               <ChevronRight className="w-5 h-5 text-white" />
             </button>
+          </div>
+        </div>
+
+        {/* Mobile Character Grid */}
+        <div className="mt-8 md:hidden">
+          <div className="space-y-6">
+            {/* Group characters by role */}
+            {[
+              { role: 'Engineers' as Role, icon: Code, chars: characters.filter(c => c.role === 'Engineers') },
+              { role: 'Product' as Role, icon: Package, chars: characters.filter(c => c.role === 'Product') },
+              { role: 'Board' as Role, icon: Users, chars: characters.filter(c => c.role === 'Board') },
+              { role: 'Operations' as Role, icon: Settings, chars: characters.filter(c => c.role === 'Operations') },
+            ].map(({ role, icon: Icon, chars }) => (
+              <div key={role} className="space-y-2">
+                {/* Role Header */}
+                <div className="flex items-center gap-2 px-2">
+                  <Icon className="w-4 h-4" style={{ color: roleColors[role] }} />
+                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: roleColors[role] }}>
+                    {role}
+                  </span>
+                </div>
+
+                {/* Character Cards */}
+                <div className="grid grid-cols-2 gap-3">
+                  {chars.map((char) => (
+                    <button
+                      key={char.id}
+                      onClick={() => setSelectedCharacterId(char.id)}
+                      className={`relative rounded-lg border overflow-hidden transition-all ${
+                        selectedCharacterId === char.id
+                          ? 'scale-105'
+                          : 'opacity-70 hover:opacity-100'
+                      }`}
+                      style={{
+                        backgroundColor: selectedCharacterId === char.id ? `${roleColors[role]}20` : 'transparent',
+                        borderColor: selectedCharacterId === char.id ? roleColors[role] : `${roleColors[role]}50`,
+                        boxShadow: selectedCharacterId === char.id ? `0 0 12px ${roleColors[role]}60` : 'none',
+                      }}
+                    >
+                      {/* Character Thumbnail */}
+                      <div className="aspect-square relative bg-black/30">
+                        {char.thumbnailPath ? (
+                          <Image
+                            src={char.thumbnailPath}
+                            alt={char.name}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 50vw, 200px"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-white/50 text-xs">
+                            <Users className="w-8 h-8" />
+                          </div>
+                        )}
+                        {/* Bottom color indicator */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-1 z-10"
+                          style={{ backgroundColor: roleColors[role] }}
+                        />
+                      </div>
+
+                      {/* Character Info */}
+                      <div className="p-2 bg-black/50">
+                        <p className="text-xs font-bold text-white uppercase truncate">
+                          {char.name}
+                        </p>
+                        <p className="text-[10px] text-white/60 uppercase truncate">
+                          {char.class}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         </div>
