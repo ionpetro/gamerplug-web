@@ -1,4 +1,4 @@
-import { Code, Package, Users, Settings, Megaphone } from "lucide-react";
+import { Code, Package, Users, Settings, Megaphone, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -104,12 +104,13 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                       href="https://www.linkedin.com/company/gamerplug/jobs/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer"
+                      className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer group"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
                       <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]}`} />
-                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-lg font-bold">
-                        ?
+                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                        <span className="text-lg font-bold group-hover:hidden">?</span>
+                        <ExternalLink className="w-5 h-5 hidden group-hover:block" />
                       </div>
                     </Link>
                   );
@@ -187,12 +188,13 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                       href="https://www.linkedin.com/company/gamerplug/jobs/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer"
+                      className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer group"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
                       <div className={`absolute bottom-0 left-0 right-0 h-1 ${classColors[classType]}`} />
-                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-lg font-bold">
-                        ?
+                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                        <span className="text-lg font-bold group-hover:hidden">?</span>
+                        <ExternalLink className="w-5 h-5 hidden group-hover:block" />
                       </div>
                     </Link>
                   );

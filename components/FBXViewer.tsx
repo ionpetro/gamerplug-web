@@ -109,6 +109,7 @@ function FBXModel({ url }: FBXModelProps) {
     let cancelled = false
 
     const loader = new FBXLoader()
+    const textureLoader = new THREE.TextureLoader()
 
     loader.load(
       url,
@@ -118,32 +119,84 @@ function FBXModel({ url }: FBXModelProps) {
           return
         }
 
-        // Center the model
-        const box = new Box3().setFromObject(fbx)
-        const center = box.getCenter(new Vector3())
-        fbx.position.sub(center)
+        // Function to finalize model setup
+        const finalizeModel = () => {
+          if (cancelled) return
 
-        // Scale the model to fit in view (zoomed in)
-        const size = box.getSize(new Vector3())
-        const maxDim = Math.max(size.x, size.y, size.z)
-        const scale = 4 / maxDim  // Increased from 3 to 5 for closer zoom
-        fbx.scale.multiplyScalar(scale)
+          // Center the model
+          const box = new Box3().setFromObject(fbx)
+          const center = box.getCenter(new Vector3())
+          fbx.position.sub(center)
 
-        prepareFadeGroup(fbx)
-        // Make sure we can fade it in/out (start invisible)
-        applyFade(fbx, 0, 1)
+          // Scale the model to fit in view (zoomed in)
+          const size = box.getSize(new Vector3())
+          const maxDim = Math.max(size.x, size.y, size.z)
+          const scale = 4 / maxDim  // Increased from 3 to 5 for closer zoom
+          fbx.scale.multiplyScalar(scale)
 
-        // Set up animations if they exist
-        if (fbx.animations && fbx.animations.length > 0) {
-          const mixer = new AnimationMixer(fbx)
-          nextMixerRef.current = mixer
-          const action = mixer.clipAction(fbx.animations[0])
-          action.play()
+          prepareFadeGroup(fbx)
+          // Make sure we can fade it in/out (start invisible)
+          applyFade(fbx, 0, 1)
+
+          // Set up animations if they exist
+          if (fbx.animations && fbx.animations.length > 0) {
+            const mixer = new AnimationMixer(fbx)
+            nextMixerRef.current = mixer
+            const action = mixer.clipAction(fbx.animations[0])
+            action.play()
+          }
+
+          transitionTRef.current = 0
+          rootRef.current?.add(fbx)
+          nextModelRef.current = fbx
         }
 
-        transitionTRef.current = 0
-        rootRef.current?.add(fbx)
-        nextModelRef.current = fbx
+        // Load and apply texture based on model filename
+        const modelName = url.split('/').pop()?.replace('.fbx', '')
+        if (modelName) {
+          const texturePath = `/models/${modelName}_texture.png`
+
+          textureLoader.load(
+            texturePath,
+            (texture) => {
+              if (cancelled) return
+
+              // Apply texture to all meshes in the model
+              fbx.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                  const material = child.material
+
+                  const applyTexture = (mat: THREE.Material) => {
+                    if (mat instanceof THREE.MeshStandardMaterial ||
+                        mat instanceof THREE.MeshPhongMaterial ||
+                        mat instanceof THREE.MeshLambertMaterial) {
+                      mat.map = texture
+                      mat.needsUpdate = true
+                    }
+                  }
+
+                  if (Array.isArray(material)) {
+                    material.forEach(applyTexture)
+                  } else if (material) {
+                    applyTexture(material)
+                  }
+                }
+              })
+
+              // Finalize model setup after texture is applied
+              finalizeModel()
+            },
+            undefined,
+            (error) => {
+              console.warn('Texture loading failed, proceeding without texture:', error)
+              // Proceed even if texture fails to load
+              finalizeModel()
+            }
+          )
+        } else {
+          // No texture to load, proceed immediately
+          finalizeModel()
+        }
       },
       (xhr) => {
         // Intentionally no UI spinners / progress logs
