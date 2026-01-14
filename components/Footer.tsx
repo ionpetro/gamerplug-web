@@ -89,6 +89,7 @@ export function Footer() {
             <h4 className="font-bold text-foreground mb-8 uppercase tracking-widest text-sm">{messages.footer.company}</h4>
             <ul className="space-y-4 text-muted-foreground text-sm font-medium">
               <li><a href="https://www.linkedin.com/company/gamerplug" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.aboutUs}</a></li>
+              <li><Link href={`/${locale}/team`} className="hover:text-primary transition-colors">{messages.footer.team}</Link></li>
               <li><a href="https://www.linkedin.com/company/gamerplug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
             </ul>
           </div>

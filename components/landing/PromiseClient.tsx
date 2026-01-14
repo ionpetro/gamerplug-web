@@ -26,9 +26,29 @@ export const OurPromise = () => {
     <section id="our-promise" className="py-32 bg-secondary/20 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none font-space-mono">
-            Our <br/><span className="text-primary">Promise</span>
-          </h2>
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
+          >
+            Our Promise
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
+          >
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Foundation</span> of GamerPlug
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-muted-foreground max-w-2xl mx-auto text-lg"
+          >
+            Built on trust, authenticity, and community. Here's what we stand for.
+          </motion.p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 relative z-10">
