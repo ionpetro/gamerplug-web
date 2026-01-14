@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer"
 import WaitlistForm from "@/components/WaitlistForm"
 import { getAllGames } from '@/lib/games'
 import type { GameWithDetails } from '@/lib/games'
+import { CharacterGrid } from '@/components/CharacterGrid'
 
 // --- Types ---
 interface FeatureCardProps {
@@ -369,7 +370,7 @@ const OurPromise = () => {
     <section id="our-promise" className="py-32 bg-secondary/20 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none font-space-mono">
+          <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">
             Our <br/><span className="text-primary">Promise</span>
           </h2>
         </div>
@@ -402,6 +403,51 @@ const OurPromise = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const TeamSection = () => {
+  const [selectedCharacterId, setSelectedCharacterId] = useState('stephan-nicklow')
+
+  return (
+    <section className="py-32 bg-background relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
+          >
+            Meet The Team
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
+          >
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Squad</span> Behind GamerPlug
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-muted-foreground max-w-2xl mx-auto text-lg"
+          >
+            A diverse team of gamers, engineers, and entrepreneurs united by one mission: revolutionizing how gamers connect.
+          </motion.p>
+        </div>
+
+        <div className="flex items-center justify-center">
+          <CharacterGrid
+            selectedId={selectedCharacterId}
+            onSelect={(char) => setSelectedCharacterId(char.id)}
+          />
         </div>
       </div>
     </section>
@@ -562,6 +608,7 @@ export default function GamerplugLanding() {
         <GameTicker />
         <Features />
         <OurPromise />
+        <TeamSection />
         <CTASection />
       </main>
       <Footer />

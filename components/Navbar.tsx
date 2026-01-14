@@ -49,10 +49,16 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <GameDropdown />
             <Link
+              href={hrefWithLocale("/team")}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t.nav.team}
+            </Link>
+            <Link
               href={hrefWithLocale("/contact")}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              {locale === 'es' ? t.nav.contact : t.nav.contact}
+              {t.nav.contact}
             </Link>
           </div>
 
@@ -102,11 +108,18 @@ export function Navbar() {
               <MobileGameMenu onClose={() => setIsOpen(false)} />
             </div>
             <Link
+              href={hrefWithLocale("/team")}
+              className="block text-muted-foreground hover:text-foreground transition-colors py-2"
+              onClick={() => setIsOpen(false)}
+            >
+              {t.nav.team}
+            </Link>
+            <Link
               href={hrefWithLocale("/contact")}
               className="block text-muted-foreground hover:text-foreground transition-colors py-2"
               onClick={() => setIsOpen(false)}
             >
-              {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
+              {t.nav.contact}
             </Link>
             <Link
               href={switchLocaleHref}
