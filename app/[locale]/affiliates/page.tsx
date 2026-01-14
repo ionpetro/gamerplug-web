@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { DollarSign, TrendingUp, Sparkles, Video, Shield, Calendar, Tag, Mail } from 'lucide-react'
+import { DollarSign, TrendingUp, Sparkles, Video, Shield, Calendar, Tag } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -141,7 +141,7 @@ export default function AffiliatesPage() {
               <iframe
                 src="https://tally.so/embed/kdGWZZ?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
                 width="100%"
-                height="1500"
+                height="900"
                 frameBorder="0"
                 title="GamerPlug Affiliate Application"
                 className="rounded-lg"
@@ -153,7 +153,7 @@ export default function AffiliatesPage() {
       </section>
 
       {/* What is GamerPlug Section */}
-      <section className="py-24 relative overflow-hidden bg-card/50">
+      <section className="pt-12 pb-24 relative overflow-hidden bg-card/50">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
 
         <div className="container mx-auto px-6">
@@ -340,40 +340,6 @@ export default function AffiliatesPage() {
               <p className="text-muted-foreground text-sm relative z-10">Chief Visionary Officer. Hunter works to strengthen the community connection and product roadmap.</p>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <h2 className="text-3xl md:text-4xl font-black uppercase mb-4">Questions?</h2>
-            <p className="text-muted-foreground mb-6">Reach out to us directly.</p>
-            <a
-              href="mailto:Stephanos@gamerplug.app"
-              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-lg"
-            >
-              <Mail className="w-5 h-5" />
-              Stephanos@gamerplug.app
-            </a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Trust Footer */}
-      <section className="py-8 border-t border-border">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-muted-foreground text-sm">
-            &copy; {new Date().getFullYear()} GamerPlug. All rights reserved.
-          </p>
-          <p className="text-primary font-medium mt-2">Trust. It&apos;s Everything.</p>
         </div>
       </section>
 
