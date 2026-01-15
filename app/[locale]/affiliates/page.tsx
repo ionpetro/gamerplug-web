@@ -307,7 +307,7 @@ export default function AffiliatesPage() {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative w-32 h-32 mx-auto mb-6 rounded-xl overflow-hidden border-2 border-border group-hover:border-primary/50 transition-colors">
                 <Image
-                  src="/models/thumbnails/stephan.png"
+                  src="/images/team/stephanos.png"
                   alt="Stephanos"
                   fill
                   className="object-cover"
@@ -329,7 +329,7 @@ export default function AffiliatesPage() {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative w-32 h-32 mx-auto mb-6 rounded-xl overflow-hidden border-2 border-border group-hover:border-primary/50 transition-colors">
                 <Image
-                  src="/models/thumbnails/hunter.png"
+                  src="/images/team/hunter.png"
                   alt="Hunter"
                   fill
                   className="object-cover"
