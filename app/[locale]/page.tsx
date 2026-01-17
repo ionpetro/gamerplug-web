@@ -1,5 +1,6 @@
 import { Footer } from "@/components/Footer"
 import { LandingSections } from "@/components/landing/LandingSections"
+import Script from "next/script"
 
 // --- Main Page ---
 
@@ -72,6 +73,11 @@ export default function LocalizedHome() {
         <LandingSections />
       </main>
       <Footer />
+      <elevenlabs-convai agent-id="agent_1501kd5ergn1e5zr4345bsc9zs9k"></elevenlabs-convai>
+      <Script
+        src="https://unpkg.com/@elevenlabs/convai-widget-embed"
+        strategy="lazyOnload"
+      />
     </div>
   )
 }
