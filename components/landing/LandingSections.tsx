@@ -1,6 +1,7 @@
 'use client'
 
 import { Hero } from '@/components/landing/HeroClient'
+import { DemoVideo } from '@/components/landing/DemoVideoClient'
 import { SupportedGamesPlatforms } from '@/components/landing/SupportedGamesPlatformsClient'
 import { OurPromise } from '@/components/landing/PromiseClient'
 import { TeamSection } from '@/components/landing/TeamSectionClient'
@@ -10,6 +11,7 @@ export function LandingSections() {
   return (
     <>
       <Hero />
+      <DemoVideo />
       <SupportedGamesPlatforms />
       <OurPromise />
       <TeamSection />

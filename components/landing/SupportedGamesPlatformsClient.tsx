@@ -25,10 +25,8 @@ export const SupportedGamesPlatforms = () => {
   }, [])
 
   return (
-    <section className="py-20 bg-background relative overflow-hidden">
+    <section className="py-32 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6">
-
-
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -39,7 +37,7 @@ export const SupportedGamesPlatforms = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 gap-6 max-w-7xl mx-auto"
+            className="flex flex-nowrap gap-3 md:gap-4 lg:gap-6 justify-center items-center max-w-7xl mx-auto"
           >
             {games.map((game, idx) => (
               <motion.div
@@ -48,7 +46,8 @@ export const SupportedGamesPlatforms = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.03 }}
-                className="flex items-center justify-center group"
+                className="flex items-center justify-center group flex-1"
+                style={{ minWidth: '60px', maxWidth: '100px' }}
               >
                 <div className="relative w-full aspect-square bg-card border border-border rounded-xl md:rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:scale-105 flex items-center justify-center">
                   <Image
