@@ -14,6 +14,33 @@ export interface BlogPost {
 // Blog posts
 export const blogPosts: BlogPost[] = [
   {
+    id: 22,
+    slug: "gamerplug-ion-abed-join-ice-gaming-convention-2026",
+    title: "GamerPlug Founders Ion & Abed Join ICE Gaming Convention 2026",
+    excerpt: "GamerPlug co-founders Ion and Abed are heading to ICE Barcelona 2026, one of the world's largest gaming industry events, to showcase the future of authentic gaming connections.",
+    content: `
+      <p>GamerPlug is making waves at one of gaming's biggest stages. Co-founders Ion and Abed are joining ICE Barcelona 2026, the premier global gaming industry convention, to share how GamerPlug is revolutionizing how gamers connect and build authentic squads.</p>
+
+      <h2>What is ICE Gaming Convention?</h2>
+      <p>ICE Barcelona is one of the largest gaming industry trade events in the world, bringing together over 65,000 professionals across iGaming, esports, tech providers, regulatory bodies, and gaming platforms. Scheduled for January 19-21, 2026 at Fira Barcelona Gran Via, the event features over 600 global exhibitors and serves as a hub for innovation, networking, and industry insights.</p>
+
+      <h2>Why This Matters</h2>
+      <p>Ion and Abed's participation at ICE represents a significant milestone for GamerPlug. As a platform focused on connecting real gamers and eliminating bots, GamerPlug brings a fresh perspective to an industry often dominated by large operators. Their presence at ICE highlights the growing importance of community-driven platforms that prioritize authentic gaming experiences.</p>
+
+      <h2>What to Expect</h2>
+      <p>At ICE Barcelona, Ion and Abed will showcase GamerPlug's innovative approach to matchmaking and community building. They'll be sharing insights on how AI-powered matching creates better gaming experiences, discussing the platform's commitment to authentic connections, and networking with industry leaders who share GamerPlug's vision for the future of gaming communities.</p>
+
+      <p>This is an exciting opportunity to put GamerPlug on the global stage and demonstrate how smaller, community-focused platforms can make a significant impact in the gaming industry. As gaming continues to evolve, platforms that prioritize real connections over algorithms will become increasingly important.</p>
+
+      <p>Stay tuned for updates from ICE Barcelona as Ion and Abed represent GamerPlug at one of gaming's most important industry events.</p>
+    `,
+    author: "GamerPlug Team",
+    date: "2026-01-11",
+    readTime: "4 min read",
+    category: "News",
+    image: "/images/games/lol.webp"
+  },
+  {
     id: 21,
     slug: "gta-6-pricing-controversy-80-100-price-point-delay-concerns",
     title: "GTA 6 Pricing Controversy: Breaking the $70 Ceiling and Release Delay Concerns",
