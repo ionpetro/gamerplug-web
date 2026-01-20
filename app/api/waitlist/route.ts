@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey)
+}
 
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -25,6 +31,7 @@ function getClientIP(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
     const body = await request.json()
     const { email, honeypot } = body
 
@@ -47,8 +54,8 @@ export async function POST(request: NextRequest) {
     })
 
     if (!rateLimitCheck) {
-      return NextResponse.json({ 
-        error: 'Too many requests. Please try again later.' 
+      return NextResponse.json({
+        error: 'Too many requests. Please try again later.'
       }, { status: 429 })
     }
 
@@ -56,7 +63,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase
       .from('waitlist')
       .insert([
-        { 
+        {
           email: email.toLowerCase().trim(),
           ip_address: clientIP
         }
