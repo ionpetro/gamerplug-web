@@ -101,7 +101,7 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                   return (
                     <Link
                       key={character.id}
-                      href="https://www.linkedin.com/company/gamerplug/jobs/"
+                      href="https://www.linkedin.com/company/gamer-plug/jobs"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer group"
@@ -185,7 +185,7 @@ export const CharacterGrid = ({ onSelect, selectedId }: CharacterGridProps) => {
                   return (
                     <Link
                       key={character.id}
-                      href="https://www.linkedin.com/company/gamerplug/jobs/"
+                      href="https://www.linkedin.com/company/gamer-plug/jobs"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="character-portrait w-14 h-14 opacity-50 hover:opacity-70 transition-opacity cursor-pointer group"
