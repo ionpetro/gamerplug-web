@@ -158,5 +158,34 @@
       "newMessage": "Nuevo Mensaje",
       "duoMessage": "\"¿Duo para ranked?\""
     }
+  },
+  "affiliates": {
+    "badge": "Programa de Afiliados",
+    "title": "Asóciate con",
+    "titleHighlight": "GamerPlug",
+    "subtitle": "Únete a nuestro escuadrón. Monetiza tu influencia. Ayúdanos a curar la soledad en el gaming.",
+    "applyNow": "Aplicar Ahora",
+    "applyTitle": "Aplicar Ahora",
+    "applyDesc": "Completa el formulario a continuación para unirte a nuestro programa de afiliados.",
+    "whatIsTitle": "¿Qué es",
+    "whatIsSubtitle": "El producto que estarás promocionando.",
+    "whatIsDesc1": "GamerPlug es una plataforma social basada en deslizamientos diseñada para fomentar relaciones significativas para gamers en todo el mundo. Fundada en septiembre de 2025 y con sede en Austin, Texas, GamerPlug sirve como un \"conector sin fronteras\", ayudando a gamers moderados y serios a encontrar su escuadrón en un entorno libre de bots.",
+    "whatIsDesc2": "A diferencia de las plataformas tradicionales, los usuarios de GamerPlug suben clips de gameplay en lugar de fotos de perfil estáticas, permitiendo que la comunidad se conecte basándose en el estilo de juego y la habilidad. Con un enfoque en la seguridad y la reducción de fricción, la plataforma resuelve el problema creciente de la soledad en la comunidad gamer.",
+    "whyCareTitle": "Por Qué Le Importará a Tu Audiencia",
+    "whyCareSubtitle": "Puntos clave de venta para tu contenido.",
+    "clipFirstTitle": "Perfiles Basados en Clips",
+    "clipFirstDesc": "Sin catfish ni bots. Los usuarios hacen match basándose en clips de video de gameplay reales, asegurando compatibilidad de habilidad y vibra.",
+    "safetyTitle": "Seguridad e Integridad",
+    "safetyDesc": "Un entorno organizado y priorizado que elimina la fricción de encontrar una nueva comunidad.",
+    "futureFeaturesTitle": "Funciones Futuras",
+    "futureFeaturesDesc": "Programación de \"Buscando Grupos\" (LFG) y \"Jugar Ahora\" para lobbies instantáneos.",
+    "teamTitle": "El Equipo",
+    "teamSubtitle": "Con quién trabajarás.",
+    "stephanosName": "Stephanos",
+    "stephanosRole": "CEO",
+    "stephanosDesc": "El portador de la visión. Stephanos se enfoca en mantener el ambiente del equipo alto y liderar la adquisición estratégica de usuarios.",
+    "hunterName": "Hunter",
+    "hunterRole": "CVO",
+    "hunterDesc": "Director de Visión. Hunter trabaja para fortalecer la conexión de la comunidad y la hoja de ruta del producto."
   }
 }

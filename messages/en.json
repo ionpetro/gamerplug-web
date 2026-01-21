@@ -158,5 +158,34 @@
       "newMessage": "New Message",
       "duoMessage": "\"Duo for ranked?\""
     }
+  },
+  "affiliates": {
+    "badge": "Affiliate Program",
+    "title": "Partner with",
+    "titleHighlight": "GamerPlug",
+    "subtitle": "Join our squad. Monetize your influence. Help us cure gaming loneliness.",
+    "applyNow": "Apply Now",
+    "applyTitle": "Apply Now",
+    "applyDesc": "Fill out the form below to join our affiliate program.",
+    "whatIsTitle": "What is",
+    "whatIsSubtitle": "The product you will be promoting.",
+    "whatIsDesc1": "GamerPlug is a swipe-based social platform designed to foster meaningful relationships for gamers worldwide. Founded in September 2025 and based in Austin, Texas, GamerPlug serves as a \"borderless connector,\" helping moderate to serious gamers find their squad in a bot-free environment.",
+    "whatIsDesc2": "Unlike traditional platforms, GamerPlug users upload gameplay clips instead of static profile pictures, allowing the community to connect based on playstyle and skill. With a focus on safety and reducing friction, the platform solves the growing problem of loneliness in the gaming community.",
+    "whyCareTitle": "Why Your Audience Will Care",
+    "whyCareSubtitle": "Key selling points for your content.",
+    "clipFirstTitle": "Clip-First Profiles",
+    "clipFirstDesc": "No catfish or bots. Users match based on actual gameplay video clips, ensuring skill and vibe compatibility.",
+    "safetyTitle": "Safety & Integrity",
+    "safetyDesc": "A prioritized organized environment that eliminates the friction of finding a new community.",
+    "futureFeaturesTitle": "Future Features",
+    "futureFeaturesDesc": "\"Looking for Groups\" (LFG) scheduling and \"Game Now\" for instant lobbies.",
+    "teamTitle": "The Team",
+    "teamSubtitle": "Who you'll be working with.",
+    "stephanosName": "Stephanos",
+    "stephanosRole": "CEO",
+    "stephanosDesc": "The vision carrier. Stephanos focuses on keeping the team vibe high and leading strategic user acquisition.",
+    "hunterName": "Hunter",
+    "hunterRole": "CVO",
+    "hunterDesc": "Chief Visionary Officer. Hunter works to strengthen the community connection and product roadmap."
   }
 }
