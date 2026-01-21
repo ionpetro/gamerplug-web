@@ -95,12 +95,6 @@ export const Header = () => {
           >
             {t.nav?.contact || 'Contact'}
           </Link>
-          <Link
-            href={hrefWithLocale("/affiliates")}
-            className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
-          >
-            Affiliates
-          </Link>
 
           {/* Language Selector */}
           <div className="flex items-center space-x-2">
@@ -154,13 +148,6 @@ export const Header = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
-            </Link>
-            <Link
-              href={hrefWithLocale("/affiliates")}
-              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Affiliates
             </Link>
             <Link
               href={switchLocaleHref}

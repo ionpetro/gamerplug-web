@@ -91,6 +91,7 @@ export function Footer() {
               <li><a href="https://www.linkedin.com/company/gamerplug" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.aboutUs}</a></li>
               <li><Link href={`/${locale}/team`} className="hover:text-primary transition-colors">{messages.footer.team}</Link></li>
               <li><a href="https://www.linkedin.com/company/gamerplug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
+              <li><Link href={`/${locale}/affiliates`} className="hover:text-primary transition-colors">{messages.footer.affiliates || 'Affiliates'}</Link></li>
             </ul>
           </div>
 
