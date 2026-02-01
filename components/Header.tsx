@@ -132,6 +132,14 @@ export const Header = () => {
               </button>
               {userMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 rounded-xl bg-card border border-white/10 shadow-xl overflow-hidden z-50">
+                  <Link
+                    href="/en/app"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <User size={16} />
+                    My Profile
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
@@ -198,12 +206,16 @@ export const Header = () => {
             {/* Mobile Auth Buttons */}
             {session ? (
               <>
-                <div className="flex items-center gap-2 py-2 text-gray-300">
+                <Link
+                  href="/en/app"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 py-2 text-gray-300 hover:text-primary font-medium"
+                >
                   <User size={18} className="text-primary" />
-                  <span className="font-medium truncate">
-                    {session.user.email?.split('@')[0]}
+                  <span className="truncate">
+                    My Profile
                   </span>
-                </div>
+                </Link>
                 <button
                   onClick={() => {
                     handleSignOut()
