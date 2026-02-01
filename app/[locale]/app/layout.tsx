@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { AppHeader } from '@/components/AppHeader';
+import { Footer } from '@/components/Footer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { session, loading } = useAuth();
@@ -40,5 +42,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-background text-white flex flex-col overflow-x-hidden">
+      <AppHeader />
+      <main className="flex-1 flex flex-col pt-20">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
 }

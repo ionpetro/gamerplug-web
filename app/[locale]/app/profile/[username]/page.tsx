@@ -6,12 +6,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import VideoModal from '@/components/VideoModal';
 import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
 import { 
-  Settings, 
   Share2, 
   Edit3, 
   Play, 
@@ -32,37 +29,33 @@ const SkeletonLine = ({ className = "" }: { className?: string }) => (
 
 function ProfileSkeleton() {
   return (
-    <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-      <div className="relative flex-1 pt-24">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
-          <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
-        </div>
-        <div className="relative container mx-auto px-6 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Profile Header Skeleton */}
-            <div className="flex flex-col items-center mb-8">
-              <div className="w-28 h-28 rounded-full bg-white/10 animate-pulse mb-4" />
-              <SkeletonLine className="h-7 w-40 mb-2" />
-              <SkeletonLine className="h-5 w-24" />
-            </div>
-            {/* Action Buttons Skeleton */}
-            <div className="flex gap-3 justify-center mb-8">
-              <SkeletonLine className="h-10 w-32 rounded-xl" />
-              <SkeletonLine className="h-10 w-32 rounded-xl" />
-            </div>
-            {/* Clips Skeleton */}
-            <SkeletonLine className="h-6 w-24 mb-4" />
-            <div className="grid grid-cols-3 gap-3">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="aspect-[3/4] bg-white/5 rounded-lg animate-pulse" />
-              ))}
-            </div>
+    <div className="relative flex-1">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
+      </div>
+      <div className="relative container mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Profile Header Skeleton */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-28 h-28 rounded-full bg-white/10 animate-pulse mb-4" />
+            <SkeletonLine className="h-7 w-40 mb-2" />
+            <SkeletonLine className="h-5 w-24" />
+          </div>
+          {/* Action Buttons Skeleton */}
+          <div className="flex gap-3 justify-center mb-8">
+            <SkeletonLine className="h-10 w-32 rounded-xl" />
+            <SkeletonLine className="h-10 w-32 rounded-xl" />
+          </div>
+          {/* Clips Skeleton */}
+          <SkeletonLine className="h-6 w-24 mb-4" />
+          <div className="grid grid-cols-3 gap-3">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="aspect-[3/4] bg-white/5 rounded-lg animate-pulse" />
+            ))}
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
@@ -170,24 +163,18 @@ export default function AuthenticatedProfilePage() {
 
   if (!profileUser) {
     return (
-      <div className="min-h-screen bg-background text-white flex flex-col">
-        <Header />
-        <div className="relative flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-2">User Not Found</h1>
-            <p className="text-white/60">The profile you're looking for doesn't exist.</p>
-          </div>
+      <div className="relative flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">User Not Found</h1>
+          <p className="text-white/60">The profile you're looking for doesn't exist.</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-      
-      <div className="relative flex-1 pt-24">
+    <>
+      <div className="relative flex-1">
         {/* Background Effects */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
@@ -446,8 +433,6 @@ export default function AuthenticatedProfilePage() {
         onNext={() => setCurrentClipIndex(prev => Math.min(prev + 1, clips.length - 1))}
         onPrev={() => setCurrentClipIndex(prev => Math.max(prev - 1, 0))}
       />
-
-      <Footer />
-    </div>
+    </>
   );
 }

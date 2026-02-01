@@ -56,8 +56,9 @@ export default function DownloadButton() {
           href="https://play.google.com/store/apps/details?id=com.ionpetro.gamerplug&pcampaignid=web_share"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-none"
+          className="flex-none relative"
         >
+          <span className="absolute -top-2 -right-2 bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase z-10">Beta</span>
           <Button
             className="gradient-accent text-white font-sans font-extrabold tracking-tight px-8 py-[14px] whitespace-nowrap h-[50px] hover:opacity-90 hover:scale-105 transition-all duration-200 cursor-pointer flex justify-center"
           >
