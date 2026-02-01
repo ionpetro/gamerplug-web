@@ -62,35 +62,6 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Right Side: Language Selector */}
-          <div className="hidden md:flex items-center space-x-2">
-            {(() => {
-              const localeHref = (target: 'en' | 'es') => {
-                const segs = (pathname?.split('/') || []);
-                if (segs.length > 1) segs[1] = target;
-                const nextPath = segs.join('/') || '/';
-                return nextPath.startsWith('/') ? nextPath : `/${nextPath}`;
-              };
-              return (
-                <>
-                  <Link
-                    href={localeHref('en')}
-                    className={`text-sm ${locale === 'en' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                  >
-                    EN
-                  </Link>
-                  <span className="text-muted-foreground/50">|</span>
-                  <Link
-                    href={localeHref('es')}
-                    className={`text-sm ${locale === 'es' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                  >
-                    ES
-                  </Link>
-                </>
-              );
-            })()}
-          </div>
-
           {/* Mobile menu button */}
           <button
             className="md:hidden text-foreground"
@@ -120,13 +91,6 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               {t.nav.contact}
-            </Link>
-            <Link
-              href={switchLocaleHref}
-              className="block text-muted-foreground hover:text-foreground transition-colors py-2"
-              onClick={() => setIsOpen(false)}
-            >
-              {locale === 'en' ? 'ES' : 'EN'}
             </Link>
             <div className="pt-4 flex space-x-3 border-t border-border/50">
               <Button variant="outline" size="sm">

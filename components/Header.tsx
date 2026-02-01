@@ -1,19 +1,41 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { X, Menu } from 'lucide-react'
+import { X, Menu, User, LogOut } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
 import { useI18n } from "@/components/I18nProvider"
+import { supabase } from '@/lib/supabase'
+import type { Session } from '@supabase/supabase-js'
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [session, setSession] = useState<Session | null>(null)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
   const context = useI18n()
   const t = context?.t || {}
+
+  // Check for session
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setUserMenuOpen(false)
+  }
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -96,22 +118,46 @@ export const Header = () => {
             {t.nav?.contact || 'Contact'}
           </Link>
 
-          {/* Language Selector */}
-          <div className="flex items-center space-x-2">
-            <Link
-              href={localeHref('en')}
-              className={`text-sm ${locale === 'en' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              EN
-            </Link>
-            <span className="text-muted-foreground/50">|</span>
-            <Link
-              href={localeHref('es')}
-              className={`text-sm ${locale === 'es' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              ES
-            </Link>
-          </div>
+          {/* Auth Buttons */}
+          {session ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+              >
+                <User size={18} className="text-primary" />
+                <span className="text-sm font-medium truncate max-w-[120px]">
+                  {session.user.email?.split('@')[0]}
+                </span>
+              </button>
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-xl bg-card border border-white/10 shadow-xl overflow-hidden z-50">
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link
+                href={hrefWithLocale("/login")}
+                className="text-sm font-medium text-white/80 hover:text-white transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href={hrefWithLocale("/signup")}
+                className="py-2 px-4 rounded-lg bg-primary hover:bg-primary/90 text-sm font-bold uppercase tracking-wide transition-colors"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -149,19 +195,51 @@ export const Header = () => {
             >
               {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
             </Link>
-            <Link
-              href={switchLocaleHref}
-              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {locale === 'en' ? 'ES' : 'EN'}
-            </Link>
+            {/* Mobile Auth Buttons */}
+            {session ? (
+              <>
+                <div className="flex items-center gap-2 py-2 text-gray-300">
+                  <User size={18} className="text-primary" />
+                  <span className="font-medium truncate">
+                    {session.user.email?.split('@')[0]}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    handleSignOut()
+                    setIsMobileMenuOpen(false)
+                  }}
+                  className="flex items-center gap-2 text-gray-300 hover:text-primary font-medium py-2"
+                >
+                  <LogOut size={18} />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-3 mt-4">
+                <Link
+                  href={hrefWithLocale("/login")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full py-3 text-center border border-white/20 text-white font-bold rounded-lg hover:bg-white/5 transition-all duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href={hrefWithLocale("/signup")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full py-3 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+            
             <Link
               href={hrefWithLocale("/download")}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
+              className="block w-full py-3 mt-4 border border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-center"
             >
-              Download Now
+              Download App
             </Link>
           </div>
         </div>
