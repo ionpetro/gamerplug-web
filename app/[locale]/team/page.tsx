@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CharacterGrid } from '@/components/CharacterGrid'
 import { usePathname } from 'next/navigation'
@@ -384,7 +383,6 @@ export default function TeamPage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
-      <Header />
 
       <div className="relative w-full flex-1 overflow-x-hidden">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
