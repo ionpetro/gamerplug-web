@@ -1,14 +1,23 @@
 "use client"
 
-import { Zap } from "lucide-react"
 import { useI18n } from "@/components/I18nProvider"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { useMemo } from "react"
 
 export function Footer() {
   const context = useI18n()
   const t = context?.t || {}
   const locale = context?.locale || 'en'
+  const pathname = usePathname()
+
+  const localeHref = (target: 'en' | 'es') => {
+    const segs = (pathname?.split('/') || []);
+    if (segs.length > 1) segs[1] = target;
+    const nextPath = segs.join('/') || '/';
+    return nextPath.startsWith('/') ? nextPath : `/${nextPath}`;
+  }
 
   // Fallback messages if context is missing
   const fallbackMessages = {
@@ -88,9 +97,9 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-foreground mb-8 uppercase tracking-widest text-sm">{messages.footer.company}</h4>
             <ul className="space-y-4 text-muted-foreground text-sm font-medium">
-              <li><a href="https://www.linkedin.com/company/gamerplug" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.aboutUs}</a></li>
+              <li><a href="https://www.linkedin.com/company/gamer-plug" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.aboutUs}</a></li>
               <li><Link href={`/${locale}/team`} className="hover:text-primary transition-colors">{messages.footer.team}</Link></li>
-              <li><a href="https://www.linkedin.com/company/gamerplug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
+              <li><a href="https://www.linkedin.com/company/gamer-plug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
               <li><Link href={`/${locale}/affiliates`} className="hover:text-primary transition-colors">{messages.footer.affiliates || 'Affiliates'}</Link></li>
             </ul>
           </div>
@@ -106,10 +115,26 @@ export function Footer() {
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground text-xs font-medium uppercase tracking-wider">
           <div>&copy; {new Date().getFullYear()} {messages.footer.copyright}</div>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
             <Link href={`/${locale}/privacy`} className="hover:text-gray-400">{messages.footer.privacy}</Link>
             <Link href={`/${locale}/tac`} className="hover:text-gray-400">{messages.footer.terms}</Link>
             <a href="#" className="hover:text-gray-400">{messages.footer.cookies}</a>
+            {/* Language Selector */}
+            <div className="flex items-center space-x-2">
+              <Link
+                href={localeHref('en')}
+                className={`text-sm ${locale === 'en' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                EN
+              </Link>
+              <span className="text-muted-foreground/50">|</span>
+              <Link
+                href={localeHref('es')}
+                className={`text-sm ${locale === 'es' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                ES
+              </Link>
+            </div>
           </div>
         </div>
       </div>

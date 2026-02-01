@@ -23,7 +23,7 @@ export default function LocalizedHome() {
           'https://x.com/The_Gamer_Plug',
           'https://discord.gg/gamerplug',
           'https://www.tiktok.com/@thegamerplugapp',
-          'https://www.linkedin.com/company/gamerplug',
+          'https://www.linkedin.com/company/gamer-plug',
         ],
         contactPoint: {
           '@type': 'ContactPoint',
