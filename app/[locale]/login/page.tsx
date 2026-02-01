@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,7 +11,8 @@ import { Loader2, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithEmail, signInWithGoogle, signInWithMagicLink, session } = useAuth();
+  const searchParams = useSearchParams();
+  const { signInWithEmail, signInWithGoogle, signInWithMagicLink, session, user } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,11 +22,15 @@ export default function LoginPage() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [authMode, setAuthMode] = useState<'password' | 'magic'>('password');
 
+  const returnUrl = searchParams.get('returnUrl');
+
   // Redirect if already logged in
-  if (session) {
-    router.push('/');
-    return null;
-  }
+  useEffect(() => {
+    if (session && user?.gamertag) {
+      const redirectTo = returnUrl || `/en/app/profile/${user.gamertag}`;
+      router.push(redirectTo);
+    }
+  }, [session, user, router, returnUrl]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,9 +42,8 @@ export default function LoginPage() {
     if (result.error) {
       setError(result.error);
       setLoading(false);
-    } else {
-      router.push('/');
     }
+    // Redirect handled by useEffect when session updates
   };
 
   const handleMagicLink = async (e: React.FormEvent) => {

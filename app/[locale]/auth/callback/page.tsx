@@ -44,9 +44,9 @@ function AuthCallbackContent() {
           setStatus('success');
           setMessage('Successfully signed in! Redirecting...');
           
-          // Redirect to home page after short delay
+          // Redirect to app after short delay
           setTimeout(() => {
-            router.push('/');
+            router.push('/en/app');
           }, 1500);
           return;
         }
@@ -62,7 +62,7 @@ function AuthCallbackContent() {
             setMessage('Successfully signed in! Redirecting...');
             
             setTimeout(() => {
-              router.push('/');
+              router.push('/en/app');
             }, 1500);
             return;
           }

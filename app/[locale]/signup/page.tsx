@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signUpWithEmail, signInWithGoogle, session } = useAuth();
+  const { signUpWithEmail, signInWithGoogle, session, user } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,10 +22,13 @@ export default function SignupPage() {
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
 
   // Redirect if already logged in
-  if (session) {
-    router.push('/');
-    return null;
-  }
+  useEffect(() => {
+    if (session && user?.gamertag) {
+      router.push(`/en/app/profile/${user.gamertag}`);
+    } else if (session) {
+      router.push('/en/app');
+    }
+  }, [session, user, router]);
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 8) {
@@ -61,9 +64,8 @@ export default function SignupPage() {
     } else if (result.needsConfirmation) {
       setNeedsConfirmation(true);
       setLoading(false);
-    } else {
-      router.push('/');
     }
+    // Redirect handled by useEffect when session updates
   };
 
   const handleGoogleSignup = async () => {
