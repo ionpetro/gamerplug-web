@@ -196,15 +196,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
-      setSession(null);
-      setUser(null);
+      // Use local scope to avoid 403 errors with expired sessions
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (error) {
       console.error('Sign out error:', error);
-      // Still clear local state
-      setSession(null);
-      setUser(null);
     }
+    // Always clear local state
+    setSession(null);
+    setUser(null);
   };
 
   const refreshUser = async () => {

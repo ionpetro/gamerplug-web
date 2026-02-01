@@ -118,19 +118,7 @@ export default function VideoModal({
 
           {/* Video Info Overlay */}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                {currentClip.title && (
-                  <h3 className="text-white text-lg font-semibold mb-1">
-                    {currentClip.title}
-                  </h3>
-                )}
-                {currentClip.description && (
-                  <p className="text-white/80 text-sm">
-                    {currentClip.description}
-                  </p>
-                )}
-              </div>
+            <div className="flex items-center justify-end">
               <div className="text-white/60 text-sm">
                 {currentIndex + 1} of {clips.length}
               </div>

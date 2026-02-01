@@ -33,8 +33,15 @@ export const Header = () => {
   }, [])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut({ scope: 'local' })
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
+    setSession(null)
     setUserMenuOpen(false)
+    // Redirect to home page
+    window.location.href = '/en'
   }
 
   const locale = useMemo(() => {
@@ -151,20 +158,12 @@ export const Header = () => {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <Link
-                href={hrefWithLocale("/login")}
-                className="text-sm font-medium text-white/80 hover:text-white transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href={hrefWithLocale("/signup")}
-                className="py-2 px-4 rounded-lg bg-primary hover:bg-primary/90 text-sm font-bold uppercase tracking-wide transition-colors"
-              >
-                Sign Up
-              </Link>
-            </div>
+            <Link
+              href={hrefWithLocale("/login")}
+              className="py-2 px-4 rounded-lg bg-primary hover:bg-primary/90 text-sm font-bold uppercase tracking-wide transition-colors"
+            >
+              Sign In
+            </Link>
           )}
         </div>
 
@@ -228,22 +227,13 @@ export const Header = () => {
                 </button>
               </>
             ) : (
-              <div className="flex flex-col gap-3 mt-4">
-                <Link
-                  href={hrefWithLocale("/login")}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full py-3 text-center border border-white/20 text-white font-bold rounded-lg hover:bg-white/5 transition-all duration-200"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href={hrefWithLocale("/signup")}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full py-3 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              <Link
+                href={hrefWithLocale("/login")}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
+              >
+                Sign In
+              </Link>
             )}
             
             <Link
