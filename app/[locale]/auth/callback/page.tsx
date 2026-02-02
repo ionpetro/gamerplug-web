@@ -3,7 +3,6 @@
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -83,8 +82,6 @@ function AuthCallbackContent() {
 
   return (
     <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-
       <div className="relative flex-1 flex flex-col overflow-hidden pt-32">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
@@ -158,7 +155,6 @@ export default function AuthCallback() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-background text-white flex flex-col">
-        <Header />
         <div className="relative flex-1 flex flex-col overflow-hidden pt-32">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
