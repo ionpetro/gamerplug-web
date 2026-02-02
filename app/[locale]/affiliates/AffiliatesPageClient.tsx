@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { Video, Shield, Calendar } from 'lucide-react'
 import Image from 'next/image'
@@ -13,8 +12,6 @@ export default function AffiliatesPageClient() {
 
   return (
     <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-
       {/* Hero Section */}
       <section className="relative min-h-[50vh] flex items-center pt-24 pb-12 overflow-hidden">
         {/* Background decorations */}

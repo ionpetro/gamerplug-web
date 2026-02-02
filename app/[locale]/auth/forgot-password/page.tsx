@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Loader2, Mail, CheckCircle, ArrowLeft } from 'lucide-react';
 
@@ -33,8 +32,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-
       <div className="relative flex-1 flex flex-col overflow-hidden pt-24">
         {/* Background Effects */}
         <div className="pointer-events-none absolute inset-0">

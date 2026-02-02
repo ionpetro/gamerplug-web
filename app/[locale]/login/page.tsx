@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Loader2, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
@@ -63,8 +62,6 @@ function LoginContent() {
 
   return (
     <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
-
       <div className="relative flex-1 flex flex-col overflow-hidden pt-24">
         {/* Background Effects */}
         <div className="pointer-events-none absolute inset-0">
@@ -235,7 +232,6 @@ function LoginContent() {
 function LoginFallback() {
   return (
     <div className="min-h-screen bg-background text-white flex flex-col">
-      <Header />
       <div className="relative flex-1 flex flex-col overflow-hidden pt-24">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />

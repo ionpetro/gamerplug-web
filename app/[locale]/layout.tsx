@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { loadMessages } from "@/lib/i18n";
 import { I18nProvider } from "@/components/I18nProvider";
-import { Header } from "@/components/Header";
+import { ConditionalHeader } from "@/components/ConditionalHeader";
 
 export const metadata: Metadata = {
   title: {
@@ -94,7 +94,7 @@ export default async function LocaleLayout({
   return (
     <I18nProvider locale={locale} messages={messages}>
       <div className="antialiased font-sans">
-        <Header />
+        <ConditionalHeader />
         {children}
       </div>
     </I18nProvider>
