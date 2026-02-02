@@ -4,6 +4,12 @@ import { supabase, User, TABLES } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
+/** Supabase: defer async work from onAuthStateChange with setTimeout to avoid deadlock. @see https://supabase.com/docs/reference/javascript/auth-onauthstatechange */
+const DEFER_MS = 0;
+
+const PROFILE_LOAD_TIMEOUT_MS = 15_000;
+const PROFILE_LOAD_TIMEOUT_MESSAGE = 'Profile load timeout';
+
 interface AuthContextType {
   session: Session | null;
   user: User | null;
@@ -24,18 +30,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const clearAuthState = useCallback(() => {
+    setSession(null);
+    setUser(null);
+  }, []);
+
   const loadUserProfile = useCallback(async (userId: string) => {
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(PROFILE_LOAD_TIMEOUT_MESSAGE)), PROFILE_LOAD_TIMEOUT_MS)
+    );
+
     try {
-      const { data, error } = await supabase
+      const fetchPromise = supabase
         .from(TABLES.USERS)
         .select('*')
         .eq('id', userId)
         .single();
 
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
       if (error) {
         if (error.code === 'PGRST116') {
           // No user profile found - this is normal for new users
           setUser(null);
+        } else if (error.message?.includes('JWT') || error.message?.includes('session') || error.code === '401') {
+          console.warn('Session invalid while loading profile:', error.message);
+          await supabase.auth.signOut({ scope: 'local' });
+          clearAuthState();
         } else {
           console.error('Error loading user profile:', error);
           setUser(null);
@@ -50,29 +71,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setUser(data as User);
       }
-    } catch (error) {
-      console.error('Unexpected error loading user profile:', error);
-      setUser(null);
+    } catch (err) {
+      const isTimeout = err instanceof Error && err.message === PROFILE_LOAD_TIMEOUT_MESSAGE;
+      if (isTimeout) {
+        console.warn('Profile load timed out - session may be expired');
+        await supabase.auth.signOut({ scope: 'local' });
+        clearAuthState();
+      } else {
+        console.error('Unexpected error loading user profile:', err);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [clearAuthState]);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        loadUserProfile(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
+    let cancelled = false;
 
-    // Listen for auth changes
+    async function initSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
+      setSession(session);
+
+      if (!session?.user) {
+        setLoading(false);
+        return;
+      }
+
+      // refreshSession() ensures a valid token before profile fetch (getSession() can return cached expired session).
+      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+      if (cancelled) return;
+      if (refreshError || !refreshData.session) {
+        clearAuthState();
+        setLoading(false);
+        return;
+      }
+      setSession(refreshData.session);
+
+      await loadUserProfile(refreshData.session.user.id);
+    }
+
+    initSession();
+
+    // Sync callback only; defer async work per Supabase docs to avoid deadlock.
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
 
       if (session?.user) {
@@ -80,7 +125,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setLoading(false);
         } else {
-          await loadUserProfile(session.user.id);
+          const userId = session.user.id;
+          setTimeout(() => {
+            if (!cancelled) loadUserProfile(userId);
+          }, DEFER_MS);
         }
       } else {
         setUser(null);
@@ -89,9 +137,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
+      cancelled = true;
       subscription.unsubscribe();
     };
-  }, [loadUserProfile]);
+  }, [loadUserProfile, clearAuthState]);
 
   const signInWithEmail = async (email: string, password: string): Promise<{ error: string | null }> => {
     try {
@@ -196,14 +245,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      // Use local scope to avoid 403 errors with expired sessions
       await supabase.auth.signOut({ scope: 'local' });
     } catch (error) {
       console.error('Sign out error:', error);
     }
-    // Always clear local state
-    setSession(null);
-    setUser(null);
+    clearAuthState();
   };
 
   const refreshUser = async () => {
