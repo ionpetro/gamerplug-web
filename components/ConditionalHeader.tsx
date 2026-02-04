@@ -12,7 +12,9 @@ export function ConditionalHeader() {
 
   // Hide main Header when we're under /en/app or /es/app (app has its own AppHeader)
   const isAppRoute = pathname?.match(/^\/(en|es)\/app(\/|$)/);
-  if (isAppRoute) {
+  // Hide main Header on university dashboard (it has its own top bar and sidebar)
+  const isUniversitiesRoute = pathname?.match(/^\/(en|es)\/universities(\/|$)/);
+  if (isAppRoute || isUniversitiesRoute) {
     return null;
   }
 
