@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Users,
   CalendarDays,
+  Trophy,
   GraduationCap,
   ArrowLeft,
 } from "lucide-react";
@@ -20,12 +21,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 
 const navItems = [
   { href: "", label: "Dashboard", icon: LayoutDashboard },
   { href: "/players", label: "Players", icon: Users },
   { href: "/events", label: "Events", icon: CalendarDays },
+  { href: "/tournaments", label: "Tournaments", icon: Trophy },
 ] as const;
 
 type UniversitySidebarProps = {
@@ -105,6 +108,7 @@ export function UniversitySidebar({ locale }: UniversitySidebarProps) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
