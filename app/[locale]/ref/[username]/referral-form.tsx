@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { Lock, UserPlus, Users, UserCircle, ExternalLink } from 'lucide-react'
+import { UserCircle, ExternalLink } from 'lucide-react'
 import { User, Game, UserGame } from '@/lib/supabase'
 import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets'
 import { Footer } from '@/components/Footer'
@@ -93,7 +93,7 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.2_0_0)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.2_0_0)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 -z-10 pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="container mx-auto px-4 md:px-6 pt-20 pb-16 lg:pt-24 lg:pb-24">
+      <div className="max-w-5xl mx-auto px-6 md:px-10 pt-24 pb-20 lg:pt-32 lg:pb-28">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Side - Text Content */}
           <motion.div
@@ -188,11 +188,8 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative flex justify-center lg:justify-end"
           >
-            {/* Background Shape */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl rotate-12 -z-10 blur-sm" />
-
-            {/* Profile Card - guideline: rounded-xl, bg-card, shadow-sm, border */}
-            <div className="relative bg-card rounded-2xl p-6 sm:p-8 w-full max-w-[340px] sm:max-w-[380px] border border-border shadow-sm transition-all duration-300">
+            {/* Profile Card */}
+            <div className="relative bg-card rounded-2xl p-6 sm:p-8 w-full max-w-[340px] sm:max-w-[380px] border border-border shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all duration-300">
               {/* Floating Stats Card - dark theme */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -324,64 +321,7 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
         </div>
       </div>
 
-      {/* How It Works Section - guideline: rounded-xl, bg-card, border, shadow-sm */}
-      <div className="container mx-auto px-4 md:px-6 pb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="relative bg-card rounded-2xl p-6 sm:p-8 lg:p-12 border border-border shadow-sm transition-all duration-300"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Title */}
-            <div className="lg:col-span-1">
-              <h3 className="text-3xl sm:text-4xl font-black italic text-foreground leading-none">
-                How it<br />
-                <span className="text-primary">works</span>
-              </h3>
-            </div>
-
-            {/* Steps - icons 24px primary per guidelines */}
-            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-8">
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
-                  <Lock className="size-7" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">Sign up</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Enter your email and download the GamerPlug app to create your account.
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
-                  <UserPlus className="size-7" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">Create profile</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Add your games, platforms, and gaming preferences to find the best matches.
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
-                  <Users className="size-7" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">Find teammates</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Connect with {username} and other gamers who share your passion.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
+      <div className="max-w-5xl mx-auto px-6 md:px-10 pb-20">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
