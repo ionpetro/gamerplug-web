@@ -101,6 +101,7 @@ export function Footer() {
               <li><Link href={`/${locale}/team`} className="hover:text-primary transition-colors">{messages.footer.team}</Link></li>
               <li><a href="https://www.linkedin.com/company/gamer-plug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
               <li><Link href={`/${locale}/affiliates`} className="hover:text-primary transition-colors">{messages.footer.affiliates || 'Affiliates'}</Link></li>
+              <li><Link href={`/${locale}/leaderboard`} className="hover:text-primary transition-colors">Leaderboard</Link></li>
             </ul>
           </div>
 
@@ -109,6 +110,7 @@ export function Footer() {
             <ul className="space-y-4 text-muted-foreground text-sm font-medium">
               <li><Link href={`/${locale}/tac`} className="hover:text-primary transition-colors">{messages.footer.terms}</Link></li>
               <li><Link href={`/${locale}/privacy`} className="hover:text-primary transition-colors">{messages.footer.privacy}</Link></li>
+              <li><Link href={`/${locale}/contact`} className="hover:text-primary transition-colors">{messages.footer.contact || 'Contact Us'}</Link></li>
             </ul>
           </div>
         </div>

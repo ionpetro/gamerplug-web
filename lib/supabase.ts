@@ -80,10 +80,19 @@ export interface Game {
   updated_at: string;
 }
 
+export interface Referral {
+  id: string;
+  referrer: string;
+  email: string;
+  converted: boolean;
+  created_at: string;
+}
+
 // Database table names
 export const TABLES = {
   USERS: 'users',
   CLIPS: 'clips',
   GAMES: 'games',
   USER_GAMES: 'user_games',
+  REFERRALS: 'referrals',
 } as const;

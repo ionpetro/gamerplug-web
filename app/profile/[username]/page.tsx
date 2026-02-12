@@ -117,38 +117,7 @@ export default function UserProfilePage() {
 
       console.log('Searching for user with gamertag:', username);
 
-      // First, let's try a simple query to see if the user exists at all
-      const { data: simpleUserData, error: simpleError } = await supabase
-        .from(TABLES.USERS)
-        .select('*')
-        .eq('gamertag', username);
-
-      console.log('Simple user query result:', { data: simpleUserData, error: simpleError });
-
-      if (simpleError) {
-        console.error('Error in simple user query:', simpleError);
-        setError('Database error occurred');
-        return;
-      }
-
-      if (!simpleUserData || simpleUserData.length === 0) {
-        console.log('No user found with gamertag:', username);
-        
-        // Let's also try case-insensitive search
-        const { data: caseInsensitiveData, error: caseInsensitiveError } = await supabase
-          .from(TABLES.USERS)
-          .select('*')
-          .ilike('gamertag', username);
-
-        console.log('Case-insensitive search result:', { data: caseInsensitiveData, error: caseInsensitiveError });
-
-        if (!caseInsensitiveData || caseInsensitiveData.length === 0) {
-          setError('User not found');
-          return;
-        }
-      }
-
-      // Now fetch user with games if we found them
+      // Fetch user with games (case-insensitive)
       const { data: userData, error: userError } = await supabase
         .from(TABLES.USERS)
         .select(`
@@ -158,27 +127,21 @@ export default function UserProfilePage() {
             games (*)
           )
         `)
-        .eq('gamertag', username)
+        .ilike('gamertag', username)
         .single();
 
       console.log('Full user query result:', { data: userData, error: userError });
 
-      if (userError) {
-        console.error('Error fetching user with games:', userError);
-        // If the join fails, fall back to just the user data
-        const foundUser = simpleUserData?.[0];
-        if (foundUser) {
-          setUser({ ...foundUser, user_games: [] });
-        } else {
-          setError('User not found');
-          return;
-        }
-      } else {
-        setUser(userData);
+      if (userError || !userData) {
+        console.error('Error fetching user:', userError);
+        setError('User not found');
+        return;
       }
 
+      setUser(userData);
+
       // Fetch user's public clips
-      const currentUser = userData || simpleUserData?.[0];
+      const currentUser = userData;
       if (currentUser?.id) {
         const { data: clipsData, error: clipsError } = await supabase
           .from(TABLES.CLIPS)
