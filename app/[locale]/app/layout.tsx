@@ -8,7 +8,7 @@ import { AppHeader } from '@/components/AppHeader';
 import { Footer } from '@/components/Footer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { session, loading } = useAuth();
+  const { session, user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -19,6 +19,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       router.push(`/en/login?returnUrl=${returnUrl}`);
     }
   }, [session, loading, router, pathname]);
+
+  // Redirect to onboarding if user has session but no profile/gamertag
+  useEffect(() => {
+    if (!loading && session && !user?.gamertag && !pathname?.includes('/onboarding')) {
+      router.replace('/en/app/onboarding');
+    }
+  }, [session, user, loading, router, pathname]);
 
   if (loading) {
     return (
