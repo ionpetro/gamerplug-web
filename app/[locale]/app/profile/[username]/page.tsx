@@ -727,9 +727,17 @@ export default function AuthenticatedProfilePage() {
               {clips.length > 0 ? (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
                   {clips.map((clip) => (
-                    <button
+                    <div
                       key={clip.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => handleClipPress(clip)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleClipPress(clip);
+                        }
+                      }}
                       className="relative aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
                     >
                       {clip.thumbnail_url ? (
@@ -761,7 +769,7 @@ export default function AuthenticatedProfilePage() {
                       <div className="absolute bottom-2 right-2 bg-black/60 rounded-full p-1">
                         <Play size={12} className="text-white" fill="white" />
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               ) : (
