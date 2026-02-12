@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import ReferralForm from './referral-form'
+import { User, Game, UserGame } from '@/lib/supabase'
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -13,6 +14,10 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseAnonKey)
 }
 
+interface UserWithGames extends User {
+  user_games: (UserGame & { games: Game })[];
+}
+
 interface PageProps {
   params: Promise<{ username: string }>
 }
@@ -21,16 +26,22 @@ export default async function ReferralPage({ params }: PageProps) {
   const { username } = await params
   const supabase = getSupabaseClient()
 
-  // Validate that this username belongs to a real user
+  // Fetch user data with games
   const { data: user } = await supabase
     .from('users')
-    .select('gamertag')
+    .select(`
+      *,
+      user_games (
+        *,
+        games (*)
+      )
+    `)
     .ilike('gamertag', username)
-    .single()
+    .single() as { data: UserWithGames | null }
 
   if (!user) {
     notFound()
   }
 
-  return <ReferralForm username={username} />
+  return <ReferralForm username={username} user={user} />
 }
