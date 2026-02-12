@@ -729,17 +729,14 @@ export default function AuthenticatedProfilePage() {
                   {clips.map((clip) => (
                     <div
                       key={clip.id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => handleClipPress(clip)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleClipPress(clip);
-                        }
-                      }}
-                      className="relative aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
+                      className="relative aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group hover:ring-2 hover:ring-primary/50 transition-all"
                     >
+                      <button
+                        type="button"
+                        onClick={() => handleClipPress(clip)}
+                        className="absolute inset-0 z-10 cursor-pointer"
+                        aria-label={`Open clip ${clip.title || clip.id}`}
+                      />
                       {clip.thumbnail_url ? (
                         <Image
                           src={clip.thumbnail_url}
@@ -752,21 +749,22 @@ export default function AuthenticatedProfilePage() {
                           <Video size={24} className="text-white/30" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="pointer-events-none absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Play size={32} className="text-white" fill="white" />
                       </div>
                       {isOwnProfile && (
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteClip(clip.id);
                           }}
-                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                          className="absolute top-1.5 right-1.5 z-20 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         >
                           <X size={12} className="text-white" />
                         </button>
                       )}
-                      <div className="absolute bottom-2 right-2 bg-black/60 rounded-full p-1">
+                      <div className="pointer-events-none absolute bottom-2 right-2 bg-black/60 rounded-full p-1">
                         <Play size={12} className="text-white" fill="white" />
                       </div>
                     </div>

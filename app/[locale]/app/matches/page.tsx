@@ -101,7 +101,7 @@ export default function MatchesPage() {
   };
 
   return (
-    <div className="relative flex-1">
+    <div className="relative flex-1 overflow-hidden bg-black">
         {/* Background Effects */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
