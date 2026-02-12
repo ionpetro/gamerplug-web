@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { User, LogOut, Compass, Users, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ export const AppHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   // Check for session
@@ -55,6 +56,20 @@ export const AppHeader = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    if (userMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [userMenuOpen]);
 
   const isActive = (path: string) => {
     // For profile (/en/app), only match exactly or /en/app/profile paths
@@ -115,7 +130,7 @@ export const AppHeader = () => {
 
         {/* User Menu */}
         {session && (
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
               onClick={() => setUserMenuOpen(!userMenuOpen)}
               className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"

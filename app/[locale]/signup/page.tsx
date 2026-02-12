@@ -141,7 +141,7 @@ function SignupContent() {
                   {/* Google Sign In */}
                   <button
                     onClick={() => signInWithGoogle()}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 transition-colors mb-6"
+                    className="w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 transition-colors mb-6 cursor-pointer"
                   >
                     <GoogleIcon />
                     <span className="font-medium">Continue with Google</span>
@@ -192,7 +192,7 @@ function SignupContent() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60 cursor-pointer"
                         >
                           {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
@@ -225,7 +225,7 @@ function SignupContent() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold uppercase tracking-wide transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold uppercase tracking-wide transition-colors flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {loading ? (
                           <>
@@ -246,7 +246,7 @@ function SignupContent() {
                         Already have an account?{' '}
                         <button
                           onClick={() => { setIsSignUp(false); setError(''); }}
-                          className="text-primary hover:underline font-medium"
+                          className="text-primary hover:underline font-medium cursor-pointer"
                         >
                           Sign in
                         </button>
@@ -256,7 +256,7 @@ function SignupContent() {
                         Don&apos;t have an account?{' '}
                         <button
                           onClick={() => { setIsSignUp(true); setError(''); }}
-                          className="text-primary hover:underline font-medium"
+                          className="text-primary hover:underline font-medium cursor-pointer"
                         >
                           Create one
                         </button>
