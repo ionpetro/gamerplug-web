@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- PlayStation blue #003791 -->
+  <rect x="2" y="4" width="20" height="16" rx="3" fill="#003791"/>
+  <!-- Face buttons: △ top, ○ right, × bottom, □ left -->
+  <path d="M12 9l0 3l-2 1.5L12 15l2-1.5L12 12V9z" fill="white"/>
+  <circle cx="15" cy="12" r="1.6" fill="white"/>
+  <path d="M12 14.2l1.2-1.2L12 11.8l-1.2 1.2L12 14.2z" fill="white"/>
+  <rect x="8.2" y="10.4" width="2" height="2" rx="0.3" fill="white"/>
+</svg>
