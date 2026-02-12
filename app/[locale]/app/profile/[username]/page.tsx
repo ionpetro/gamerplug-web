@@ -12,6 +12,7 @@ import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
 import {
   Share2,
   Edit3,
+  Check,
   Play,
   Video,
   Gamepad2,
@@ -24,6 +25,107 @@ import {
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
 }
+
+type Platform = 'PC' | 'PS5' | 'Xbox' | 'Nintendo Switch';
+type PreferenceFieldKey =
+  | 'playStyle'
+  | 'strategy'
+  | 'teamPlay'
+  | 'focusType'
+  | 'characterPreference'
+  | 'gamingSchedule'
+  | 'micUsage'
+  | 'personality'
+  | 'conversationStyle'
+  | 'inGameTools';
+type EditableFieldKey = 'games' | 'platform' | PreferenceFieldKey;
+
+const PLATFORM_OPTIONS: Platform[] = ['PC', 'PS5', 'Xbox', 'Nintendo Switch'];
+
+const EDIT_FIELD_CONFIG: Record<
+  EditableFieldKey,
+  { label: string; title: string; multi: boolean; options?: string[] }
+> = {
+  games: {
+    label: 'I play',
+    title: 'I play',
+    multi: true,
+  },
+  platform: {
+    label: 'at',
+    title: 'at',
+    multi: true,
+    options: PLATFORM_OPTIONS,
+  },
+  playStyle: {
+    label: 'Play Style',
+    title: 'How do you like to play?',
+    multi: true,
+    options: ['Aggressive', 'Conservative', 'Balanced'],
+  },
+  strategy: {
+    label: 'Strategy Approach',
+    title: 'Strategy Approach',
+    multi: true,
+    options: ['Highly Strategic', 'Somewhat Strategic', 'Instinctive'],
+  },
+  teamPlay: {
+    label: 'Team Play',
+    title: 'Team Play Style',
+    multi: true,
+    options: ['Stick Together', 'Support From Distance', 'Flexible'],
+  },
+  focusType: {
+    label: 'Focus Preference',
+    title: 'Focus Preference',
+    multi: false,
+    options: ['Movement Exploits', 'Gameplay Metas', 'Both Equally'],
+  },
+  characterPreference: {
+    label: 'Character/Class',
+    title: 'Character/Class Preference',
+    multi: false,
+    options: ['Tank/Support', 'DPS/Carry', 'Flex Player', 'Healer/Support', 'No Preference'],
+  },
+  gamingSchedule: {
+    label: 'Gaming Schedule',
+    title: 'Gaming Schedule',
+    multi: false,
+    options: ['All Day Gamer', 'Few Hours Daily', 'Weekend Warrior'],
+  },
+  micUsage: {
+    label: 'Microphone Usage',
+    title: 'Microphone Usage',
+    multi: true,
+    options: ['Always Use Mic', 'Sometimes', 'Rarely/Never'],
+  },
+  personality: {
+    label: 'Personality Type',
+    title: 'Personality Type',
+    multi: true,
+    options: ['Chill/Laid Back', 'Competitive/Intense', 'Funny/Joking', 'Serious/Focused', 'Encouraging'],
+  },
+  conversationStyle: {
+    label: 'Conversation Style',
+    title: 'Conversation Style',
+    multi: true,
+    options: ['Game Focus Only', 'Wide Range Topics', 'Mix of Both'],
+  },
+  inGameTools: {
+    label: 'In-Game Communication',
+    title: 'In-Game Communication',
+    multi: true,
+    options: ['Ping/Text Heavy', 'Voice Only', 'All Methods'],
+  },
+};
+
+const splitPreference = (value?: string) =>
+  value
+    ? value
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+    : [];
 
 const SkeletonLine = ({ className = "" }: { className?: string }) => (
   <div className={`bg-white/10 rounded animate-pulse ${className}`} />
@@ -75,6 +177,11 @@ export default function AuthenticatedProfilePage() {
   const [currentClipIndex, setCurrentClipIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [uploadStage, setUploadStage] = useState('');
+  const [allGames, setAllGames] = useState<Game[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentEditField, setCurrentEditField] = useState<EditableFieldKey | null>(null);
+  const [editDraftValue, setEditDraftValue] = useState<string | string[]>('');
+  const [savingField, setSavingField] = useState<EditableFieldKey | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isOwnProfile = authUser?.gamertag?.toLowerCase() === username?.toLowerCase();
@@ -84,6 +191,21 @@ export default function AuthenticatedProfilePage() {
       fetchProfileData();
     }
   }, [username]);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      const { data, error } = await supabase
+        .from(TABLES.GAMES)
+        .select('*')
+        .order('display_name', { ascending: true });
+
+      if (!error && data) {
+        setAllGames(data);
+      }
+    };
+
+    fetchGames();
+  }, []);
 
   const fetchProfileData = async () => {
     try {
@@ -207,6 +329,185 @@ export default function AuthenticatedProfilePage() {
     }
   };
 
+  const getFieldValue = (field: EditableFieldKey): string | string[] => {
+    if (!profileUser) return EDIT_FIELD_CONFIG[field].multi ? [] : '';
+
+    if (field === 'games') {
+      return profileUser.user_games.map((userGame) => userGame.games.display_name);
+    }
+
+    if (field === 'platform') {
+      return profileUser.platform || [];
+    }
+
+    const preferenceValue = profileUser.game_preferences?.[field];
+    if (EDIT_FIELD_CONFIG[field].multi) {
+      return splitPreference(preferenceValue);
+    }
+
+    return preferenceValue || '';
+  };
+
+  const openFieldEditor = (field: EditableFieldKey) => {
+    setCurrentEditField(field);
+    setEditDraftValue(getFieldValue(field));
+  };
+
+  const closeFieldEditor = () => {
+    setCurrentEditField(null);
+    setEditDraftValue('');
+  };
+
+  const handleToggleOption = (option: string) => {
+    if (!currentEditField) return;
+
+    if (EDIT_FIELD_CONFIG[currentEditField].multi) {
+      const current = Array.isArray(editDraftValue) ? editDraftValue : [];
+      if (current.includes(option)) {
+        setEditDraftValue(current.filter((value) => value !== option));
+      } else {
+        setEditDraftValue([...current, option]);
+      }
+      return;
+    }
+
+    setEditDraftValue(option);
+  };
+
+  const syncUserGames = async (selectedGameNames: string[]) => {
+    if (!profileUser) return;
+
+    const selectedGameIds = allGames
+      .filter((game) => selectedGameNames.includes(game.display_name))
+      .map((game) => game.id);
+
+    const currentGameIds = profileUser.user_games.map((userGame) => userGame.game_id);
+    const gameIdsToAdd = selectedGameIds.filter((gameId) => !currentGameIds.includes(gameId));
+    const gameIdsToRemove = currentGameIds.filter((gameId) => !selectedGameIds.includes(gameId));
+
+    if (gameIdsToAdd.length > 0) {
+      const records = gameIdsToAdd.map((gameId) => ({
+        user_id: profileUser.id,
+        game_id: gameId,
+      }));
+
+      const { error } = await supabase.from(TABLES.USER_GAMES).insert(records);
+      if (error && error.code !== '23505') {
+        throw error;
+      }
+    }
+
+    if (gameIdsToRemove.length > 0) {
+      const { error } = await supabase
+        .from(TABLES.USER_GAMES)
+        .delete()
+        .eq('user_id', profileUser.id)
+        .in('game_id', gameIdsToRemove);
+
+      if (error) {
+        throw error;
+      }
+    }
+  };
+
+  const handleSaveField = async () => {
+    if (!profileUser || !currentEditField) return;
+
+    try {
+      setSavingField(currentEditField);
+
+      if (currentEditField === 'games') {
+        const selectedGames = Array.isArray(editDraftValue) ? editDraftValue : [];
+        await syncUserGames(selectedGames);
+
+        const selectedGamesMap = new Map(allGames.map((game) => [game.display_name, game]));
+        const selectedGameRecords = selectedGames
+          .map((displayName) => selectedGamesMap.get(displayName))
+          .filter((game): game is Game => Boolean(game))
+          .map((game) => {
+            const existing = profileUser.user_games.find((userGame) => userGame.game_id === game.id);
+            if (existing) return existing;
+            return {
+              id: `temp-${profileUser.id}-${game.id}`,
+              user_id: profileUser.id,
+              game_id: game.id,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              games: game,
+            } as UserGame & { games: Game };
+          });
+
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                user_games: selectedGameRecords,
+              }
+            : prev
+        );
+      } else if (currentEditField === 'platform') {
+        const selectedPlatforms = Array.isArray(editDraftValue) ? editDraftValue : [];
+        const { error } = await supabase
+          .from(TABLES.USERS)
+          .update({ platform: selectedPlatforms })
+          .eq('id', profileUser.id);
+
+        if (error) {
+          throw error;
+        }
+
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                platform: selectedPlatforms as Platform[],
+              }
+            : prev
+        );
+      } else {
+        const nextPreferences = {
+          ...(profileUser.game_preferences || {}),
+          [currentEditField]: Array.isArray(editDraftValue)
+            ? editDraftValue.filter((value) => value.trim()).join(', ')
+            : editDraftValue,
+        };
+
+        const { error } = await supabase
+          .from(TABLES.USERS)
+          .update({ game_preferences: nextPreferences })
+          .eq('id', profileUser.id);
+
+        if (error) {
+          throw error;
+        }
+
+        setProfileUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                game_preferences: nextPreferences,
+              }
+            : prev
+        );
+      }
+
+      closeFieldEditor();
+    } catch (error) {
+      console.error('Error saving profile field:', error);
+      alert('Failed to save changes. Please try again.');
+    } finally {
+      setSavingField(null);
+    }
+  };
+
+  const getDisplayValue = (value: string | string[]) => {
+    if (Array.isArray(value)) {
+      return value.length > 0 ? value.join(', ') : 'Empty';
+    }
+
+    return value || 'Empty';
+  };
+
   if (loading) {
     return <ProfileSkeleton />;
   }
@@ -258,7 +559,10 @@ export default function AuthenticatedProfilePage() {
                   </div>
                 )}
                 {isOwnProfile && (
-                  <button className="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-background">
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="absolute bottom-0 right-0 w-8 h-8 cursor-pointer bg-primary rounded-full flex items-center justify-center border-2 border-background"
+                  >
                     <Edit3 size={14} />
                   </button>
                 )}
@@ -314,15 +618,15 @@ export default function AuthenticatedProfilePage() {
               {isOwnProfile ? (
                 <>
                   <button
-                    onClick={() => {/* TODO: Edit profile */}}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
+                    onClick={() => setShowEditModal(true)}
+                    className="flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
                   >
                     <Edit3 size={16} />
                     <span className="font-medium">Edit profile</span>
                   </button>
                   <button
                     onClick={handleShareProfile}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
+                    className="flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
                   >
                     <Share2 size={16} />
                     <span className="font-medium">Share profile</span>
@@ -331,7 +635,7 @@ export default function AuthenticatedProfilePage() {
               ) : (
                 <button
                   onClick={handleShareProfile}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
+                  className="flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
                 >
                   <Share2 size={16} />
                   <span className="font-medium">Share profile</span>
@@ -348,7 +652,13 @@ export default function AuthenticatedProfilePage() {
                     Games
                   </h2>
                   {isOwnProfile && (
-                    <button className="text-sm text-white/50 hover:text-white flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        setShowEditModal(true);
+                        openFieldEditor('games');
+                      }}
+                      className="text-sm text-white/50 hover:text-white flex cursor-pointer items-center gap-1"
+                    >
                       Manage <ChevronRight size={14} />
                     </button>
                   )}
@@ -387,7 +697,7 @@ export default function AuthenticatedProfilePage() {
                   <button
                     onClick={handleUploadClick}
                     disabled={uploading}
-                    className="text-sm text-white/50 hover:text-white flex items-center gap-1 disabled:opacity-50"
+                    className="text-sm text-white/50 hover:text-white flex cursor-pointer items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {uploading ? (
                       <>
@@ -420,7 +730,7 @@ export default function AuthenticatedProfilePage() {
                     <button
                       key={clip.id}
                       onClick={() => handleClipPress(clip)}
-                      className="relative aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group hover:ring-2 hover:ring-primary/50 transition-all"
+                      className="relative aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
                     >
                       {clip.thumbnail_url ? (
                         <Image
@@ -443,7 +753,7 @@ export default function AuthenticatedProfilePage() {
                             e.stopPropagation();
                             handleDeleteClip(clip.id);
                           }}
-                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         >
                           <X size={12} className="text-white" />
                         </button>
@@ -464,7 +774,7 @@ export default function AuthenticatedProfilePage() {
                     <button
                       onClick={handleUploadClick}
                       disabled={uploading}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-xl font-medium transition-colors disabled:opacity-50"
+                      className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {uploading ? (
                         <>
@@ -526,6 +836,188 @@ export default function AuthenticatedProfilePage() {
           </div>
         </div>
       </div>
+
+      {showEditModal && isOwnProfile && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
+          <div className="h-full overflow-y-auto">
+            <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
+              <div className="rounded-2xl border border-white/10 bg-[#101010]">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#101010]/95 px-5 py-4 backdrop-blur-sm">
+                  <button
+                    onClick={() => {
+                      closeFieldEditor();
+                      setShowEditModal(false);
+                    }}
+                    className="text-sm text-white/60 hover:text-white cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <h2 className="text-base font-semibold">Edit info</h2>
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="text-sm font-semibold text-primary hover:text-primary/90 cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+
+                <div className="space-y-8 px-5 py-6">
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">ABOUT ME</p>
+                    <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-white">They call me</span>
+                        <span className="font-medium text-white/60">@{profileUser.gamertag}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">GAMES</p>
+                    <button
+                      onClick={() => openFieldEditor('games')}
+                      className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.04]"
+                    >
+                      <span className="text-sm text-white">{EDIT_FIELD_CONFIG.games.label}</span>
+                      <span className="max-w-[65%] truncate text-right text-sm text-white/60">
+                        {getDisplayValue(getFieldValue('games'))}
+                      </span>
+                    </button>
+                  </div>
+
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">PLATFORM</p>
+                    <button
+                      onClick={() => openFieldEditor('platform')}
+                      className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.04]"
+                    >
+                      <span className="text-sm text-white">{EDIT_FIELD_CONFIG.platform.label}</span>
+                      <span className="max-w-[65%] truncate text-right text-sm text-white/60">
+                        {getDisplayValue(getFieldValue('platform'))}
+                      </span>
+                    </button>
+                  </div>
+
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">PLAY STYLE</p>
+                    {(['playStyle', 'strategy', 'teamPlay'] as PreferenceFieldKey[]).map((field) => (
+                      <button
+                        key={field}
+                        onClick={() => openFieldEditor(field)}
+                        className="mb-2 flex w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.04] last:mb-0"
+                      >
+                        <span className="text-sm text-white">{EDIT_FIELD_CONFIG[field].label}</span>
+                        <span className="max-w-[65%] truncate text-right text-sm text-white/60">
+                          {getDisplayValue(getFieldValue(field))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">ADVANCED PREFERENCES</p>
+                    {(['focusType', 'characterPreference', 'gamingSchedule'] as PreferenceFieldKey[]).map((field) => (
+                      <button
+                        key={field}
+                        onClick={() => openFieldEditor(field)}
+                        className="mb-2 flex w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.04] last:mb-0"
+                      >
+                        <span className="text-sm text-white">{EDIT_FIELD_CONFIG[field].label}</span>
+                        <span className="max-w-[65%] truncate text-right text-sm text-white/60">
+                          {getDisplayValue(getFieldValue(field))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div>
+                    <p className="mb-3 text-xs font-semibold tracking-wide text-primary">COMMUNICATION</p>
+                    {(['micUsage', 'personality', 'conversationStyle', 'inGameTools'] as PreferenceFieldKey[]).map((field) => (
+                      <button
+                        key={field}
+                        onClick={() => openFieldEditor(field)}
+                        className="mb-2 flex w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.04] last:mb-0"
+                      >
+                        <span className="text-sm text-white">{EDIT_FIELD_CONFIG[field].label}</span>
+                        <span className="max-w-[65%] truncate text-right text-sm text-white/60">
+                          {getDisplayValue(getFieldValue(field))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {currentEditField && (
+            <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/80 sm:items-center">
+              <div className="w-full max-w-2xl rounded-t-2xl border border-white/10 bg-[#161616] sm:rounded-2xl">
+                <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+                  <button
+                    onClick={closeFieldEditor}
+                    className="text-sm text-white/60 hover:text-white cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <h3 className="text-sm font-semibold">{EDIT_FIELD_CONFIG[currentEditField].title}</h3>
+                  <button
+                    onClick={handleSaveField}
+                    disabled={savingField === currentEditField}
+                    className="inline-flex cursor-pointer items-center gap-1 text-sm font-semibold text-primary disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {savingField === currentEditField ? <Loader2 size={14} className="animate-spin" /> : null}
+                    Done
+                  </button>
+                </div>
+
+                <div className="max-h-[65vh] overflow-y-auto px-5 py-4">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {(currentEditField === 'games'
+                      ? allGames.map((game) => game.display_name)
+                      : EDIT_FIELD_CONFIG[currentEditField].options || []
+                    ).map((option) => {
+                      const selected = EDIT_FIELD_CONFIG[currentEditField].multi
+                        ? Array.isArray(editDraftValue) && editDraftValue.includes(option)
+                        : editDraftValue === option;
+                      const isGame = currentEditField === 'games';
+                      const isPlatform = currentEditField === 'platform';
+                      const iconUrl = isGame ? getGameAssetUrl(option) : isPlatform ? getPlatformAssetUrl(option) : '';
+
+                      return (
+                        <button
+                          key={option}
+                          onClick={() => handleToggleOption(option)}
+                          className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left transition-colors ${
+                            selected
+                              ? 'border-primary bg-primary/10 text-white'
+                              : 'border-white/10 bg-white/[0.02] text-white/80 hover:bg-white/[0.05]'
+                          } cursor-pointer`}
+                        >
+                          <span className="flex items-center gap-3">
+                            {iconUrl ? (
+                              <Image
+                                src={iconUrl}
+                                alt={option}
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 rounded object-contain"
+                                unoptimized
+                              />
+                            ) : null}
+                            <span className="text-sm">{option}</span>
+                          </span>
+                          {selected ? <Check size={14} className="text-primary" /> : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Video Modal */}
       <VideoModal
