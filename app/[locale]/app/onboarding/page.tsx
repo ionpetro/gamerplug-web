@@ -3,10 +3,11 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { supabase, TABLES, Game } from '@/lib/supabase';
+import { supabase, TABLES, Game, Clip } from '@/lib/supabase';
 import { getGameAssetUrl } from '@/lib/assets';
 import { getPlatformAssetUrl } from '@/lib/assets';
-import { Loader2, ChevronLeft, ChevronRight, Check, Gamepad2, User, Calendar, Monitor, Video, PartyPopper } from 'lucide-react';
+import { uploadClip, deleteClip, getUserClips } from '@/lib/clips';
+import { Loader2, ChevronLeft, ChevronRight, Check, Gamepad2, User, Calendar, Monitor, Video, PartyPopper, Plus, X, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -372,30 +373,183 @@ function PlatformStep({
   );
 }
 
-// ─── Step 5: Gameplay Clips (placeholder) ────────────────────────────────────
+// ─── Step 5: Gameplay Clips ───────────────────────────────────────────────────
 
-function GameplayStep() {
+const MAX_CLIPS = 6;
+
+function GameplayStep({ userId }: { userId: string }) {
+  const [clips, setClips] = useState<Clip[]>([]);
+  const [uploading, setUploading] = useState<number | null>(null); // slot index
+  const [uploadStage, setUploadStage] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingSlotRef = useRef<number>(0);
+
+  // Load existing clips on mount
+  useEffect(() => {
+    async function loadClips() {
+      const result = await getUserClips(userId);
+      if (result.success && result.clips) {
+        setClips(result.clips);
+      }
+    }
+    loadClips();
+  }, [userId]);
+
+  const handleSlotClick = (slotIndex: number) => {
+    if (uploading !== null) return;
+    pendingSlotRef.current = slotIndex;
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input so the same file can be re-selected
+    e.target.value = '';
+
+    setError(null);
+    setUploading(pendingSlotRef.current);
+    setUploadStage('Validating...');
+    setUploadProgress(0);
+
+    const result = await uploadClip({
+      file,
+      userId,
+      title: `Clip ${clips.length + 1}`,
+      onProgress: (stage, progress) => {
+        setUploadStage(stage);
+        setUploadProgress(progress);
+      },
+    });
+
+    if (result.success) {
+      // Refresh clips list
+      const refreshed = await getUserClips(userId);
+      if (refreshed.success && refreshed.clips) {
+        setClips(refreshed.clips);
+      }
+    } else {
+      setError(result.error || 'Upload failed');
+    }
+
+    setUploading(null);
+    setUploadStage('');
+    setUploadProgress(0);
+  };
+
+  const handleDeleteClip = async (clipId: string) => {
+    const result = await deleteClip(clipId);
+    if (result.success) {
+      setClips(clips.filter((c) => c.id !== clipId));
+    }
+  };
+
+  // Build 6 slots: filled clips + empty slots
+  const slots = Array.from({ length: MAX_CLIPS }, (_, i) => clips[i] || null);
+
   return (
     <div className="space-y-6 max-w-md mx-auto">
       <div className="text-center">
         <Video className="w-12 h-12 text-primary mx-auto mb-3" />
         <h2 className="text-2xl font-bold text-white">Show off your skills</h2>
-        <p className="text-white/60 mt-1">Upload your best gameplay clips</p>
+        <p className="text-white/60 mt-1">Upload your best gameplay clips (max 45s each)</p>
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
 
       <div className="grid grid-cols-3 gap-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="aspect-video rounded-xl border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center"
-          >
-            <Video className="w-6 h-6 text-white/20" />
-          </div>
-        ))}
+        {slots.map((clip, i) => {
+          const isUploading = uploading === i;
+
+          if (clip) {
+            // Filled slot with thumbnail
+            return (
+              <div
+                key={clip.id}
+                className="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-white/10 bg-white/5 group"
+              >
+                {clip.thumbnail_url ? (
+                  <Image
+                    src={clip.thumbnail_url}
+                    alt={clip.title || 'Clip'}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Video className="w-6 h-6 text-white/30" />
+                  </div>
+                )}
+                <button
+                  onClick={() => handleDeleteClip(clip.id)}
+                  className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-3.5 h-3.5 text-white" />
+                </button>
+                {clip.duration && (
+                  <div className="absolute bottom-1.5 right-1.5 bg-black/60 rounded px-1.5 py-0.5 text-[10px] text-white">
+                    {clip.duration}s
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          // Empty / uploading slot
+          return (
+            <button
+              key={i}
+              onClick={() => handleSlotClick(i)}
+              disabled={uploading !== null}
+              className={`aspect-[3/4] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-all ${
+                isUploading
+                  ? 'border-primary bg-primary/5'
+                  : uploading !== null
+                  ? 'border-white/5 bg-white/[0.02] opacity-50 cursor-not-allowed'
+                  : 'border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10 cursor-pointer'
+              }`}
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                  <span className="text-[10px] text-white/40 px-1 text-center leading-tight">
+                    {uploadStage}
+                  </span>
+                  <div className="w-10 h-1 bg-white/10 rounded-full overflow-hidden mt-1">
+                    <div
+                      className="h-full bg-primary rounded-full transition-all"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5 text-white/20" />
+                  <span className="text-[10px] text-white/20">Add clip</span>
+                </>
+              )}
+            </button>
+          );
+        })}
       </div>
 
+      {error && (
+        <p className="text-center text-red-400 text-sm">{error}</p>
+      )}
+
       <p className="text-center text-white/40 text-sm">
-        Clip uploads coming soon! You can add clips from your profile later.
+        {clips.length === 0
+          ? 'Optional — you can always upload clips later from your profile.'
+          : `${clips.length} of ${MAX_CLIPS} clips uploaded`}
       </p>
     </div>
   );
@@ -600,7 +754,9 @@ export default function OnboardingPage() {
             onSelect={(p) => setData({ ...data, platforms: p })}
           />
         )}
-        {step === 'gameplay' && <GameplayStep />}
+        {step === 'gameplay' && session?.user?.id && (
+          <GameplayStep userId={session.user.id} />
+        )}
         {step === 'complete' && <CompletionStep data={data} />}
       </div>
 
