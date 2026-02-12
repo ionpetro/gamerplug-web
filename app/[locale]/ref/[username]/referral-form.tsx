@@ -157,6 +157,13 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
               {error && (
                 <p className="text-destructive text-sm">{error}</p>
               )}
+
+              <p className="text-xs text-muted-foreground">
+                By continuing, you agree to our{' '}
+                <Link href={`/${locale}/tac`} className="text-primary hover:underline transition-colors cursor-pointer">Terms</Link>
+                {' '}and{' '}
+                <Link href={`/${locale}/privacy`} className="text-primary hover:underline transition-colors cursor-pointer">Privacy Policy</Link>
+              </p>
             </motion.form>
 
             {/* Stats */}
@@ -321,19 +328,6 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 md:px-10 pb-20">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-xs text-muted-foreground text-center mt-8"
-        >
-          By continuing, you agree to our{' '}
-          <Link href={`/${locale}/tac`} className="text-primary hover:underline transition-colors cursor-pointer">Terms</Link>
-          {' '}and{' '}
-          <Link href={`/${locale}/privacy`} className="text-primary hover:underline transition-colors cursor-pointer">Privacy Policy</Link>
-        </motion.p>
-      </div>
       <Footer />
     </div>
   )
