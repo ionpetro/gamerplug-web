@@ -174,6 +174,7 @@ text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent
 - Smooth transitions on all states
 - Hover: Slight opacity change or background shift
 - Active: Slightly darker
+- Cursor: `cursor-pointer` on all clickable elements (buttons, links, clickable cards)
 
 ### Cards
 
@@ -192,7 +193,6 @@ text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent
 - CardAction - Clickable action items
 
 **Hover Effects:**
-- Border color: `border-primary/50`
 - Subtle scale or shadow enhancement
 - Smooth transition (300ms)
 
@@ -270,7 +270,6 @@ animation: float 6s ease-in-out infinite;
 **Hover States:**
 - Scale: `hover:scale-105`
 - Opacity: `hover:opacity-80`
-- Border: `hover:border-primary`
 - Background: `hover:bg-primary`
 
 **Transitions:**
@@ -529,11 +528,13 @@ animation: float 6s ease-in-out infinite;
 - Apply consistent border radius (10px base)
 - Include hover and focus states
 - Add smooth transitions (300ms)
+- Use `cursor-pointer` on all clickable elements (links, buttons, interactive cards)
 
 ❌ **DON'T:**
 - Create one-off components without reusability
 - Ignore accessibility (focus, keyboard nav)
 - Skip loading and error states
+- Leave clickable elements without pointer cursor
 
 ---
 
@@ -541,14 +542,14 @@ animation: float 6s ease-in-out infinite;
 
 ### Button with Brand Styling
 ```tsx
-<button className="h-10 px-6 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-all duration-300">
+<button className="h-10 px-6 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-all duration-300 cursor-pointer">
   Get Started
 </button>
 ```
 
 ### Card with Gradient
 ```tsx
-<div className="rounded-xl bg-card p-8 shadow-sm border border-primary/20 hover:border-primary/50 transition-all duration-300">
+<div className="rounded-xl bg-card p-8 shadow-sm border border-border transition-all duration-300">
   <h3 className="text-xl font-semibold mb-3">Feature Title</h3>
   <p className="text-muted-foreground">Feature description goes here</p>
 </div>
