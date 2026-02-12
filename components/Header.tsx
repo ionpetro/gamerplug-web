@@ -119,10 +119,14 @@ export const Header = () => {
             {t.nav?.blog || 'Blog'}
           </Link>
           <Link
-            href={hrefWithLocale("/contact")}
-            className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
+            href={hrefWithLocale("/leaderboard")}
+            className="relative text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
-            {t.nav?.contact || 'Contact'}
+            Leaderboard
+            <span className="absolute -top-1 -right-2.5 flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+            </span>
           </Link>
 
           {/* Auth Buttons */}
@@ -196,11 +200,15 @@ export const Header = () => {
               {t.nav?.blog || 'Blog'}
             </Link>
             <Link
-              href={hrefWithLocale("/contact")}
-              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+              href={hrefWithLocale("/leaderboard")}
+              className="relative text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50 w-fit"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              {locale === 'es' ? 'Contáctanos' : 'Contact Us'}
+              Leaderboard
+              <span className="absolute -top-0.5 -right-3 flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+              </span>
             </Link>
             {/* Mobile Auth Buttons */}
             {session ? (

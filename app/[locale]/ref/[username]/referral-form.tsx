@@ -2,7 +2,20 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import { Lock, UserPlus, Users, UserCircle, ExternalLink } from 'lucide-react'
+import { User, Game, UserGame } from '@/lib/supabase'
+import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets'
+import { Footer } from '@/components/Footer'
+
+function useLocale() {
+  const pathname = usePathname()
+  const seg = pathname?.split('/')[1]
+  return seg === 'es' ? 'es' : 'en'
+}
 
 const IOS_APP_URL = 'https://apps.apple.com/us/app/gamerplug/id6752116866'
 const ANDROID_APP_URL = 'https://play.google.com/store/apps/details?id=com.ionpetro.gamerplug&pcampaignid=web_share'
@@ -28,11 +41,17 @@ function getAppStoreUrl(): string {
   return IOS_APP_URL
 }
 
-interface ReferralFormProps {
-  username: string
+interface UserWithGames extends User {
+  user_games: (UserGame & { games: Game })[];
 }
 
-export default function ReferralForm({ username }: ReferralFormProps) {
+interface ReferralFormProps {
+  username: string
+  user: UserWithGames
+}
+
+export default function ReferralForm({ username, user }: ReferralFormProps) {
+  const locale = useLocale()
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -65,83 +84,317 @@ export default function ReferralForm({ username }: ReferralFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-white flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] -z-10"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] bg-accent/15 rounded-full blur-[120px] -z-10"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#202020_1px,transparent_1px),linear-gradient(to_bottom,#202020_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 -z-10"></div>
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden font-sans selection:bg-primary selection:text-white">
+      {/* Background red gradients (matches leaderboard) */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+        <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
+      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.2_0_0)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.2_0_0)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 -z-10 pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full text-center space-y-8"
-      >
-        {/* Invitation message */}
-        <div className="space-y-4">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 md:px-6 pt-20 pb-16 lg:pt-24 lg:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Side - Text Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-primary text-sm font-medium"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
           >
-            You&apos;ve been invited!
+            {/* Main Heading */}
+            <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-2 py-0.5 rounded-md bg-primary/10 border border-primary/30 text-xs font-medium text-primary"
+              >
+                You&apos;ve been invited!
+              </motion.div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black italic leading-none tracking-tight">
+                <span className="text-foreground">Join </span>
+                <span className="font-extrabold italic tracking-tight text-foreground">GAMER</span>
+                <span className="font-extrabold italic tracking-tight text-primary">PLUG</span>
+                <br />
+                <span className="text-foreground">with </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{username}</span>
+              </h1>
+
+              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+                Find your perfect gaming teammates and build lasting communities. Join thousands of gamers already on the platform.
+              </p>
+            </div>
+
+            {/* Email Form */}
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              onSubmit={handleSubmit}
+              className="space-y-4"
+            >
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="flex-1 min-h-12 py-3 px-5 md:h-10 md:py-0 md:px-6 rounded-lg bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                />
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  size="lg"
+                  className="h-10 px-6 font-bold rounded-lg hover:opacity-90 transition-all duration-300 whitespace-nowrap cursor-pointer"
+                >
+                  {isLoading ? 'Loading...' : 'Get Started'}
+                </Button>
+              </div>
+
+              {error && (
+                <p className="text-destructive text-sm">{error}</p>
+              )}
+            </motion.form>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex gap-8 pt-4"
+            >
+              <div>
+                <p className="text-2xl font-bold text-foreground">300+</p>
+                <p className="text-sm text-muted-foreground">Gamers</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">10+</p>
+                <p className="text-sm text-muted-foreground">Games</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">100%</p>
+                <p className="text-sm text-muted-foreground">Free</p>
+              </div>
+            </motion.div>
           </motion.div>
 
-          <h1 className="text-3xl md:text-4xl font-black">
-            <span className="text-primary">{username}</span> invited you to join GamerPlug
-          </h1>
-
-          <p className="text-muted-foreground text-lg">
-            Find your perfect gaming teammates and build lasting communities.
-          </p>
-        </div>
-
-        {/* Email form */}
-        <motion.form
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-          <div className="relative">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="w-full px-4 py-4 bg-card border border-border rounded-xl text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all"
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
-
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full gradient-accent text-white font-semibold py-4 h-14 text-lg hover:opacity-90 hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          {/* Right Side - Profile Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative flex justify-center lg:justify-end"
           >
-            {isLoading ? 'Loading...' : 'Get the App'}
-          </Button>
-        </motion.form>
+            {/* Background Shape */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl rotate-12 -z-10 blur-sm" />
 
-        {/* Footer */}
+            {/* Profile Card - guideline: rounded-xl, bg-card, shadow-sm, border */}
+            <div className="relative bg-card rounded-2xl p-6 sm:p-8 w-full max-w-[340px] sm:max-w-[380px] border border-border shadow-sm transition-all duration-300">
+              {/* Floating Stats Card - dark theme */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.4 }}
+                className="absolute -left-4 sm:-left-8 top-1/4 bg-card rounded-xl p-3 sm:p-4 shadow-sm border border-border z-10"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                    <UserCircle className="size-5" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-foreground">{user.user_games?.length || 0}</p>
+                    <p className="text-xs text-muted-foreground">Games</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Profile Image */}
+              <div className="relative mx-auto w-32 h-32 sm:w-40 sm:h-40 mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-full blur-lg opacity-50" />
+                {user.profile_image_url ? (
+                  <Image
+                    src={user.profile_image_url}
+                    alt={user.gamertag}
+                    fill
+                    className="rounded-full object-cover border-4 border-card relative z-10"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-secondary flex items-center justify-center border-4 border-card relative z-10 text-primary">
+                    <UserCircle className="size-16" />
+                  </div>
+                )}
+              </div>
+
+              {/* User Info */}
+              <div className="text-center space-y-3">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground">@{user.gamertag}</h2>
+
+                {user.age && (
+                  <p className="text-sm text-muted-foreground">Age: {user.age}</p>
+                )}
+
+                {/* Platforms */}
+                {user.platform && Array.isArray(user.platform) && user.platform.length > 0 && (
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    {user.platform.map((platform) => {
+                      const platformIconUrl = getPlatformAssetUrl(platform);
+                      return (
+                        <div
+                          key={platform}
+                          className="flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium text-foreground bg-secondary rounded-md"
+                        >
+                          {platformIconUrl && (
+                            <Image
+                              src={platformIconUrl}
+                              alt={platform}
+                              width={14}
+                              height={14}
+                              className="w-3.5 h-3.5 object-contain rounded"
+                              unoptimized
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                          )}
+                          <span>{platform}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {user.bio && (
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    {user.bio}
+                  </p>
+                )}
+              </div>
+
+              {/* Games */}
+              {user.user_games && user.user_games.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-border">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Plays</p>
+                  <div className="flex justify-center gap-2 flex-wrap">
+                    {user.user_games.slice(0, 5).map((userGame) => {
+                      const imageUrl = getGameAssetUrl(userGame.games.display_name);
+                      return (
+                        <div key={userGame.id} className="relative group">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-border transition-all duration-300 hover:scale-105">
+                            <Image
+                              src={imageUrl}
+                              alt={userGame.games.display_name}
+                              width={48}
+                              height={48}
+                              className="w-full h-full object-cover"
+                              unoptimized
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/placeholder.svg';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {user.user_games.length > 5 && (
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-secondary flex items-center justify-center text-xs text-muted-foreground font-medium">
+                        +{user.user_games.length - 5}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* View Profile Button */}
+              <Link
+                href={`/${locale}/profile/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 w-full flex items-center justify-center gap-2 px-4 py-3 h-10 rounded-lg bg-secondary hover:bg-secondary/80 text-sm font-medium text-foreground transition-all duration-300 group border border-border cursor-pointer"
+              >
+                <span>View Profile</span>
+                <ExternalLink className="size-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* How It Works Section - guideline: rounded-xl, bg-card, border, shadow-sm */}
+      <div className="container mx-auto px-4 md:px-6 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="relative bg-card rounded-2xl p-6 sm:p-8 lg:p-12 border border-border shadow-sm transition-all duration-300"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
+            {/* Title */}
+            <div className="lg:col-span-1">
+              <h3 className="text-3xl sm:text-4xl font-black italic text-foreground leading-none">
+                How it<br />
+                <span className="text-primary">works</span>
+              </h3>
+            </div>
+
+            {/* Steps - icons 24px primary per guidelines */}
+            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-8">
+              <div className="space-y-4">
+                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                  <Lock className="size-7" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-foreground mb-2">Sign up</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Enter your email and download the GamerPlug app to create your account.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                  <UserPlus className="size-7" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-foreground mb-2">Create profile</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Add your games, platforms, and gaming preferences to find the best matches.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                  <Users className="size-7" />
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold text-foreground mb-2">Find teammates</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Connect with {username} and other gamers who share your passion.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-xs text-muted-foreground pt-4"
+          transition={{ delay: 0.6 }}
+          className="text-xs text-muted-foreground text-center mt-8"
         >
           By continuing, you agree to our{' '}
-          <a href="/tac" className="text-primary hover:underline">Terms</a>
+          <Link href={`/${locale}/tac`} className="text-primary hover:underline transition-colors cursor-pointer">Terms</Link>
           {' '}and{' '}
-          <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>
+          <Link href={`/${locale}/privacy`} className="text-primary hover:underline transition-colors cursor-pointer">Privacy Policy</Link>
         </motion.p>
-      </motion.div>
+      </div>
+      <Footer />
     </div>
   )
 }

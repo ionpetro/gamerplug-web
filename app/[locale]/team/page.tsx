@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Volume2, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { CharacterGrid } from '@/components/CharacterGrid'
@@ -195,12 +195,8 @@ export default function TeamPage() {
   const pathname = usePathname()
   const [selectedCharacter, setSelectedCharacter] = useState<Character>(characters[0])
   const [selectedCharacterId, setSelectedCharacterId] = useState<string>(characters[0].id)
-  const [volume, setVolume] = useState(0) // Start muted
-  const [previousVolume, setPreviousVolume] = useState(0.2) // Store previous volume for unmute
   const isInitialMount = useRef(true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const backgroundMusicRef = useRef<HTMLAudioElement | null>(null)
-  const hasStartedMusic = useRef(false)
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
@@ -226,96 +222,6 @@ export default function TeamPage() {
     setSelectedCharacterId(characters[newIndex].id)
   }
 
-  // Initialize background music
-  useEffect(() => {
-    if (!backgroundMusicRef.current) {
-      backgroundMusicRef.current = new Audio('/choose-character.mp3')
-      backgroundMusicRef.current.loop = true
-      backgroundMusicRef.current.volume = 0 // Start muted
-      backgroundMusicRef.current.preload = 'auto'
-      
-      // Try to play background music (may be blocked by browser autoplay policy)
-      backgroundMusicRef.current.play().then(() => {
-        hasStartedMusic.current = true
-      }).catch((error) => {
-        console.log('Background music autoplay blocked:', error)
-      })
-    }
-
-    return () => {
-      // Cleanup on unmount
-      if (backgroundMusicRef.current) {
-        backgroundMusicRef.current.pause()
-        backgroundMusicRef.current = null
-      }
-    }
-  }, [])
-
-  // Start music on first user interaction
-  useEffect(() => {
-    const startMusicOnInteraction = () => {
-      if (backgroundMusicRef.current && !hasStartedMusic.current) {
-        backgroundMusicRef.current.play().then(() => {
-          hasStartedMusic.current = true
-        }).catch((error) => {
-          console.log('Failed to start music:', error)
-        })
-      }
-    }
-
-    // Try to start on any click
-    window.addEventListener('click', startMusicOnInteraction, { once: true })
-    window.addEventListener('keydown', startMusicOnInteraction, { once: true })
-    window.addEventListener('touchstart', startMusicOnInteraction, { once: true })
-
-    return () => {
-      window.removeEventListener('click', startMusicOnInteraction)
-      window.removeEventListener('keydown', startMusicOnInteraction)
-      window.removeEventListener('touchstart', startMusicOnInteraction)
-    }
-  }, [])
-
-  // Handle volume change (only for background music)
-  const handleVolumeChange = (newVolume: number) => {
-    if (newVolume > 0) {
-      setPreviousVolume(newVolume) // Store non-zero volume
-    }
-    setVolume(newVolume)
-
-    // Try to start music if it hasn't started yet
-    if (backgroundMusicRef.current && !hasStartedMusic.current) {
-      backgroundMusicRef.current.play().then(() => {
-        hasStartedMusic.current = true
-      }).catch((error) => {
-        console.log('Failed to start music:', error)
-      })
-    }
-  }
-
-  // Toggle mute/unmute when clicking the icon
-  const handleIconClick = () => {
-    if (volume > 0) {
-      setPreviousVolume(volume)
-      setVolume(0)
-    } else {
-      setVolume(previousVolume)
-    }
-
-    // Try to start music if it hasn't started yet
-    if (backgroundMusicRef.current && !hasStartedMusic.current) {
-      backgroundMusicRef.current.play().then(() => {
-        hasStartedMusic.current = true
-      }).catch((error) => {
-        console.log('Failed to start music:', error)
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (backgroundMusicRef.current) {
-      backgroundMusicRef.current.volume = volume
-    }
-  }, [volume])
 
   // Play sound effect when champion changes (but not on initial mount)
   useEffect(() => {
@@ -324,18 +230,13 @@ export default function TeamPage() {
       return
     }
 
-    // Create audio element if it doesn't exist
     if (!audioRef.current) {
       audioRef.current = new Audio('/0110.MP3')
-      audioRef.current.volume = 0.5 // Set volume to 50%
+      audioRef.current.volume = 0.5
     }
 
-    // Play the sound
-    audioRef.current.currentTime = 0 // Reset to start
-    audioRef.current.play().catch((error) => {
-      // Handle autoplay restrictions (browsers may block autoplay)
-      console.log('Audio play failed:', error)
-    })
+    audioRef.current.currentTime = 0
+    audioRef.current.play().catch(() => {})
   }, [selectedCharacterId])
 
   useEffect(() => {
@@ -397,25 +298,6 @@ export default function TeamPage() {
           <p className="text-xs text-center text-white/80">
             <span className="font-semibold text-primary">Pro tip:</span> The desktop experience is optimal for exploring our team!
           </p>
-        </div>
-        {/* Volume Slider */}
-        <div className="fixed bottom-4 right-4 md:right-8 z-50 flex items-center gap-2 px-3 py-2 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm">
-          <button
-            onClick={handleIconClick}
-            className="hover:opacity-70 transition-opacity"
-            aria-label={volume > 0 ? 'Mute' : 'Unmute'}
-          >
-            <Volume2 className="w-4 h-4 text-white flex-shrink-0" />
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume * 100}
-            onChange={(e) => handleVolumeChange(Number(e.target.value) / 100)}
-            className="w-20 h-1 bg-white/20 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-            aria-label="Volume"
-          />
         </div>
 
         {/* Main Content */}
