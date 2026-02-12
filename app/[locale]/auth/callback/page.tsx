@@ -13,71 +13,59 @@ function AuthCallbackContent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const handleAuthCallback = async () => {
-      try {
-        // Get the URL hash and query parameters
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        const error = urlParams.get('error') || hashParams.get('error');
-        const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
-        const code = urlParams.get('code');
+    // Check for error params in URL
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const urlParams = new URLSearchParams(window.location.search);
 
-        // Check for errors
-        if (error) {
-          setStatus('error');
-          setMessage(errorDescription ? decodeURIComponent(errorDescription) : error);
-          return;
-        }
+    const error = urlParams.get('error') || hashParams.get('error');
+    const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
 
-        // Handle PKCE code exchange
-        if (code) {
-          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-          
-          if (exchangeError) {
-            setStatus('error');
-            setMessage(exchangeError.message);
-            return;
-          }
+    if (error) {
+      setStatus('error');
+      setMessage(errorDescription ? decodeURIComponent(errorDescription) : error);
+      return;
+    }
 
-          setStatus('success');
-          setMessage('Successfully signed in! Redirecting...');
-          
-          // Redirect to app after short delay
-          setTimeout(() => {
-            router.push('/en/app');
-          }, 1500);
-          return;
-        }
-
-        // Check if we have access_token in hash (implicit flow)
-        const accessToken = hashParams.get('access_token');
-        if (accessToken) {
-          // Session should be automatically set by Supabase
-          const { data: { session } } = await supabase.auth.getSession();
-          
-          if (session) {
-            setStatus('success');
-            setMessage('Successfully signed in! Redirecting...');
-            
-            setTimeout(() => {
-              router.push('/en/app');
-            }, 1500);
-            return;
-          }
-        }
-
-        // No valid auth parameters
-        setStatus('error');
-        setMessage('Invalid authentication callback. Please try signing in again.');
-      } catch (err) {
-        console.error('Auth callback error:', err);
-        setStatus('error');
-        setMessage('An unexpected error occurred. Please try again.');
+    // Supabase client handles code exchange automatically via detectSessionInUrl: true.
+    // Just listen for the session to be established.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        setStatus('success');
+        setMessage('Successfully signed in! Redirecting...');
+        setTimeout(() => {
+          router.push('/en/app');
+        }, 1500);
       }
-    };
+    });
 
-    handleAuthCallback();
+    // Fallback: check if session already exists (in case the event fired before listener was set up)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && status === 'loading') {
+        setStatus('success');
+        setMessage('Successfully signed in! Redirecting...');
+        setTimeout(() => {
+          router.push('/en/app');
+        }, 1500);
+      }
+    });
+
+    // Timeout after 10 seconds
+    const timeout = setTimeout(() => {
+      setStatus((prev) => {
+        if (prev === 'loading') {
+          setMessage('Authentication timed out. Please try signing in again.');
+          return 'error';
+        }
+        return prev;
+      });
+    }, 10000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, [router]);
 
   return (
@@ -113,7 +101,7 @@ function AuthCallbackContent() {
                     <CheckCircle size={42} strokeWidth={1.5} />
                   </div>
                   <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-6">
-                    You're In!
+                    You&apos;re In!
                   </h1>
                   <p className="text-white/70 leading-relaxed">
                     {message}
