@@ -6,11 +6,13 @@ import { useParams } from 'next/navigation';
 import { motion, type PanInfo } from 'framer-motion';
 import { supabase, User, Clip, TABLES } from '@/lib/supabase';
 import {
-  CircleOff,
   Heart,
   Loader2,
   MapPin,
   Users,
+  Volume2,
+  VolumeOff,
+  X,
 } from 'lucide-react';
 
 interface ClipWithProcessing extends Clip {
@@ -66,6 +68,7 @@ export default function ExplorePage() {
   );
   const [screenWidth, setScreenWidth] = useState(430);
   const [clipOrientations, setClipOrientations] = useState<Record<string, 'portrait' | 'landscape' | 'square'>>({});
+  const [isMuted, setIsMuted] = useState(false);
 
   const currentUser = users[currentIndex];
   const currentClips = currentUser
@@ -239,6 +242,16 @@ export default function ExplorePage() {
     });
   }, [currentClips.length, currentUser]);
 
+  const goToPrevPhoto = useCallback(() => {
+    if (!currentUser || currentClips.length <= 1) return;
+
+    setClipIndices((prev) => {
+      const current = prev[currentUser.id] ?? 0;
+      const prev_ = (current - 1 + currentClips.length) % currentClips.length;
+      return { ...prev, [currentUser.id]: prev_ };
+    });
+  }, [currentClips.length, currentUser]);
+
   const goToNextClipForUser = useCallback((userId: string, totalClips: number) => {
     if (totalClips <= 1) return;
     setClipIndices((prev) => {
@@ -290,12 +303,18 @@ export default function ExplorePage() {
       } else if (event.key === 'ArrowDown') {
         event.preventDefault();
         handleCloseProfile();
+      } else if (event.key === 'n' || event.key === 'N') {
+        event.preventDefault();
+        goToNextPhoto();
+      } else if (event.key === 'p' || event.key === 'P') {
+        event.preventDefault();
+        goToPrevPhoto();
       }
     };
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [currentUser, handleCloseProfile, handleLike, handleNope, handleOpenProfile, loading]);
+  }, [currentUser, handleCloseProfile, handleLike, handleNope, handleOpenProfile, goToNextPhoto, goToPrevPhoto, loading]);
 
   const distanceLabel = '1 mile away';
   const displayName = currentUser?.gamertag ? currentUser.gamertag.replace(/^@/, '') : 'Gamer';
@@ -310,7 +329,7 @@ export default function ExplorePage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
       </div>
 
-      <div className="relative mx-auto flex h-[calc(100vh-86px)] max-w-md flex-col items-center px-4 pb-4 pt-4">
+      <div className="relative mx-auto flex h-[calc(100vh-86px)] max-w-7xl flex-col items-center px-4 pb-0 pt-4">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
@@ -322,8 +341,8 @@ export default function ExplorePage() {
             <p className="mt-1 text-sm text-white/60">Pull to refresh later for more profiles.</p>
           </div>
         ) : (
-          <>
-            <div className="relative mt-1 h-full w-full">
+          <div className="flex flex-1 flex-col items-center justify-center w-full">
+            <div className="relative w-full aspect-video max-h-[75vh]">
               {[0, 1, 2].map((slotIndex) => {
                 const relativeIndex = (slotIndex - (currentIndex % SLOT_COUNT) + SLOT_COUNT) % SLOT_COUNT;
                 const profileIndex = currentIndex + relativeIndex;
@@ -338,6 +357,8 @@ export default function ExplorePage() {
                 const clipIndex = clipIndices[profile.id] ?? 0;
                 const activeClip = (clips[clipIndex] as ClipWithProcessing | undefined) || null;
                 const activeVideoUrl = getPlayableVideoUrl(activeClip);
+                const clipKey = activeClip ? `${profile.id}-${activeClip.id}` : '';
+                const isPortraitClip = clipKey ? (clipOrientations[clipKey] === 'portrait') : false;
 
                 const transform = slotTransforms[slotIndex] || SLOT_EMPTY;
                 const styleTransform = isCurrent
@@ -370,7 +391,7 @@ export default function ExplorePage() {
                           : { type: 'spring', stiffness: 320, damping: 30, mass: 0.85 }
                         : { duration: 0.2, ease: 'easeOut' }
                     }
-                    className={`absolute inset-0 overflow-hidden rounded-3xl border bg-zinc-900 ${
+                    className={`absolute inset-x-0 top-1/2 -translate-y-1/2 aspect-video overflow-hidden rounded-3xl border bg-zinc-900 ${
                       isCurrent
                         ? 'z-10 cursor-grab active:cursor-grabbing border-white/20 shadow-[0_20px_80px_rgba(0,0,0,0.65)]'
                         : 'z-0 scale-[0.97] border-white/10 opacity-90'
@@ -378,34 +399,41 @@ export default function ExplorePage() {
                     style={{ touchAction: isCurrent ? 'pan-y' : 'auto' }}
                   >
                     {activeClip && activeVideoUrl ? (
-                      <video
-                        key={`${profile.id}-${activeClip.id}-${isCurrent ? 'current' : 'next'}`}
-                        src={activeVideoUrl}
-                        poster={activeClip.thumbnail_url}
-                        onLoadedMetadata={(event) => {
-                          const video = event.currentTarget;
-                          const clipKey = `${profile.id}-${activeClip.id}`;
-                          const orientation =
-                            video.videoWidth > video.videoHeight
-                              ? 'landscape'
-                              : video.videoWidth < video.videoHeight
-                                ? 'portrait'
-                                : 'square';
-                          setClipOrientations((prev) =>
-                            prev[clipKey] === orientation ? prev : { ...prev, [clipKey]: orientation }
-                          );
-                        }}
-                        className={`absolute inset-0 h-full w-full ${
-                          clipOrientations[`${profile.id}-${activeClip.id}`] === 'landscape'
-                            ? 'object-contain bg-black'
-                            : 'object-cover'
-                        }`}
-                        muted
-                        playsInline
-                        loop
-                        autoPlay={isCurrent}
-                        preload="auto"
-                      />
+                      <>
+                        {isPortraitClip && activeClip.thumbnail_url && (
+                          <img
+                            src={activeClip.thumbnail_url}
+                            alt=""
+                            className="absolute inset-0 h-full w-full object-cover blur-2xl scale-110 brightness-50"
+                          />
+                        )}
+                        <video
+                          key={`${profile.id}-${activeClip.id}-${isCurrent ? 'current' : 'next'}`}
+                          src={activeVideoUrl}
+                          poster={activeClip.thumbnail_url}
+                          onLoadedMetadata={(event) => {
+                            const video = event.currentTarget;
+                            const clipKey = `${profile.id}-${activeClip.id}`;
+                            const orientation =
+                              video.videoWidth > video.videoHeight
+                                ? 'landscape'
+                                : video.videoWidth < video.videoHeight
+                                  ? 'portrait'
+                                  : 'square';
+                            setClipOrientations((prev) =>
+                              prev[clipKey] === orientation ? prev : { ...prev, [clipKey]: orientation }
+                            );
+                          }}
+                          className={`absolute inset-0 h-full w-full ${
+                            isPortraitClip ? 'object-contain' : 'object-cover'
+                          }`}
+                          muted={isMuted}
+                          playsInline
+                          loop
+                          autoPlay={isCurrent}
+                          preload="auto"
+                        />
+                      </>
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
                         <Users className="h-14 w-14 text-white/40" />
@@ -500,6 +528,22 @@ export default function ExplorePage() {
                             </div>
                           )}
                         </div>
+
+                        <button
+                          type="button"
+                          aria-label={isMuted ? 'Unmute' : 'Mute'}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setIsMuted((prev) => !prev);
+                          }}
+                          className="absolute bottom-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 backdrop-blur transition hover:bg-black/70"
+                        >
+                          {isMuted ? (
+                            <VolumeOff className="h-5 w-5 text-white" />
+                          ) : (
+                            <Volume2 className="h-5 w-5 text-white" />
+                          )}
+                        </button>
                       </>
                     )}
                   </motion.div>
@@ -507,25 +551,26 @@ export default function ExplorePage() {
               })}
             </div>
 
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-5 flex items-center gap-12">
               <ActionButton label="Nope" onClick={handleNope}>
-                <CircleOff className="h-6 w-6 text-rose-400" />
+                <X className="h-8 w-8 text-rose-400" strokeWidth={3} />
               </ActionButton>
               <ActionButton label="Like" onClick={handleLike}>
-                <Heart className="h-6 w-6 text-lime-300" />
+                <Heart className="h-8 w-8 text-lime-300" fill="currentColor" />
               </ActionButton>
             </div>
 
-          </>
+          </div>
         )}
       </div>
 
       {!loading && currentUser && (
-        <div className="mt-4 mx-auto flex w-full max-w-[40rem] flex-nowrap items-center justify-center gap-2 px-4 whitespace-nowrap text-xs font-semibold text-white/80">
+        <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 whitespace-nowrap text-xs font-semibold text-white/80">
           <KeyHint keyLabel="←" label="Nope" onClick={handleNope} />
           <KeyHint keyLabel="→" label="Like" onClick={handleLike} />
           <KeyHint keyLabel="↑" label="Open Profile" onClick={handleOpenProfile} />
           <KeyHint keyLabel="↓" label="Close Profile" onClick={handleCloseProfile} />
+          <KeyHint keyLabel="P" label="Prev Clip" onClick={goToPrevPhoto} />
           <KeyHint keyLabel="N" label="Next Clip" onClick={goToNextPhoto} />
         </div>
       )}
@@ -547,7 +592,7 @@ function ActionButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-[#151a25] shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:border-white/30"
+      className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-[#151a25] shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition hover:scale-110 hover:border-white/30"
     >
       {children}
     </button>
