@@ -2,21 +2,23 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
+import { uploadClip, deleteClip as deleteClipApi } from '@/lib/clips';
 import VideoModal from '@/components/VideoModal';
 import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
-import { 
-  Share2, 
-  Edit3, 
-  Play, 
+import {
+  Share2,
+  Edit3,
+  Play,
   Video,
   Gamepad2,
   Loader2,
   Upload,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 
 interface UserWithGames extends User {
@@ -71,6 +73,9 @@ export default function AuthenticatedProfilePage() {
   const [loading, setLoading] = useState(true);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [currentClipIndex, setCurrentClipIndex] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStage, setUploadStage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isOwnProfile = authUser?.gamertag?.toLowerCase() === username?.toLowerCase();
 
@@ -154,6 +159,51 @@ export default function AuthenticatedProfilePage() {
     } else {
       await navigator.clipboard.writeText(profileUrl);
       alert('Profile link copied to clipboard!');
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !session?.user?.id) return;
+    e.target.value = '';
+
+    setUploading(true);
+    setUploadStage('Uploading...');
+
+    const result = await uploadClip({
+      file,
+      userId: session.user.id,
+      title: `Clip ${clips.length + 1}`,
+      onProgress: (stage) => setUploadStage(stage),
+    });
+
+    if (result.success) {
+      // Refresh clips
+      if (profileUser?.id) {
+        const { data: clipsData } = await supabase
+          .from(TABLES.CLIPS)
+          .select('*')
+          .eq('user_id', profileUser.id)
+          .order('created_at', { ascending: false });
+        setClips(clipsData || []);
+      }
+    } else {
+      alert(result.error || 'Upload failed');
+    }
+
+    setUploading(false);
+    setUploadStage('');
+  };
+
+  const handleDeleteClip = async (clipId: string) => {
+    if (!confirm('Delete this clip?')) return;
+    const result = await deleteClipApi(clipId);
+    if (result.success) {
+      setClips(clips.filter((c) => c.id !== clipId));
     }
   };
 
@@ -333,7 +383,36 @@ export default function AuthenticatedProfilePage() {
                   <Video size={20} className="text-primary" />
                   Clips
                 </h2>
+                {isOwnProfile && clips.length > 0 && (
+                  <button
+                    onClick={handleUploadClick}
+                    disabled={uploading}
+                    className="text-sm text-white/50 hover:text-white flex items-center gap-1 disabled:opacity-50"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        {uploadStage}
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={14} />
+                        Upload
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
+
+              {isOwnProfile && (
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              )}
 
               {clips.length > 0 ? (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
@@ -358,6 +437,17 @@ export default function AuthenticatedProfilePage() {
                       <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Play size={32} className="text-white" fill="white" />
                       </div>
+                      {isOwnProfile && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClip(clip.id);
+                          }}
+                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X size={12} className="text-white" />
+                        </button>
+                      )}
                       <div className="absolute bottom-2 right-2 bg-black/60 rounded-full p-1">
                         <Play size={12} className="text-white" fill="white" />
                       </div>
@@ -371,9 +461,22 @@ export default function AuthenticatedProfilePage() {
                     {isOwnProfile ? "You haven't uploaded any clips yet" : "No clips to show"}
                   </p>
                   {isOwnProfile && (
-                    <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-xl font-medium transition-colors">
-                      <Upload size={16} />
-                      Upload Clips
+                    <button
+                      onClick={handleUploadClick}
+                      disabled={uploading}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-xl font-medium transition-colors disabled:opacity-50"
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" />
+                          {uploadStage}
+                        </>
+                      ) : (
+                        <>
+                          <Upload size={16} />
+                          Upload Clips
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
