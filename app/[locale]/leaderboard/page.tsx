@@ -1,6 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
+import { unstable_cache } from 'next/cache'
 import { Referral, User } from '@/lib/supabase'
 import LeaderboardClient from './leaderboard-client'
+
+const QUERY_TIMEOUT_MS = 8000
+export const revalidate = 60
+
+async function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    Promise.resolve(promise),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+    ),
+  ])
+}
 
 export const metadata = {
   title: 'Referral Leaderboard | GamerPlug',
@@ -27,53 +40,81 @@ export interface LeaderboardEntry {
   conversionRate: number
 }
 
-export default async function LeaderboardPage() {
-  const supabase = getSupabaseClient()
+const getCachedLeaderboardEntries = unstable_cache(
+  async () => {
+    const supabase = getSupabaseClient()
 
-  const { data: referrals } = await supabase
-    .from('referrals')
-    .select('*') as { data: Referral[] | null }
+    const { data: referrals, error: referralsError } = await withTimeout(
+      supabase
+        .from('referrals')
+        .select('*'),
+      QUERY_TIMEOUT_MS,
+      'Leaderboard referrals query'
+    ) as { data: Referral[] | null; error: { message?: string } | null }
 
-  // Aggregate referrals by referrer
-  const referrerMap = new Map<string, { total: number; converted: number }>()
-  for (const ref of referrals ?? []) {
-    const entry = referrerMap.get(ref.referrer) ?? { total: 0, converted: 0 }
-    entry.total++
-    if (ref.converted) entry.converted++
-    referrerMap.set(ref.referrer, entry)
-  }
-
-  // Fetch user profiles for all referrers
-  const gamertags = Array.from(referrerMap.keys())
-  let usersMap = new Map<string, Pick<User, 'gamertag' | 'profile_image_url'>>()
-
-  if (gamertags.length > 0) {
-    const { data: users } = await supabase
-      .from('users')
-      .select('gamertag, profile_image_url')
-      .in('gamertag', gamertags)
-
-    for (const user of users ?? []) {
-      usersMap.set(user.gamertag.toLowerCase(), user)
+    if (referralsError) {
+      throw new Error(referralsError.message || 'Failed to load referrals')
     }
-  }
 
-  // Build leaderboard sorted by converted desc, then total desc
-  const leaderboard: LeaderboardEntry[] = gamertags
-    .map((gamertag) => {
-      const stats = referrerMap.get(gamertag)!
-      const user = usersMap.get(gamertag.toLowerCase())
-      return {
-        rank: 0,
-        gamertag: user?.gamertag ?? gamertag,
-        profileImageUrl: user?.profile_image_url ?? null,
-        totalReferrals: stats.total,
-        convertedReferrals: stats.converted,
-        conversionRate: stats.total > 0 ? Math.round((stats.converted / stats.total) * 100) : 0,
+    const referrerMap = new Map<string, { total: number; converted: number }>()
+    for (const ref of referrals ?? []) {
+      const entry = referrerMap.get(ref.referrer) ?? { total: 0, converted: 0 }
+      entry.total++
+      if (ref.converted) entry.converted++
+      referrerMap.set(ref.referrer, entry)
+    }
+
+    const gamertags = Array.from(referrerMap.keys())
+    const usersMap = new Map<string, Pick<User, 'gamertag' | 'profile_image_url'>>()
+
+    if (gamertags.length > 0) {
+      const { data: users, error: usersError } = await withTimeout(
+        supabase
+          .from('users')
+          .select('gamertag, profile_image_url')
+          .in('gamertag', gamertags),
+        QUERY_TIMEOUT_MS,
+        'Leaderboard users query'
+      ) as { data: Pick<User, 'gamertag' | 'profile_image_url'>[] | null; error: { message?: string } | null }
+
+      if (usersError) {
+        throw new Error(usersError.message || 'Failed to load leaderboard users')
       }
-    })
-    .sort((a, b) => b.convertedReferrals - a.convertedReferrals || b.totalReferrals - a.totalReferrals)
-    .map((entry, i) => ({ ...entry, rank: i + 1 }))
 
-  return <LeaderboardClient entries={leaderboard} />
+      for (const user of users ?? []) {
+        usersMap.set(user.gamertag.toLowerCase(), user)
+      }
+    }
+
+    const leaderboard: LeaderboardEntry[] = gamertags
+      .map((gamertag) => {
+        const stats = referrerMap.get(gamertag)!
+        const user = usersMap.get(gamertag.toLowerCase())
+        return {
+          rank: 0,
+          gamertag: user?.gamertag ?? gamertag,
+          profileImageUrl: user?.profile_image_url ?? null,
+          totalReferrals: stats.total,
+          convertedReferrals: stats.converted,
+          conversionRate: stats.total > 0 ? Math.round((stats.converted / stats.total) * 100) : 0,
+        }
+      })
+      .sort((a, b) => b.convertedReferrals - a.convertedReferrals || b.totalReferrals - a.totalReferrals)
+      .map((entry, i) => ({ ...entry, rank: i + 1 }))
+
+    return leaderboard
+  },
+  ['leaderboard-entries'],
+  { revalidate: 60 }
+)
+
+export default async function LeaderboardPage() {
+  try {
+    const leaderboard = await getCachedLeaderboardEntries()
+
+    return <LeaderboardClient entries={leaderboard} />
+  } catch (error) {
+    console.error('Leaderboard page failed:', error)
+    return <LeaderboardClient entries={[]} />
+  }
 }
