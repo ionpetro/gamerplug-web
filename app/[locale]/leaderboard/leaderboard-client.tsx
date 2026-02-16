@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Trophy, Crown, Medal } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -42,7 +41,7 @@ function Avatar({ src, gamertag, size = 48, ring }: { src: string | null; gamert
   )
 }
 
-function PodiumCard({ entry, highlight, delay, locale }: { entry: LeaderboardEntry; highlight: boolean; delay: number; locale: string }) {
+function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; highlight: boolean; locale: string }) {
   const trophyColor = TROPHY_COLORS[entry.rank - 1]
   const glow = RANK_GLOWS[entry.rank - 1]
   const RankIcon = entry.rank === 1 ? Crown : Medal
@@ -51,10 +50,7 @@ function PodiumCard({ entry, highlight, delay, locale }: { entry: LeaderboardEnt
 
   return (
     <Link href={`/${locale}/profile/${entry.gamertag}`} className={orderClass}>
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
+    <div
       className={`relative flex flex-col items-center gap-4 rounded-2xl border bg-gradient-to-b p-8 transition-all duration-300 hover:scale-[1.03] cursor-pointer h-full ${glow} ${
         highlight
           ? 'border-[#FFD700]/20 from-[#FFD700]/[0.06] to-transparent sm:-mt-6'
@@ -102,7 +98,7 @@ function PodiumCard({ entry, highlight, delay, locale }: { entry: LeaderboardEnt
           <span className="text-white/50 ml-1">referrals</span>
         </span>
       </div>
-    </motion.div>
+    </div>
     </Link>
   )
 }
@@ -122,12 +118,7 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
 
       <div className="relative mx-auto max-w-5xl px-4 py-20 sm:py-28">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
+        <div className="mb-16 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
@@ -141,7 +132,7 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
           <p className="mt-4 text-white/50 text-lg max-w-md mx-auto">
             The gamers bringing the most players to GamerPlug
           </p>
-        </motion.div>
+        </div>
 
         {/* Podium */}
         {top3.length > 0 && (
@@ -151,7 +142,6 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
                 key={entry.gamertag}
                 entry={entry}
                 highlight={entry.rank === 1}
-                delay={0.15 + i * 0.1}
                 locale={locale}
               />
             ))}
@@ -160,11 +150,7 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
 
         {/* Table */}
         {entries.length > 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
+          <div>
             <h2 className="text-lg font-semibold mb-4 text-white/70">All Referrers</h2>
             <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm">
               <table className="w-full text-left">
@@ -176,12 +162,9 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
                   </tr>
                 </thead>
                 <tbody>
-                  {entries.map((entry, i) => (
-                    <motion.tr
+                  {entries.map((entry) => (
+                    <tr
                       key={entry.gamertag}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: 0.55 + i * 0.05 }}
                       className="border-b border-white/5 transition-colors hover:bg-white/[0.04] group"
                     >
                       <td className="px-6 py-4">
@@ -211,23 +194,18 @@ export default function LeaderboardClient({ entries }: { entries: LeaderboardEnt
                           {entry.convertedReferrals}
                         </span>
                       </td>
-                    </motion.tr>
+                    </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.02] py-20 text-center"
-          >
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] py-20 text-center">
             <Trophy size={40} className="mx-auto mb-4 text-white/20" />
             <p className="text-white/40 text-lg">No referrals yet.</p>
             <p className="text-white/30 text-sm mt-1">Be the first to refer a gamer!</p>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
