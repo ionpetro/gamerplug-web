@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import AffiliatesPageWrapper from './AffiliatesPageWrapper'
+import AffiliatesPageClient from './AffiliatesPageClient'
 
 const baseUrl = 'https://gamerplug.app'
 
@@ -68,6 +68,6 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
   }
 }
 
-export default function LocalizedAffiliates({ params }: { params: any }) {
-  return <AffiliatesPageWrapper params={params} />
+export default function LocalizedAffiliates() {
+  return <AffiliatesPageClient />
 }
