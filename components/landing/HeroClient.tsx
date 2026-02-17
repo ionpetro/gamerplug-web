@@ -75,8 +75,8 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Phone Graphic */}
-        <div className="relative flex justify-center z-10 scale-90 sm:scale-75 lg:scale-90">
+        {/* Phone Graphic (desktop/tablet only, hidden on mobile to avoid heavy video payload) */}
+        <div className="relative hidden md:flex justify-center z-10 scale-75 lg:scale-90">
           <div className="relative w-[340px] h-[680px] bg-background border-[8px] border-secondary rounded-[3rem] shadow-2xl overflow-hidden">
             {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-secondary rounded-b-2xl z-20"></div>
