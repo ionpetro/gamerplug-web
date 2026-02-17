@@ -5,7 +5,7 @@ import { X, Menu, User, LogOut } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
+import { GameDropdown } from "@/components/GameDropdown"
 import { useI18n } from "@/components/I18nProvider"
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -162,10 +162,6 @@ export const Header = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-card border-b border-border overflow-hidden">
           <div className="flex flex-col p-6 gap-4">
-            <div>
-              <div className="text-muted-foreground font-medium mb-2">{t.nav?.games || 'Games'}</div>
-              <MobileGameMenu onClose={() => setIsMobileMenuOpen(false)} />
-            </div>
             <Link
               href={hrefWithLocale("/team")}
               className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
