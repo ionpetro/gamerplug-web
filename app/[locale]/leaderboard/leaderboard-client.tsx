@@ -1,16 +1,7 @@
-'use client'
-
 import { Trophy, Crown, Medal } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import type { LeaderboardEntry } from './page'
-
-function useLocale() {
-  const pathname = usePathname()
-  const seg = pathname?.split('/')[1]
-  return seg === 'es' ? 'es' : 'en'
-}
 
 const TROPHY_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32'] as const
 const RANK_LABELS = ['1st', '2nd', '3rd'] as const
@@ -103,8 +94,7 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
   )
 }
 
-export default function LeaderboardClient({ entries }: { entries: LeaderboardEntry[] }) {
-  const locale = useLocale()
+export default function LeaderboardClient({ entries, locale }: { entries: LeaderboardEntry[]; locale: 'en' | 'es' }) {
   const top3 = entries.slice(0, 3)
 
   return (

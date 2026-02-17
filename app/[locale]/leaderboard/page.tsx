@@ -122,13 +122,20 @@ const getCachedLeaderboardEntries = unstable_cache(
   { revalidate: 60 }
 )
 
-export default async function LeaderboardPage() {
+interface PageProps {
+  params: Promise<{ locale: string }>
+}
+
+export default async function LeaderboardPage({ params }: PageProps) {
+  const { locale: rawLocale } = await params
+  const locale = rawLocale === 'es' ? 'es' : 'en'
+
   try {
     const leaderboard = await getCachedLeaderboardEntries()
 
-    return <LeaderboardClient entries={leaderboard} />
+    return <LeaderboardClient entries={leaderboard} locale={locale} />
   } catch (error) {
     console.error('Leaderboard page failed:', error)
-    return <LeaderboardClient entries={[]} />
+    return <LeaderboardClient entries={[]} locale={locale} />
   }
 }
