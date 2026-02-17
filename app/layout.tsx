@@ -3,6 +3,7 @@ import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/Providers";
+import { PerformanceDebugPanel } from "@/components/PerformanceDebugPanel";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {children}
         </Providers>
+        <PerformanceDebugPanel />
         <SpeedInsights />
         <Analytics />
       </body>
