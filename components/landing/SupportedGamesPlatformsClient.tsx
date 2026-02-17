@@ -25,10 +25,6 @@ export const SupportedGamesPlatforms = async () => {
                     alt={game.display_name}
                     fill
                     className="object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder.svg';
-                    }}
                   />
                 </div>
               </div>
