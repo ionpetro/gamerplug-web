@@ -42,7 +42,7 @@ function getAppStoreUrl(): string {
 }
 
 interface UserWithGames extends User {
-  user_games: (UserGame & { games: Game })[];
+  user_games: Array<Pick<UserGame, 'id'> & { games: Pick<Game, 'id' | 'name' | 'display_name'> }>;
 }
 
 interface ReferralFormProps {

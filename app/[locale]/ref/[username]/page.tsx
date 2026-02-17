@@ -28,7 +28,7 @@ function getSupabaseClient() {
 }
 
 interface UserWithGames extends User {
-  user_games: (UserGame & { games: Game })[];
+  user_games: Array<Pick<UserGame, 'id'> & { games: Pick<Game, 'id' | 'name' | 'display_name'> }>;
 }
 
 interface PageProps {
@@ -43,10 +43,19 @@ const getCachedReferralUser = unstable_cache(
       supabase
         .from('users')
         .select(`
-          *,
+          id,
+          gamertag,
+          profile_image_url,
+          age,
+          platform,
+          bio,
           user_games (
-            *,
-            games (*)
+            id,
+            games (
+              id,
+              name,
+              display_name
+            )
           )
         `)
         .ilike('gamertag', username)

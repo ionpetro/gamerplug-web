@@ -8,6 +8,22 @@ import { GameWithDetails, getAllGames } from "@/lib/games"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/components/I18nProvider"
 
+let cachedGames: GameWithDetails[] | null = null
+let gamesPromise: Promise<GameWithDetails[]> | null = null
+
+async function loadGamesCached(): Promise<GameWithDetails[]> {
+  if (cachedGames) return cachedGames
+  if (!gamesPromise) {
+    gamesPromise = getAllGames().then((games) => {
+      cachedGames = games
+      return games
+    }).finally(() => {
+      gamesPromise = null
+    })
+  }
+  return gamesPromise
+}
+
 export function GameDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [games, setGames] = useState<GameWithDetails[]>([])
@@ -27,7 +43,7 @@ export function GameDropdown() {
   useEffect(() => {
     async function fetchGames() {
       try {
-        const gamesList = await getAllGames()
+        const gamesList = await loadGamesCached()
         setGames(gamesList)
       } catch (error) {
         console.error('Failed to fetch games:', error)
@@ -106,7 +122,6 @@ export function GameDropdown() {
                         alt={game.display_name}
                         fill
                         className="object-cover"
-                        unoptimized
                         onError={(e) => {
                           // Fallback to a default image if the game image doesn't exist
                           const target = e.target as HTMLImageElement;
@@ -165,7 +180,7 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     async function fetchGames() {
       try {
-        const gamesList = await getAllGames()
+        const gamesList = await loadGamesCached()
         setGames(gamesList)
       } catch (error) {
         console.error('Failed to fetch games:', error)
@@ -209,7 +224,6 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
                   alt={game.display_name}
                   fill
                   className="object-cover"
-                  unoptimized
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/placeholder.svg';

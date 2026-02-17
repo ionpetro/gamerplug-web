@@ -99,17 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // refreshSession() ensures a valid token before profile fetch (getSession() can return cached expired session).
-      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-      if (cancelled) return;
-      if (refreshError || !refreshData.session) {
-        clearAuthState();
-        setLoading(false);
-        return;
-      }
-      setSession(refreshData.session);
-
-      await loadUserProfile(refreshData.session.user.id);
+      await loadUserProfile(session.user.id);
     }
 
     initSession();

@@ -40,6 +40,16 @@ export interface LeaderboardEntry {
   conversionRate: number
 }
 
+const USER_BATCH_SIZE = 500
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const chunks: T[][] = []
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size))
+  }
+  return chunks
+}
+
 const getCachedLeaderboardEntries = unstable_cache(
   async () => {
     const supabase = getSupabaseClient()
@@ -47,10 +57,10 @@ const getCachedLeaderboardEntries = unstable_cache(
     const { data: referrals, error: referralsError } = await withTimeout(
       supabase
         .from('referrals')
-        .select('*'),
+        .select('referrer, converted'),
       QUERY_TIMEOUT_MS,
       'Leaderboard referrals query'
-    ) as { data: Referral[] | null; error: { message?: string } | null }
+    ) as { data: Pick<Referral, 'referrer' | 'converted'>[] | null; error: { message?: string } | null }
 
     if (referralsError) {
       throw new Error(referralsError.message || 'Failed to load referrals')
@@ -68,21 +78,25 @@ const getCachedLeaderboardEntries = unstable_cache(
     const usersMap = new Map<string, Pick<User, 'gamertag' | 'profile_image_url'>>()
 
     if (gamertags.length > 0) {
-      const { data: users, error: usersError } = await withTimeout(
-        supabase
-          .from('users')
-          .select('gamertag, profile_image_url')
-          .in('gamertag', gamertags),
-        QUERY_TIMEOUT_MS,
-        'Leaderboard users query'
-      ) as { data: Pick<User, 'gamertag' | 'profile_image_url'>[] | null; error: { message?: string } | null }
+      const userQueries = chunk(gamertags, USER_BATCH_SIZE).map((batch, index) =>
+        withTimeout(
+          supabase
+            .from('users')
+            .select('gamertag, profile_image_url')
+            .in('gamertag', batch),
+          QUERY_TIMEOUT_MS,
+          `Leaderboard users query batch ${index + 1}`
+        ) as Promise<{ data: Pick<User, 'gamertag' | 'profile_image_url'>[] | null; error: { message?: string } | null }>
+      )
 
-      if (usersError) {
-        throw new Error(usersError.message || 'Failed to load leaderboard users')
-      }
-
-      for (const user of users ?? []) {
-        usersMap.set(user.gamertag.toLowerCase(), user)
+      const userResults = await Promise.all(userQueries)
+      for (const result of userResults) {
+        if (result.error) {
+          throw new Error(result.error.message || 'Failed to load leaderboard users')
+        }
+        for (const user of result.data ?? []) {
+          usersMap.set(user.gamertag.toLowerCase(), user)
+        }
       }
     }
 

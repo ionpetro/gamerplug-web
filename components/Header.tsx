@@ -7,41 +7,22 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
 import { useI18n } from "@/components/I18nProvider"
-import { supabase } from '@/lib/supabase'
-import type { Session } from '@supabase/supabase-js'
+import { useAuth } from '@/contexts/AuthContext'
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [session, setSession] = useState<Session | null>(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { session, signOut } = useAuth()
   const context = useI18n()
   const t = context?.t || {}
 
-  // Check for session
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
   const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut({ scope: 'local' })
-    } catch (error) {
-      console.error('Sign out error:', error)
-    }
-    setSession(null)
+    await signOut()
     setUserMenuOpen(false)
     // Redirect to home page
-    window.location.href = '/en'
+    window.location.href = `/${locale}`
   }
 
   const locale = useMemo(() => {
