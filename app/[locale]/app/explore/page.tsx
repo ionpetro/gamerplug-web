@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, type PanInfo } from 'framer-motion';
@@ -69,6 +69,10 @@ export default function ExplorePage() {
   const [screenWidth, setScreenWidth] = useState(430);
   const [clipOrientations, setClipOrientations] = useState<Record<string, 'portrait' | 'landscape' | 'square'>>({});
   const [isMuted, setIsMuted] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const seenUserIds = useRef(new Set<string>());
+  const PAGE_SIZE = 20;
 
   const currentUser = users[currentIndex];
   const currentClips = currentUser
@@ -91,9 +95,10 @@ export default function ExplorePage() {
     []
   );
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = useCallback(async (offset: number, isInitial: boolean) => {
     try {
-      setLoading(true);
+      if (isInitial) setLoading(true);
+      else setLoadingMore(true);
 
       const { data: usersData, error } = await supabase
         .from(TABLES.USERS)
@@ -111,14 +116,21 @@ export default function ExplorePage() {
         )
         .eq('clips.is_public', true)
         .not('gamertag', 'is', null)
-        .limit(20);
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + PAGE_SIZE - 1);
 
       if (error) {
         console.error('Error fetching users:', error);
         return;
       }
 
+      if (!usersData || usersData.length < PAGE_SIZE) {
+        setHasMore(false);
+      }
+
       const usersWithPlayableClips = (usersData || [])
+        .filter((user) => !seenUserIds.current.has(user.id))
         .map((user) => {
           const playableClips = getUserClips(user as UserWithClips)
             .slice()
@@ -136,6 +148,10 @@ export default function ExplorePage() {
         })
         .filter((user) => user.clips.length > 0);
 
+      for (const user of usersWithPlayableClips) {
+        seenUserIds.current.add(user.id);
+      }
+
       const clipsData: Record<string, ClipWithProcessing[]> = usersWithPlayableClips.reduce(
         (acc, user) => {
           acc[user.id] = user.clips;
@@ -144,25 +160,41 @@ export default function ExplorePage() {
         {} as Record<string, ClipWithProcessing[]>
       );
 
-      setUsers(usersWithPlayableClips);
-      setClipsByUser(clipsData);
-      setCurrentIndex(0);
-      setClipIndices({});
-      setIsProfileOpen(false);
-      setIsSwiping(false);
-      setIsSwipeCommitted(false);
-      setCurrentDragX(0);
-      setSlotTransforms(Array.from({ length: SLOT_COUNT }, () => ({ ...SLOT_EMPTY })));
+      if (isInitial) {
+        setUsers(usersWithPlayableClips);
+        setClipsByUser(clipsData);
+        setCurrentIndex(0);
+        setClipIndices({});
+        setIsProfileOpen(false);
+        setIsSwiping(false);
+        setIsSwipeCommitted(false);
+        setCurrentDragX(0);
+        setSlotTransforms(Array.from({ length: SLOT_COUNT }, () => ({ ...SLOT_EMPTY })));
+      } else {
+        setUsers((prev) => [...prev, ...usersWithPlayableClips]);
+        setClipsByUser((prev) => ({ ...prev, ...clipsData }));
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchUsers();
+    seenUserIds.current.clear();
+    fetchUsers(0, true);
   }, [fetchUsers]);
+
+  // Infinite load: fetch more when within 5 cards of the end
+  useEffect(() => {
+    if (loadingMore || !hasMore || loading) return;
+    const remaining = users.length - currentIndex;
+    if (remaining <= 5) {
+      fetchUsers(users.length, false);
+    }
+  }, [currentIndex, users.length, hasMore, loadingMore, loading, fetchUsers]);
 
   const commitSwipe = useCallback(
     (direction: SwipeDirection, slotIndex: number) => {
@@ -334,11 +366,15 @@ export default function ExplorePage() {
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
           </div>
-        ) : !currentUser ? (
+        ) : !currentUser && !loadingMore ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center">
             <Users className="mb-3 h-10 w-10 text-white/30" />
             <p className="text-lg font-semibold text-white">No gamers left to explore</p>
-            <p className="mt-1 text-sm text-white/60">Pull to refresh later for more profiles.</p>
+            <p className="mt-1 text-sm text-white/60">Check back later for new profiles.</p>
+          </div>
+        ) : !currentUser && loadingMore ? (
+          <div className="flex flex-1 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-white/80" />
           </div>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center w-full">

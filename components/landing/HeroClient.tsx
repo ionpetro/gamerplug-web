@@ -5,14 +5,23 @@ import Link from "next/link"
 import Image from "next/image"
 import DownloadButton from "@/components/DownloadButton"
 import { useI18n } from "@/components/I18nProvider"
-import { useMemo, useCallback } from "react"
+import { useMemo, useCallback, useEffect, useState } from "react"
 
 export const Hero = () => {
   const { t, locale } = useI18n()
+  const [showDesktopPhone, setShowDesktopPhone] = useState(false)
   
   const hrefWithLocale = useCallback((path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`, [locale])
   
   const titleWords = useMemo(() => t.landing.hero.title2.split(' '), [t.landing.hero.title2])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
+    const updateDesktopPhone = () => setShowDesktopPhone(mediaQuery.matches)
+    updateDesktopPhone()
+    mediaQuery.addEventListener('change', updateDesktopPhone)
+    return () => mediaQuery.removeEventListener('change', updateDesktopPhone)
+  }, [])
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-background overflow-x-hidden">
@@ -75,7 +84,8 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Phone Graphic (desktop/tablet only, hidden on mobile to avoid heavy video payload) */}
+        {/* Phone Graphic (only mounted on desktop/tablet to avoid mobile video payload) */}
+        {showDesktopPhone && (
         <div className="relative hidden md:flex justify-center z-10 scale-75 lg:scale-90">
           <div className="relative w-[340px] h-[680px] bg-background border-[8px] border-secondary rounded-[3rem] shadow-2xl overflow-hidden">
             {/* Notch */}
@@ -173,6 +183,7 @@ export const Hero = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
     </section>
   )
