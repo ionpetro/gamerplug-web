@@ -163,6 +163,13 @@ export const Header = () => {
         <div className="md:hidden bg-card border-b border-border overflow-hidden">
           <div className="flex flex-col p-6 gap-4">
             <Link
+              href={hrefWithLocale("/games")}
+              className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {t.nav?.games || 'Games'}
+            </Link>
+            <Link
               href={hrefWithLocale("/team")}
               className="text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50"
               onClick={() => setIsMobileMenuOpen(false)}
