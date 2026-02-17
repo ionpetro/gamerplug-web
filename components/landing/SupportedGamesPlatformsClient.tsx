@@ -1,51 +1,21 @@
-'use client'
-
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { getAllGames } from '@/lib/games'
-import type { GameWithDetails } from '@/lib/games'
 
-export const SupportedGamesPlatforms = () => {
-  const [games, setGames] = useState<GameWithDetails[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const allGames = await getAllGames()
-        setGames(allGames)
-      } catch (error) {
-        console.error('Error fetching games:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchGames()
-  }, [])
+export const SupportedGamesPlatforms = async () => {
+  const games = await getAllGames()
 
   return (
     <section className="py-32 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6">
-        {loading ? (
+        {games.length === 0 ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground">No games available right now.</p>
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-nowrap gap-3 md:gap-4 lg:gap-6 justify-center items-center max-w-7xl mx-auto"
-          >
+          <div className="flex flex-nowrap gap-3 md:gap-4 lg:gap-6 justify-center items-center max-w-7xl mx-auto">
             {games.map((game, idx) => (
-              <motion.div
+              <div
                 key={game.id || idx}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.03 }}
                 className="flex items-center justify-center group flex-1"
                 style={{ minWidth: '60px', maxWidth: '100px' }}
               >
@@ -55,19 +25,17 @@ export const SupportedGamesPlatforms = () => {
                     alt={game.display_name}
                     fill
                     className="object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
-                    unoptimized
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder.svg';
                     }}
                   />
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>
   )
 }
-

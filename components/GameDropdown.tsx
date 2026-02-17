@@ -41,6 +41,11 @@ export function GameDropdown() {
   const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`
 
   useEffect(() => {
+    if (!window.matchMedia('(min-width: 768px)').matches) {
+      setLoading(false)
+      return
+    }
+
     async function fetchGames() {
       try {
         const gamesList = await loadGamesCached()
