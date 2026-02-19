@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
+import { unstable_cache } from 'next/cache'
 import { Referral, User } from '@/lib/supabase'
 import LeaderboardClient from './leaderboard-client'
 
 const QUERY_TIMEOUT_MS = 8000
-export const dynamic = 'force-static'
-export const revalidate = false
+const LEADERBOARD_REVALIDATE_SECONDS = 3600
+export const dynamic = 'force-dynamic'
 
 async function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
@@ -50,7 +51,7 @@ function chunk<T>(items: T[], size: number): T[][] {
   return chunks
 }
 
-async function getBuildTimeLeaderboardEntries(): Promise<LeaderboardEntry[]> {
+async function getLeaderboardEntries(): Promise<LeaderboardEntry[]> {
   const supabase = getSupabaseClient()
 
   const { data: referrals, error: referralsError } = await withTimeout(
@@ -116,6 +117,12 @@ async function getBuildTimeLeaderboardEntries(): Promise<LeaderboardEntry[]> {
     .map((entry, i) => ({ ...entry, rank: i + 1 }))
 }
 
+const getCachedLeaderboardEntries = unstable_cache(
+  async () => getLeaderboardEntries(),
+  ['leaderboard-entries'],
+  { revalidate: LEADERBOARD_REVALIDATE_SECONDS }
+)
+
 interface PageProps {
   params: Promise<{ locale: string }>
 }
@@ -125,7 +132,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
   const locale = rawLocale === 'es' ? 'es' : 'en'
 
   try {
-    const leaderboard = await getBuildTimeLeaderboardEntries()
+    const leaderboard = await getCachedLeaderboardEntries()
 
     return <LeaderboardClient entries={leaderboard} locale={locale} />
   } catch (error) {

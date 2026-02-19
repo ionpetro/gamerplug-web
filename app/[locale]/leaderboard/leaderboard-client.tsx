@@ -42,7 +42,7 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
   return (
     <Link href={`/${locale}/profile/${entry.gamertag}`} className={orderClass}>
     <div
-      className={`relative flex flex-col items-center gap-4 rounded-2xl border bg-gradient-to-b p-8 transition-all duration-300 hover:scale-[1.03] cursor-pointer h-full ${glow} ${
+      className={`relative flex flex-col items-center gap-4 rounded-2xl border bg-gradient-to-b p-8 transition-all duration-300 sm:hover:scale-[1.03] cursor-pointer h-full ${glow} ${
         highlight
           ? 'border-[#FFD700]/20 from-[#FFD700]/[0.06] to-transparent sm:-mt-6'
           : entry.rank === 2
@@ -67,7 +67,7 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
           ring={`ring-[${trophyColor}]/30`}
         />
         {highlight && (
-          <div className="absolute -inset-2 rounded-full border border-[#FFD700]/20 animate-pulse" />
+          <div className="absolute -inset-2 hidden sm:block rounded-full border border-[#FFD700]/20 sm:animate-pulse" />
         )}
       </div>
 
@@ -100,18 +100,18 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
   return (
     <div className="min-h-screen bg-background text-white relative overflow-hidden">
       {/* Background decoration */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
-        <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-[-15%] left-[-15%] w-[320px] h-[320px] bg-primary/12 blur-[110px] rounded-full sm:top-[-20%] sm:w-[520px] sm:h-[520px] sm:bg-primary/20 sm:blur-[190px]" />
+        <div className="hidden sm:block absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
       </div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.2_0_0)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.2_0_0)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 -z-10 pointer-events-none" />
+      <div className="hidden sm:block absolute inset-0 bg-[linear-gradient(to_right,oklch(0.2_0_0)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.2_0_0)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 -z-10 pointer-events-none" />
 
       <div className="relative mx-auto max-w-5xl px-4 py-20 sm:py-28">
         {/* Header */}
         <div className="mb-16 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+              <span className="absolute hidden sm:inline-flex h-full w-full sm:animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
             </span>
             <span className="text-sm font-medium text-primary">Leaderboard Snapshot</span>
@@ -142,7 +142,7 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
         {entries.length > 0 ? (
           <div>
             <h2 className="text-lg font-semibold mb-4 text-white/70">All Referrers</h2>
-            <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm">
+            <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.04] sm:bg-white/[0.02] sm:backdrop-blur-sm">
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-white/40">
@@ -155,7 +155,7 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
                   {entries.map((entry) => (
                     <tr
                       key={entry.gamertag}
-                      className="border-b border-white/5 transition-colors hover:bg-white/[0.04] group"
+                      className="border-b border-white/5 transition-colors sm:hover:bg-white/[0.04] group"
                     >
                       <td className="px-6 py-4">
                         {entry.rank <= 3 ? (
@@ -174,7 +174,7 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
                       <td className="px-6 py-4">
                         <Link href={`/${locale}/profile/${entry.gamertag}`} className="flex items-center gap-3">
                           <Avatar src={entry.profileImageUrl} gamertag={entry.gamertag} size={36} />
-                          <span className="font-semibold group-hover:text-primary transition-colors">
+                          <span className="font-semibold sm:group-hover:text-primary transition-colors">
                             {entry.gamertag}
                           </span>
                         </Link>
