@@ -2,13 +2,14 @@
 
 import { supabase, User, TABLES } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 /** Supabase: defer async work from onAuthStateChange with setTimeout to avoid deadlock. @see https://supabase.com/docs/reference/javascript/auth-onauthstatechange */
 const DEFER_MS = 0;
 
 const PROFILE_LOAD_TIMEOUT_MS = 15_000;
 const PROFILE_LOAD_TIMEOUT_MESSAGE = 'Profile load timeout';
+const PROFILE_RELOAD_DEBOUNCE_MS = 2_500;
 
 interface AuthContextType {
   session: Session | null;
@@ -29,13 +30,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const inFlightProfileLoadUserIdRef = useRef<string | null>(null);
+  const lastProfileLoadAtRef = useRef<Record<string, number>>({});
 
   const clearAuthState = useCallback(() => {
     setSession(null);
     setUser(null);
   }, []);
 
-  const loadUserProfile = useCallback(async (userId: string) => {
+  const loadUserProfile = useCallback(async (userId: string, options?: { force?: boolean }) => {
+    const force = options?.force === true;
+    const now = Date.now();
+    const lastLoadedAt = lastProfileLoadAtRef.current[userId] ?? 0;
+
+    if (!force && inFlightProfileLoadUserIdRef.current === userId) {
+      return;
+    }
+
+    if (!force && now - lastLoadedAt < PROFILE_RELOAD_DEBOUNCE_MS) {
+      return;
+    }
+
+    inFlightProfileLoadUserIdRef.current = userId;
+
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error(PROFILE_LOAD_TIMEOUT_MESSAGE)), PROFILE_LOAD_TIMEOUT_MS)
     );
@@ -82,6 +99,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     } finally {
+      lastProfileLoadAtRef.current[userId] = Date.now();
+      if (inFlightProfileLoadUserIdRef.current === userId) {
+        inFlightProfileLoadUserIdRef.current = null;
+      }
       setLoading(false);
     }
   }, [clearAuthState]);
@@ -114,12 +135,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_OUT') {
           setUser(null);
           setLoading(false);
-        } else {
-          const userId = session.user.id;
-          setTimeout(() => {
-            if (!cancelled) loadUserProfile(userId);
-          }, DEFER_MS);
+          return;
         }
+
+        if (event !== 'SIGNED_IN' && event !== 'USER_UPDATED' && event !== 'INITIAL_SESSION') {
+          return;
+        }
+
+        const userId = session.user.id;
+        setTimeout(() => {
+          if (!cancelled) void loadUserProfile(userId);
+        }, DEFER_MS);
       } else {
         setUser(null);
         setLoading(false);
@@ -244,7 +270,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     if (!session?.user?.id) return;
-    await loadUserProfile(session.user.id);
+    await loadUserProfile(session.user.id, { force: true });
   };
 
   const value: AuthContextType = {
