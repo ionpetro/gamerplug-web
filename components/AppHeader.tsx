@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, LogOut, Compass, Users, UserCircle, Gamepad2 } from 'lucide-react';
+import { User, LogOut, Compass, Users, UserCircle, Gamepad2, Crown } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -64,6 +64,7 @@ export const AppHeader = () => {
     { href: '/en/app/explore', label: 'Explore', icon: Compass },
     { href: '/en/app/matches', label: 'Matches', icon: Users },
     { href: '/en/app/play-now', label: 'Play Now', icon: Gamepad2 },
+    { href: '/en/app/pay-to-play', label: 'Pay to Play', icon: Crown },
     { href: '/en/app', label: 'Profile', icon: UserCircle },
   ];
 
