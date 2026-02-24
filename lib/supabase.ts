@@ -88,6 +88,16 @@ export interface Referral {
   created_at: string;
 }
 
+export interface PlayNowMessage {
+  id: string;
+  game_id: string;
+  user_id: string;
+  gamertag: string;
+  profile_image_url?: string;
+  message_text: string;
+  created_at: string;
+}
+
 // Database table names
 export const TABLES = {
   USERS: 'users',
@@ -95,4 +105,5 @@ export const TABLES = {
   GAMES: 'games',
   USER_GAMES: 'user_games',
   REFERRALS: 'referrals',
+  PLAY_NOW_MESSAGES: 'play_now_messages',
 } as const;
