@@ -402,7 +402,7 @@ export default function ExplorePage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
       </div>
 
-      <div className="relative mx-auto flex h-[calc(100vh-86px)] max-w-7xl flex-col items-center px-4 pb-0 pt-4">
+      <div className="relative mx-auto flex h-[calc(100dvh-86px)] max-w-7xl flex-col items-center px-4 pb-0 pt-2 sm:pt-4">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
@@ -419,7 +419,7 @@ export default function ExplorePage() {
           </div>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center w-full">
-            <div className="relative w-full aspect-video max-h-[75vh]">
+            <div className="relative w-full aspect-video max-h-[58vh] sm:max-h-[75vh]">
               {[0, 1, 2].map((slotIndex) => {
                 const relativeIndex = (slotIndex - (currentIndex % SLOT_COUNT) + SLOT_COUNT) % SLOT_COUNT;
                 const profileIndex = currentIndex + relativeIndex;
@@ -575,7 +575,7 @@ export default function ExplorePage() {
                             Recently Active
                           </div>
 
-                          <h2 className="text-4xl font-extrabold leading-none text-white">
+                          <h2 className="text-2xl sm:text-4xl font-extrabold leading-none text-white">
                             {displayName}
                             {currentUser.age ? ` ${currentUser.age}` : ''}
                           </h2>
@@ -628,7 +628,7 @@ export default function ExplorePage() {
               })}
             </div>
 
-            <div className="mt-5 flex items-center gap-12">
+            <div className="mt-3 sm:mt-5 flex items-center gap-8 sm:gap-12">
               <ActionButton label="Nope" onClick={handleNope}>
                 <X className="h-8 w-8 text-rose-400" strokeWidth={3} />
               </ActionButton>
@@ -642,7 +642,7 @@ export default function ExplorePage() {
       </div>
 
       {!loading && currentUser && (
-        <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 whitespace-nowrap text-xs font-semibold text-white/80">
+        <div className="absolute bottom-3 left-0 right-0 hidden sm:flex items-center justify-center gap-2 whitespace-nowrap text-xs font-semibold text-white/80">
           <KeyHint keyLabel="←" label="Nope" onClick={handleNope} />
           <KeyHint keyLabel="→" label="Like" onClick={handleLike} />
           <KeyHint keyLabel="↑" label="Open Profile" onClick={handleOpenProfile} />
@@ -654,34 +654,34 @@ export default function ExplorePage() {
 
       {showMatchModal && matchedUser && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm">
-          <div className="relative flex flex-col items-center gap-6 rounded-3xl border border-white/15 bg-[#0d1117] px-10 py-10 shadow-2xl">
-            <div className="flex items-center gap-4">
+          <div className="relative flex flex-col items-center gap-5 rounded-3xl border border-white/15 bg-[#0d1117] mx-4 px-6 py-8 sm:px-10 sm:py-10 shadow-2xl">
+            <div className="flex items-center gap-3 sm:gap-4">
               {authUser?.profile_image_url ? (
                 <img
                   src={authUser.profile_image_url}
                   alt={authUser.gamertag}
-                  className="h-20 w-20 rounded-full border-2 border-primary object-cover"
+                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-primary object-cover"
                 />
               ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
-                  <Users className="h-8 w-8 text-white/50" />
+                <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
+                  <Users className="h-7 w-7 text-white/50" />
                 </div>
               )}
-              <Heart className="h-8 w-8 shrink-0 text-primary" fill="currentColor" />
+              <Heart className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-primary" fill="currentColor" />
               {matchedUser.profile_image_url ? (
                 <img
                   src={matchedUser.profile_image_url}
                   alt={matchedUser.gamertag}
-                  className="h-20 w-20 rounded-full border-2 border-primary object-cover"
+                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-primary object-cover"
                 />
               ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
-                  <Users className="h-8 w-8 text-white/50" />
+                <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
+                  <Users className="h-7 w-7 text-white/50" />
                 </div>
               )}
             </div>
             <div className="text-center">
-              <p className="text-3xl font-extrabold text-white">It&apos;s a Match!</p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-white">It&apos;s a Match!</p>
               <p className="mt-1 text-sm text-white/60">
                 You and <span className="font-semibold text-white">{matchedUser.gamertag}</span> liked each other.
               </p>
