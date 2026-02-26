@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, type PanInfo } from 'framer-motion';
 import { supabase, User, Clip, TABLES } from '@/lib/supabase';
+import { swipeUser } from '@/lib/swipes';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Heart,
   Loader2,
@@ -53,6 +55,7 @@ function getPlayableVideoUrl(clip: ClipWithProcessing | null) {
 export default function ExplorePage() {
   const params = useParams<{ locale: string }>();
   const locale = params?.locale || 'en';
+  const { user: authUser } = useAuth();
 
   const [users, setUsers] = useState<UserWithClips[]>([]);
   const [clipsByUser, setClipsByUser] = useState<Record<string, ClipWithProcessing[]>>({});
@@ -71,6 +74,8 @@ export default function ExplorePage() {
   const [isMuted, setIsMuted] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [showMatchModal, setShowMatchModal] = useState(false);
+  const [matchedUser, setMatchedUser] = useState<UserWithClips | null>(null);
   const seenUserIds = useRef(new Set<string>());
   const PAGE_SIZE = 20;
 
@@ -95,12 +100,28 @@ export default function ExplorePage() {
     []
   );
 
-  const fetchUsers = useCallback(async (offset: number, isInitial: boolean) => {
+  const fetchUsers = useCallback(async (isInitial: boolean) => {
     try {
       if (isInitial) setLoading(true);
       else setLoadingMore(true);
 
-      const { data: usersData, error } = await supabase
+      // Exclude users already swiped on (persisted in DB) + session-seen users
+      let swipedIds: string[] = [];
+      if (authUser?.id) {
+        const { data: swipedData } = await supabase
+          .from(TABLES.SWIPES)
+          .select('to_user_id')
+          .eq('from_user_id', authUser.id);
+        swipedIds = swipedData?.map((s: { to_user_id: string }) => s.to_user_id) || [];
+      }
+
+      const excludeIds = [
+        ...(authUser?.id ? [authUser.id] : []),
+        ...swipedIds,
+        ...Array.from(seenUserIds.current),
+      ];
+
+      let query = supabase
         .from(TABLES.USERS)
         .select(
           `
@@ -116,9 +137,16 @@ export default function ExplorePage() {
         )
         .eq('clips.is_public', true)
         .not('gamertag', 'is', null)
+        .neq('gamertag', 'Temporary User')
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
-        .range(offset, offset + PAGE_SIZE - 1);
+        .limit(PAGE_SIZE);
+
+      if (excludeIds.length > 0) {
+        query = query.not('id', 'in', `(${excludeIds.join(',')})`);
+      }
+
+      const { data: usersData, error } = await query;
 
       if (error) {
         console.error('Error fetching users:', error);
@@ -180,11 +208,11 @@ export default function ExplorePage() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, []);
+  }, [authUser?.id]);
 
   useEffect(() => {
     seenUserIds.current.clear();
-    fetchUsers(0, true);
+    fetchUsers(true);
   }, [fetchUsers]);
 
   // Infinite load: fetch more when within 5 cards of the end
@@ -192,13 +220,16 @@ export default function ExplorePage() {
     if (loadingMore || !hasMore || loading) return;
     const remaining = users.length - currentIndex;
     if (remaining <= 5) {
-      fetchUsers(users.length, false);
+      fetchUsers(false);
     }
   }, [currentIndex, users.length, hasMore, loadingMore, loading, fetchUsers]);
 
   const commitSwipe = useCallback(
     (direction: SwipeDirection, slotIndex: number) => {
       if (!currentUser || isSwipeCommitted) return;
+
+      // Capture the swiped user before state changes
+      const swipedUser = currentUser;
 
       setIsSwiping(true);
       setIsSwipeCommitted(true);
@@ -213,6 +244,16 @@ export default function ExplorePage() {
       const nextIndex = currentIndex + 1;
       const slotToReset = (currentIndex + 2) % SLOT_COUNT;
 
+      // Persist swipe to DB (fire-and-forget for left; check match for right)
+      if (authUser?.id) {
+        swipeUser(authUser.id, swipedUser.id, direction).then((result) => {
+          if (result.isMatch) {
+            setMatchedUser(swipedUser);
+            setShowMatchModal(true);
+          }
+        });
+      }
+
       window.setTimeout(() => {
         setSlotTransform(slotToReset, { ...SLOT_EMPTY });
         setCurrentIndex(nextIndex);
@@ -222,7 +263,7 @@ export default function ExplorePage() {
         setIsProfileOpen(false);
       }, 220);
     },
-    [currentIndex, currentUser, isSwipeCommitted, screenWidth, setSlotTransform]
+    [authUser?.id, currentIndex, currentUser, isSwipeCommitted, screenWidth, setSlotTransform]
   );
 
   const onCardDrag = useCallback((_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -608,6 +649,60 @@ export default function ExplorePage() {
           <KeyHint keyLabel="↓" label="Close Profile" onClick={handleCloseProfile} />
           <KeyHint keyLabel="P" label="Prev Clip" onClick={goToPrevPhoto} />
           <KeyHint keyLabel="N" label="Next Clip" onClick={goToNextPhoto} />
+        </div>
+      )}
+
+      {showMatchModal && matchedUser && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm">
+          <div className="relative flex flex-col items-center gap-6 rounded-3xl border border-white/15 bg-[#0d1117] px-10 py-10 shadow-2xl">
+            <div className="flex items-center gap-4">
+              {authUser?.profile_image_url ? (
+                <img
+                  src={authUser.profile_image_url}
+                  alt={authUser.gamertag}
+                  className="h-20 w-20 rounded-full border-2 border-primary object-cover"
+                />
+              ) : (
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
+                  <Users className="h-8 w-8 text-white/50" />
+                </div>
+              )}
+              <Heart className="h-8 w-8 shrink-0 text-primary" fill="currentColor" />
+              {matchedUser.profile_image_url ? (
+                <img
+                  src={matchedUser.profile_image_url}
+                  alt={matchedUser.gamertag}
+                  className="h-20 w-20 rounded-full border-2 border-primary object-cover"
+                />
+              ) : (
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-zinc-800">
+                  <Users className="h-8 w-8 text-white/50" />
+                </div>
+              )}
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-extrabold text-white">It&apos;s a Match!</p>
+              <p className="mt-1 text-sm text-white/60">
+                You and <span className="font-semibold text-white">{matchedUser.gamertag}</span> liked each other.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Link
+                href={`/${locale}/app/matches`}
+                className="rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
+                onClick={() => setShowMatchModal(false)}
+              >
+                View Matches
+              </Link>
+              <button
+                type="button"
+                onClick={() => setShowMatchModal(false)}
+                className="rounded-full border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-white/20"
+              >
+                Keep Swiping
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
