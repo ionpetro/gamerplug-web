@@ -224,4 +224,6 @@ export const TABLES = {
   PAY_TO_PLAY_BOOKINGS: 'pay_to_play_bookings',
   PAY_TO_PLAY_LISTING_MEDIA: 'pay_to_play_listing_media',
   PAY_TO_PLAY_REVIEWS: 'pay_to_play_reviews',
+  SWIPES: 'swipes',
+  MATCHES: 'matches',
 } as const;
