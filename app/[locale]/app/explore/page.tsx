@@ -419,7 +419,7 @@ export default function ExplorePage() {
           </div>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center w-full">
-            <div className="relative w-full aspect-video max-h-[58vh] sm:max-h-[75vh]">
+            <div className="relative w-full max-w-[420px] aspect-[9/16] max-h-[68vh] sm:max-w-none sm:aspect-video sm:max-h-[75vh]">
               {[0, 1, 2].map((slotIndex) => {
                 const relativeIndex = (slotIndex - (currentIndex % SLOT_COUNT) + SLOT_COUNT) % SLOT_COUNT;
                 const profileIndex = currentIndex + relativeIndex;
@@ -468,7 +468,7 @@ export default function ExplorePage() {
                           : { type: 'spring', stiffness: 320, damping: 30, mass: 0.85 }
                         : { duration: 0.2, ease: 'easeOut' }
                     }
-                    className={`absolute inset-x-0 top-1/2 -translate-y-1/2 aspect-video overflow-hidden rounded-3xl border bg-zinc-900 ${
+                    className={`absolute inset-x-0 top-1/2 -translate-y-1/2 aspect-[9/16] overflow-hidden rounded-3xl border bg-zinc-900 sm:aspect-video ${
                       isCurrent
                         ? 'z-10 cursor-grab active:cursor-grabbing border-white/20 shadow-[0_20px_80px_rgba(0,0,0,0.65)]'
                         : 'z-0 scale-[0.97] border-white/10 opacity-90'
