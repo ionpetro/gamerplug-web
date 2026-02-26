@@ -10,7 +10,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   Heart,
   Loader2,
-  MapPin,
   Users,
   Volume2,
   VolumeOff,
@@ -389,7 +388,6 @@ export default function ExplorePage() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [currentUser, handleCloseProfile, handleLike, handleNope, handleOpenProfile, goToNextPhoto, goToPrevPhoto, loading]);
 
-  const distanceLabel = '1 mile away';
   const displayName = currentUser?.gamertag ? currentUser.gamertag.replace(/^@/, '') : 'Gamer';
   const likeOpacity = Math.max(0, Math.min(1, currentDragX / (screenWidth * 0.5)));
   const nopeOpacity = Math.max(0, Math.min(1, -currentDragX / (screenWidth * 0.5)));
@@ -402,7 +400,7 @@ export default function ExplorePage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
       </div>
 
-      <div className="relative mx-auto flex h-[calc(100dvh-86px)] max-w-7xl flex-col items-center px-4 pb-0 pt-2 sm:pt-4">
+      <div className="relative mx-auto flex h-[calc(100dvh-86px)] max-w-7xl flex-col items-center px-4 pb-24 pt-2 sm:pb-0 sm:pt-4">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
@@ -418,7 +416,7 @@ export default function ExplorePage() {
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
           </div>
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center w-full">
+          <div className="flex flex-1 flex-col items-center justify-start pt-1 w-full sm:justify-center sm:pt-0">
             <div className="relative w-full max-w-[420px] aspect-[9/16] max-h-[68vh] sm:max-w-none sm:aspect-video sm:max-h-[75vh]">
               {[0, 1, 2].map((slotIndex) => {
                 const relativeIndex = (slotIndex - (currentIndex % SLOT_COUNT) + SLOT_COUNT) % SLOT_COUNT;
@@ -569,7 +567,7 @@ export default function ExplorePage() {
                           ))}
                         </div>
 
-                        <div className="absolute bottom-0 left-0 right-0 p-4 pb-5">
+                        <div className="absolute bottom-0 left-0 right-0 p-4 pb-9 sm:pb-5">
                           <div className="mb-1 flex items-center gap-2 text-sm text-white/90">
                             <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
                             Recently Active
@@ -579,11 +577,6 @@ export default function ExplorePage() {
                             {displayName}
                             {currentUser.age ? ` ${currentUser.age}` : ''}
                           </h2>
-
-                          <div className="mt-1 flex items-center gap-1 text-sm text-white/90">
-                            <MapPin className="h-3.5 w-3.5" />
-                            {distanceLabel}
-                          </div>
 
                           <button
                             type="button"
@@ -628,7 +621,16 @@ export default function ExplorePage() {
               })}
             </div>
 
-            <div className="mt-3 sm:mt-5 flex items-center gap-8 sm:gap-12">
+            <div className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-30 flex -translate-x-1/2 items-center gap-8 sm:hidden">
+              <ActionButton label="Nope" onClick={handleNope}>
+                <X className="h-8 w-8 text-rose-400" strokeWidth={3} />
+              </ActionButton>
+              <ActionButton label="Like" onClick={handleLike}>
+                <Heart className="h-8 w-8 text-lime-300" fill="currentColor" />
+              </ActionButton>
+            </div>
+
+            <div className="mt-5 hidden items-center gap-12 sm:flex">
               <ActionButton label="Nope" onClick={handleNope}>
                 <X className="h-8 w-8 text-rose-400" strokeWidth={3} />
               </ActionButton>

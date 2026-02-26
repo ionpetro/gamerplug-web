@@ -105,7 +105,7 @@ export const AppHeader = () => {
                 }`}
               >
                 <Icon size={18} />
-                {active && <span className="text-sm font-medium">{link.label}</span>}
+                {active && <span className="hidden text-sm font-medium sm:inline">{link.label}</span>}
               </Link>
             );
           })}
