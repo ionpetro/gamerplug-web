@@ -1,6 +1,6 @@
 'use client'
 
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle } from '@/lib/icons'
 
 export default function ReferralError({
   error,

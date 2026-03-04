@@ -1,7 +1,5 @@
 import { Footer } from "@/components/Footer"
 import { LandingSections } from "@/components/landing/LandingSections"
-import { ElevenLabsWidget } from "@/components/ElevenLabsWidget"
-
 // --- Main Page ---
 
 export default function LocalizedHome() {
@@ -73,7 +71,6 @@ export default function LocalizedHome() {
         <LandingSections />
       </main>
       <Footer />
-      <ElevenLabsWidget />
     </div>
   )
 }

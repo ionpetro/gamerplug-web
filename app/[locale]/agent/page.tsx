@@ -4,7 +4,7 @@ import { useConversation } from '@elevenlabs/react'
 import { useEffect, useState, useMemo, useRef } from 'react'
 import { Orb, type AgentState } from '@/components/ui/orb'
 import { Button } from '@/components/ui/button'
-import { Mic, MicOff, PhoneOff, Phone } from 'lucide-react'
+import { Mic, MicOff, PhoneOff, Phone } from '@/lib/icons'
 
 export default function LocalizedAgent({ params }: { params: Promise<{ locale: string }> }) {
   const [locale, setLocale] = useState<string | null>(null)

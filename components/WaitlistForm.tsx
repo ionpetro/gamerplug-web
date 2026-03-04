@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Mail } from "lucide-react"
+import { Mail } from '@/lib/icons'
 import { useI18n } from "@/components/I18nProvider"
 
 export default function WaitlistForm() {

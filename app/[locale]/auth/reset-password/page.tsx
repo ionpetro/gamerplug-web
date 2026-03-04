@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Footer } from '@/components/Footer';
-import { Loader2, Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, Lock, Eye, EyeOff, CheckCircle, XCircle } from '@/lib/icons';
 
 function ResetPasswordContent() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { ArrowLeft, Eye } from "lucide-react";
+import { ArrowLeft, Eye } from '@/lib/icons';
 
 export const BottomActions = () => {
   return (

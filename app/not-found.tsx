@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { cookies, headers } from "next/headers"
-import { AlertTriangle, ArrowLeft, Home } from "lucide-react"
+import { AlertTriangle, ArrowLeft, Home } from '@/lib/icons'
 
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"

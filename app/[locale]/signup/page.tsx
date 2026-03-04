@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/Footer';
-import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from '@/lib/icons';
 
 const GoogleIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">

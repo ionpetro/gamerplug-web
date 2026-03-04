@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, User, Settings, LogOut } from "lucide-react"
+import { Menu, X, User, Settings, LogOut } from '@/lib/icons'
 import Image from "next/image"
 import { GameDropdown, MobileGameMenu } from "@/components/GameDropdown"
 import { usePathname } from "next/navigation"

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from "framer-motion"
-import { Users, Gamepad2 } from "lucide-react"
+import { Users, Gamepad2 } from '@/lib/icons'
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -81,7 +81,7 @@ export default function LocalizedGames({ params }: { params: Promise<{ locale: s
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
               POPULAR<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GAMES.</span>
+              <span className="text-primary">GAMES.</span>
             </h1>
 
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">

@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/lib/icons';
 import { AppHeader } from '@/components/AppHeader';
 import { Footer } from '@/components/Footer';
 

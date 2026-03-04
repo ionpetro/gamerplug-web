@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
 import VideoModal from '@/components/VideoModal';
 import { Footer } from '@/components/Footer';
-import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, ArrowLeft } from '@/lib/icons';
 import LoLStats from '@/components/LoLStats';
 import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
 

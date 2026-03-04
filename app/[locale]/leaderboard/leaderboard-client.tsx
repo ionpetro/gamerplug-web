@@ -1,4 +1,4 @@
-import { Trophy, Crown, Medal } from 'lucide-react'
+import { Trophy, Crown, Medal } from '@/lib/icons'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { LeaderboardEntry } from './page'

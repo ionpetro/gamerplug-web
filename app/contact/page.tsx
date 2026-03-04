@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from "framer-motion"
-import { Mail, MessageCircle, Flame } from "lucide-react"
+import { Mail, MessageCircle, Flame } from '@/lib/icons'
 import Link from "next/link"
 import { Footer } from "@/components/Footer"
 import { I18nProvider } from "@/components/I18nProvider"
@@ -54,7 +54,7 @@ export default function ContactPage() {
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
               CONTACT<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">US.</span>
+              <span className="text-primary">US.</span>
             </h1>
 
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
@@ -189,7 +189,7 @@ export default function ContactPage() {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
             >
-              Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Questions</span>
+              Common <span className="text-primary">Questions</span>
             </motion.h2>
           </div>
 

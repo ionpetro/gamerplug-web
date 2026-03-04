@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from '@/lib/icons'
 import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useI18n } from "@/components/I18nProvider"
@@ -275,7 +275,7 @@ export function BlogListClient({ posts, locale: initialLocale }: BlogListClientP
               {t.blog?.stayUpdated || 'Stay Updated'}
             </motion.span>
             <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase italic">
-              {t.blog?.dontMiss || "Don't Miss"} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+              {t.blog?.dontMiss || "Don't Miss"} <span className="text-primary">
                 {t.blog?.out || 'Out'}
               </span>
             </h2>

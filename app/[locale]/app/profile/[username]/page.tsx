@@ -20,7 +20,7 @@ import {
   Upload,
   ChevronRight,
   X
-} from 'lucide-react';
+} from '@/lib/icons';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];

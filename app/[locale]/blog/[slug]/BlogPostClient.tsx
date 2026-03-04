@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Calendar, Clock, ArrowLeft, User } from "lucide-react"
+import { Calendar, Clock, ArrowLeft, User } from '@/lib/icons'
 import { Footer } from "@/components/Footer"
 import { useI18n } from "@/components/I18nProvider"
 import { useMemo } from "react"

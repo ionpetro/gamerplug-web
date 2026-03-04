@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Footer } from "@/components/Footer";
-import { FileText } from "lucide-react";
+import { FileText } from '@/lib/icons';
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | Gamerplug",
@@ -26,7 +26,7 @@ export default function TermsAndConditionsPage() {
             </div>
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 uppercase italic tracking-tight">
-            Terms & <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Conditions</span>
+            Terms & <span className="text-primary">Conditions</span>
           </h1>
           <p className="text-muted-foreground text-lg border-l-2 border-border pl-6 inline-block">
             Last updated: {new Date().toLocaleDateString()}

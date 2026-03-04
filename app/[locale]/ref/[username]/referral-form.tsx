@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { UserCircle, ExternalLink } from 'lucide-react'
+import { UserCircle, ExternalLink } from '@/lib/icons'
 import { User, Game, UserGame } from '@/lib/supabase'
 import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets'
 import { Footer } from '@/components/Footer'
@@ -119,7 +119,7 @@ export default function ReferralForm({ username, user }: ReferralFormProps) {
                 <span className="font-extrabold italic tracking-tight text-primary">PLUG</span>
                 <br />
                 <span className="text-foreground">with </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{username}</span>
+                <span className="text-primary">{username}</span>
               </h1>
 
               <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">

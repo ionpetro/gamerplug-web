@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Twitter, Instagram, Youtube, Twitch, Facebook, Code, Package, Users, Settings, Megaphone, Mail, ChevronLeft, ChevronRight } from '@/lib/icons'
 
 import { Footer } from '@/components/Footer'
 import { CharacterGrid } from '@/components/CharacterGrid'

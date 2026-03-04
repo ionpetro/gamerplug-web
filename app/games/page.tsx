@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Users, Star } from "lucide-react"
+import { Users, Star } from '@/lib/icons'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
@@ -14,7 +14,7 @@ export default async function GamesPage() {
       <section className="pt-20 pb-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-primary">
               Popular Games
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">

@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase, User, TABLES } from '@/lib/supabase';
 import { getGameAssetUrl } from '@/lib/assets';
 import { useI18n } from '@/components/I18nProvider';
-import { Hash, Send, Users } from 'lucide-react';
+import { Hash, Send, Users } from '@/lib/icons';
 // ── CALENDAR PANEL — remove this import to disable ──────────────────────────
 import { PlayNowCalendar } from './PlayNowCalendar';
 // ────────────────────────────────────────────────────────────────────────────

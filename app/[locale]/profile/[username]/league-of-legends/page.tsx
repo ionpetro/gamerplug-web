@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@/lib/icons';
 import { LoLPlayerStats, LeagueEntry } from '@/lib/riot-api';
 import { Footer } from '@/components/Footer';
 

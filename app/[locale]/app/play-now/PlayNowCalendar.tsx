@@ -10,7 +10,7 @@
  */
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, X, Calendar, Clock, Gamepad2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calendar, Clock, Gamepad2 } from '@/lib/icons';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 

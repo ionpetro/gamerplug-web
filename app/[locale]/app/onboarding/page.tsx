@@ -7,7 +7,7 @@ import { supabase, TABLES, Game, Clip } from '@/lib/supabase';
 import { getGameAssetUrl } from '@/lib/assets';
 import { getPlatformAssetUrl } from '@/lib/assets';
 import { uploadClip, deleteClip, getUserClips } from '@/lib/clips';
-import { Loader2, ChevronLeft, ChevronRight, Check, Gamepad2, User, Calendar, Monitor, Video, PartyPopper, Plus, X, Upload } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight, Check, Gamepad2, User, Calendar, Monitor, Video, PartyPopper, Plus, X, Upload } from '@/lib/icons';
 import Image from 'next/image';
 
 // ─── Types ───────────────────────────────────────────────────────────────────

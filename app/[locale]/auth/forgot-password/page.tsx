@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/Footer';
-import { Loader2, Mail, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Loader2, Mail, CheckCircle, ArrowLeft } from '@/lib/icons';
 
 export default function ForgotPasswordPage() {
   const { resetPassword } = useAuth();

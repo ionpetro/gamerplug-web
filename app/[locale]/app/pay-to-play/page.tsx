@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Crown, DollarSign, Gamepad2, Loader2, Star, Timer } from 'lucide-react';
+import { Crown, DollarSign, Gamepad2, Loader2, Star, Timer } from '@/lib/icons';
 import { useI18n } from '@/components/I18nProvider';
 import { getGameAssetUrl } from '@/lib/assets';
 import { supabase, TABLES } from '@/lib/supabase';

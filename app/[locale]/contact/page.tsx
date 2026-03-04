@@ -2,7 +2,7 @@
 
 import ContactPage from "../../contact/page";
 import { motion } from "framer-motion"
-import { Mail, MessageCircle } from "lucide-react"
+import { Mail, MessageCircle } from '@/lib/icons'
 import Link from "next/link"
 import { Footer } from "@/components/Footer"
 import { I18nProvider } from "@/components/I18nProvider"
@@ -63,7 +63,7 @@ export default function LocalizedContact({ params }: { params: any }) {
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] mb-6 tracking-tight">
               CONTÁCTANOS<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">.</span>
+              <span className="text-primary">.</span>
             </h1>
 
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
@@ -198,7 +198,7 @@ export default function LocalizedContact({ params }: { params: any }) {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
             >
-              Preguntas <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Comunes</span>
+              Preguntas <span className="text-primary">Comunes</span>
             </motion.h2>
           </div>
 

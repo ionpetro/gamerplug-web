@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { X, Menu, User, LogOut } from 'lucide-react'
+import { X, Menu, User, LogOut } from '@/lib/icons'
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"

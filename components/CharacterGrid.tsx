@@ -1,4 +1,4 @@
-import { Code, Package, Users, Settings, Megaphone, ExternalLink } from "lucide-react";
+import { Code, Package, Users, Settings, Megaphone, ExternalLink } from '@/lib/icons';
 import Link from "next/link";
 import Image from "next/image";
 

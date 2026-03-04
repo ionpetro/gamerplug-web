@@ -14,7 +14,7 @@ import {
   Volume2,
   VolumeOff,
   X,
-} from 'lucide-react';
+} from '@/lib/icons';
 
 interface ClipWithProcessing extends Clip {
   video_processing?:

@@ -6,7 +6,7 @@ export default function GamesLoading() {
       <section className="pt-20 pb-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-primary">
               Popular Games
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">

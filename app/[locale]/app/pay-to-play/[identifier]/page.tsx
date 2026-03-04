@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Crown, DollarSign, Gamepad2, Loader2, MapPin, Star, Timer } from 'lucide-react';
+import { ArrowLeft, Crown, DollarSign, Gamepad2, Loader2, MapPin, Star, Timer } from '@/lib/icons';
 import { useI18n } from '@/components/I18nProvider';
 import { useAuth } from '@/contexts/AuthContext';
 import { getGameAssetUrl } from '@/lib/assets';

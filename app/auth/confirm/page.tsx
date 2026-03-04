@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { AppInstallPrompt } from '@/components/AppInstallPrompt';
-import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2 } from '@/lib/icons';
 
 function AuthConfirmContent() {
   const router = useRouter();

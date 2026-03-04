@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, LogOut, Compass, Users, UserCircle, Gamepad2, Crown } from 'lucide-react';
+import { User, LogOut, Compass, Users, UserCircle, Gamepad2, Crown } from '@/lib/icons';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';

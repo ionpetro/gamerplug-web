@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown } from '@/lib/icons'
 import { GameWithDetails, getAllGames } from "@/lib/games"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/components/I18nProvider"

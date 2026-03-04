@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase, User, TABLES } from '@/lib/supabase';
 import { getPlatformAssetUrl } from '@/lib/assets';
 import { useI18n } from '@/components/I18nProvider';
-import { Users, MessageCircle, Loader2, Heart, Sparkles, LayoutGrid, List, Gamepad2 } from 'lucide-react';
+import { Users, MessageCircle, Loader2, Heart, Sparkles, LayoutGrid, List, Gamepad2 } from '@/lib/icons';
 
 interface Match {
   id: string;

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Footer } from '@/components/Footer'
-import { Video, Shield, Calendar } from 'lucide-react'
+import { Video, Shield, Calendar } from '@/lib/icons'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useI18n } from '@/components/I18nProvider'

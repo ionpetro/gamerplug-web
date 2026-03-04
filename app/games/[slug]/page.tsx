@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from "framer-motion"
-import { Users, MessageCircle, Trophy, Gamepad2 } from "lucide-react"
+import { Users, MessageCircle, Trophy, Gamepad2 } from '@/lib/icons'
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -154,7 +154,7 @@ export default function GamePage({ params }: GamePageProps) {
                         <br />
                       </>
                     )}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                    <span className="text-primary">
                       {details.hero.titleHighlight.toUpperCase()}
                     </span>
                     {details.hero.titleSuffix && (
@@ -167,7 +167,7 @@ export default function GamePage({ params }: GamePageProps) {
                 ) : (
                   <>
                     {details.hero.title.split(' ').slice(0, -2).join(' ')}<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                    <span className="text-primary">
                       {details.hero.title.split(' ').slice(-2).join(' ').toUpperCase()}
                     </span>
                   </>
@@ -229,7 +229,7 @@ export default function GamePage({ params }: GamePageProps) {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
             >
-              Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GamerPlug?</span>
+              Why Choose <span className="text-primary">GamerPlug?</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0 }}
@@ -324,7 +324,7 @@ export default function GamePage({ params }: GamePageProps) {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
             >
-              Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Questions</span>
+              Common <span className="text-primary">Questions</span>
             </motion.h2>
           </div>
 
@@ -366,7 +366,7 @@ export default function GamePage({ params }: GamePageProps) {
               <div className="relative z-10 max-w-3xl mx-auto">
                 <h2 className="text-4xl md:text-7xl font-black mb-8 text-foreground uppercase italic leading-none">
                   Ready to Find Your<br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{game.display_name.toUpperCase()}</span> Team?
+                  <span className="text-primary">{game.display_name.toUpperCase()}</span> Team?
                 </h2>
                 <p className="text-muted-foreground text-xl mb-10">
                   Join thousands of players who've already found their perfect teammates
