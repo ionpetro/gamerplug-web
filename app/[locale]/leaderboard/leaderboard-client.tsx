@@ -1,7 +1,44 @@
-import { Trophy, Crown, Medal } from 'lucide-react'
+'use client'
+
+import { Trophy, Crown, Medal, Clock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { LeaderboardEntry } from './page'
+import { useEffect, useState, startTransition } from 'react'
+
+export interface LeaderboardEntry {
+  rank: number
+  gamertag: string
+  profileImageUrl: string | null
+  convertedReferrals: number
+}
+
+function useCountdown(nextResetAtIso: string) {
+  const [left, setLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const target = new Date(nextResetAtIso).getTime()
+
+    const tick = () => {
+      const now = Date.now()
+      const diff = Math.max(0, target - now)
+      const next = {
+        days: Math.floor(diff / (24 * 60 * 60 * 1000)),
+        hours: Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)),
+        minutes: Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000)),
+        seconds: Math.floor((diff % (60 * 1000)) / 1000),
+      }
+      startTransition(() => setLeft(next))
+    }
+
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [nextResetAtIso])
+
+  return { ...left, mounted }
+}
 
 const TROPHY_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32'] as const
 const RANK_LABELS = ['1st', '2nd', '3rd'] as const
@@ -94,8 +131,19 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
   )
 }
 
-export default function LeaderboardClient({ entries, locale }: { entries: LeaderboardEntry[]; locale: 'en' | 'es' }) {
+export default function LeaderboardClient({
+  entries,
+  locale,
+  periodLabel,
+  nextResetAt,
+}: {
+  entries: LeaderboardEntry[]
+  locale: 'en' | 'es'
+  periodLabel: string
+  nextResetAt: string
+}) {
   const top3 = entries.slice(0, 3)
+  const countdown = useCountdown(nextResetAt)
 
   return (
     <div className="min-h-screen bg-background text-white relative overflow-hidden">
@@ -114,7 +162,9 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
               <span className="absolute hidden sm:inline-flex h-full w-full sm:animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
             </span>
-            <span className="text-sm font-medium text-primary">Leaderboard Snapshot</span>
+            <span className="text-sm font-medium text-primary">
+              Referrals since {periodLabel}
+            </span>
           </div>
           <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl tracking-tight">
             Top Referrers
@@ -122,10 +172,48 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
           <p className="mt-4 text-white/50 text-lg max-w-md mx-auto">
             The gamers bringing the most players to GamerPlug
           </p>
+
+          {/* Countdown to next reset (5th of next month) */}
+          <div className="mt-4 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03]">
+            <div className="flex items-center gap-1.5 text-white/60">
+              <Clock size={14} />
+              <span className="text-xs font-medium">Resets in</span>
+            </div>
+            {countdown.mounted ? (
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+                <div className="flex flex-col items-center min-w-[2rem]">
+                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                    {String(countdown.days).padStart(2, '0')}
+                  </span>
+                  <span className="text-[10px] text-white/40 uppercase tracking-wider">days</span>
+                </div>
+                <div className="flex flex-col items-center min-w-[2rem]">
+                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                    {String(countdown.hours).padStart(2, '0')}
+                  </span>
+                  <span className="text-[10px] text-white/40 uppercase tracking-wider">hrs</span>
+                </div>
+                <div className="flex flex-col items-center min-w-[2rem]">
+                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                    {String(countdown.minutes).padStart(2, '0')}
+                  </span>
+                  <span className="text-[10px] text-white/40 uppercase tracking-wider">min</span>
+                </div>
+                <div className="flex flex-col items-center min-w-[2rem]">
+                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                    {String(countdown.seconds).padStart(2, '0')}
+                  </span>
+                  <span className="text-[10px] text-white/40 uppercase tracking-wider">sec</span>
+                </div>
+              </div>
+            ) : (
+              <div className="h-6 w-32 rounded bg-white/10 animate-pulse" />
+            )}
+          </div>
         </div>
 
         {/* Podium */}
-        {top3.length > 0 && (
+        {top3.length > 0 ? (
           <div className="mb-20 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-end">
             {top3.map((entry, i) => (
               <PodiumCard
@@ -136,7 +224,7 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
               />
             ))}
           </div>
-        )}
+        ) : null}
 
         {/* Table */}
         {entries.length > 0 ? (
@@ -155,7 +243,7 @@ export default function LeaderboardClient({ entries, locale }: { entries: Leader
                   {entries.map((entry) => (
                     <tr
                       key={entry.gamertag}
-                      className="border-b border-white/5 transition-colors sm:hover:bg-white/[0.04] group"
+                      className="border-b border-white/5 transition-colors sm:hover:bg-white/[0.04] group [content-visibility:auto] [contain-intrinsic-size:0_60px]"
                     >
                       <td className="px-6 py-4">
                         {entry.rank <= 3 ? (

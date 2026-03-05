@@ -42,6 +42,32 @@ export interface LeaderboardEntry {
 }
 
 const USER_BATCH_SIZE = 500
+const LEADERBOARD_RESET_DAY = 5
+
+/** Current period starts on the 5th; if today is before the 5th, use previous month's 5th. All UTC. */
+function getPeriodStart(): { iso: string; label: string } {
+  const now = new Date()
+  const year = now.getUTCFullYear()
+  const month = now.getUTCMonth()
+  const day = now.getUTCDate()
+  const periodDate = day >= LEADERBOARD_RESET_DAY
+    ? new Date(Date.UTC(year, month, LEADERBOARD_RESET_DAY))
+    : new Date(Date.UTC(year, month - 1, LEADERBOARD_RESET_DAY))
+  const label = periodDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+  return { iso: periodDate.toISOString(), label }
+}
+
+/** Next reset is the 5th of next month (or this month if we're before the 5th). UTC. */
+function getNextResetAt(): string {
+  const now = new Date()
+  const year = now.getUTCFullYear()
+  const month = now.getUTCMonth()
+  const day = now.getUTCDate()
+  const nextReset = day >= LEADERBOARD_RESET_DAY
+    ? new Date(Date.UTC(year, month + 1, LEADERBOARD_RESET_DAY))
+    : new Date(Date.UTC(year, month, LEADERBOARD_RESET_DAY))
+  return nextReset.toISOString()
+}
 
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = []
@@ -51,16 +77,17 @@ function chunk<T>(items: T[], size: number): T[][] {
   return chunks
 }
 
-async function getLeaderboardEntries(): Promise<LeaderboardEntry[]> {
+async function getLeaderboardEntries(periodStartIso: string): Promise<LeaderboardEntry[]> {
   const supabase = getSupabaseClient()
 
   const { data: referrals, error: referralsError } = await withTimeout(
     supabase
       .from('referrals')
-      .select('referrer, converted'),
+      .select('referrer, converted, created_at')
+      .gte('created_at', periodStartIso),
     QUERY_TIMEOUT_MS,
     'Leaderboard referrals query'
-  ) as { data: Pick<Referral, 'referrer' | 'converted'>[] | null; error: { message?: string } | null }
+  ) as { data: (Pick<Referral, 'referrer' | 'converted'> & { created_at: string })[] | null; error: { message?: string } | null }
 
   if (referralsError) {
     throw new Error(referralsError.message || 'Failed to load referrals')
@@ -113,15 +140,10 @@ async function getLeaderboardEntries(): Promise<LeaderboardEntry[]> {
         conversionRate: stats.total > 0 ? Math.round((stats.converted / stats.total) * 100) : 0,
       }
     })
+    .filter((entry) => entry.convertedReferrals > 0)
     .sort((a, b) => b.convertedReferrals - a.convertedReferrals || b.totalReferrals - a.totalReferrals)
     .map((entry, i) => ({ ...entry, rank: i + 1 }))
 }
-
-const getCachedLeaderboardEntries = unstable_cache(
-  async () => getLeaderboardEntries(),
-  ['leaderboard-entries'],
-  { revalidate: LEADERBOARD_REVALIDATE_SECONDS }
-)
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -131,12 +153,41 @@ export default async function LeaderboardPage({ params }: PageProps) {
   const { locale: rawLocale } = await params
   const locale = rawLocale === 'es' ? 'es' : 'en'
 
+  const { iso: periodStartIso, label: periodLabel } = getPeriodStart()
+  const nextResetAt = getNextResetAt()
+
+  const getCachedLeaderboardEntries = unstable_cache(
+    async () => getLeaderboardEntries(periodStartIso),
+    ['leaderboard-entries-v2', periodStartIso],
+    { revalidate: LEADERBOARD_REVALIDATE_SECONDS }
+  )
+
   try {
     const leaderboard = await getCachedLeaderboardEntries()
+    const clientEntries = leaderboard.map(({ rank, gamertag, profileImageUrl, convertedReferrals }) => ({
+      rank,
+      gamertag,
+      profileImageUrl,
+      convertedReferrals,
+    }))
 
-    return <LeaderboardClient entries={leaderboard} locale={locale} />
+    return (
+      <LeaderboardClient
+        entries={clientEntries}
+        locale={locale}
+        periodLabel={periodLabel}
+        nextResetAt={nextResetAt}
+      />
+    )
   } catch (error) {
     console.error('Leaderboard page failed:', error)
-    return <LeaderboardClient entries={[]} locale={locale} />
+    return (
+      <LeaderboardClient
+        entries={[]}
+        locale={locale}
+        periodLabel={periodLabel}
+        nextResetAt={nextResetAt}
+      />
+    )
   }
 }
