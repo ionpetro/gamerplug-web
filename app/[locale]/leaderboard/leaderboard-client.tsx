@@ -135,15 +135,15 @@ export default function LeaderboardClient({
   entries,
   locale,
   periodLabel,
-  nextResetAt,
+  nextResetAt = null,
 }: {
   entries: LeaderboardEntry[]
   locale: 'en' | 'es'
   periodLabel: string
-  nextResetAt: string
+  nextResetAt?: string | null
 }) {
   const top3 = entries.slice(0, 3)
-  const countdown = useCountdown(nextResetAt)
+  const countdown = useCountdown(nextResetAt || '2099-01-01T00:00:00.000Z')
 
   return (
     <div className="min-h-screen bg-background text-white relative overflow-hidden">
@@ -171,45 +171,54 @@ export default function LeaderboardClient({
           </h1>
           <p className="mt-4 text-white/50 text-lg max-w-md mx-auto">
             The gamers bringing the most players to GamerPlug
+            {' · '}
+            <Link
+              href={`/${locale}/leaderboard/february-2026`}
+              className="text-primary hover:underline font-medium"
+            >
+              Previous month
+            </Link>
           </p>
 
-          {/* Countdown to next reset (5th of next month) */}
-          <div className="mt-4 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03]">
-            <div className="flex items-center gap-1.5 text-white/60">
-              <Clock size={14} />
-              <span className="text-xs font-medium">Resets in</span>
-            </div>
-            {countdown.mounted ? (
-              <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-                <div className="flex flex-col items-center min-w-[2rem]">
-                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
-                    {String(countdown.days).padStart(2, '0')}
-                  </span>
-                  <span className="text-[10px] text-white/40 uppercase tracking-wider">days</span>
-                </div>
-                <div className="flex flex-col items-center min-w-[2rem]">
-                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
-                    {String(countdown.hours).padStart(2, '0')}
-                  </span>
-                  <span className="text-[10px] text-white/40 uppercase tracking-wider">hrs</span>
-                </div>
-                <div className="flex flex-col items-center min-w-[2rem]">
-                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
-                    {String(countdown.minutes).padStart(2, '0')}
-                  </span>
-                  <span className="text-[10px] text-white/40 uppercase tracking-wider">min</span>
-                </div>
-                <div className="flex flex-col items-center min-w-[2rem]">
-                  <span className="text-base sm:text-lg font-bold tabular-nums text-white">
-                    {String(countdown.seconds).padStart(2, '0')}
-                  </span>
-                  <span className="text-[10px] text-white/40 uppercase tracking-wider">sec</span>
-                </div>
+          {/* Countdown to next reset (5th of next month) — only when nextResetAt is set */}
+          {nextResetAt && (
+            <div className="mt-4 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03]">
+              <div className="flex items-center gap-1.5 text-white/60">
+                <Clock size={14} />
+                <span className="text-xs font-medium">Resets in</span>
               </div>
-            ) : (
-              <div className="h-6 w-32 rounded bg-white/10 animate-pulse" />
-            )}
-          </div>
+              {countdown.mounted ? (
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+                  <div className="flex flex-col items-center min-w-[2rem]">
+                    <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                      {String(countdown.days).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">days</span>
+                  </div>
+                  <div className="flex flex-col items-center min-w-[2rem]">
+                    <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                      {String(countdown.hours).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">hrs</span>
+                  </div>
+                  <div className="flex flex-col items-center min-w-[2rem]">
+                    <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                      {String(countdown.minutes).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">min</span>
+                  </div>
+                  <div className="flex flex-col items-center min-w-[2rem]">
+                    <span className="text-base sm:text-lg font-bold tabular-nums text-white">
+                      {String(countdown.seconds).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">sec</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-6 w-32 rounded bg-white/10 animate-pulse" />
+              )}
+            </div>
+          )}
         </div>
 
         {/* Podium */}
