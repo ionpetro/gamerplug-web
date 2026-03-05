@@ -406,10 +406,26 @@ export default function ExplorePage() {
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
           </div>
         ) : !currentUser && !loadingMore ? (
-          <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <Users className="mb-3 h-10 w-10 text-white/30" />
-            <p className="text-lg font-semibold text-white">No gamers left to explore</p>
-            <p className="mt-1 text-sm text-white/60">Check back later for new profiles.</p>
+          <div className="flex flex-1 flex-col items-center justify-center text-center w-full px-6 py-12">
+            <div className="flex flex-col items-center justify-center max-w-lg">
+              <img
+                src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTl5czd2ZDVpYnZiZjBlYjYxdzQyNHQ1amtzaDdkaTYzejB1azRreSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCdPNT81vlv3y/giphy.gif"
+                alt=""
+                className="mb-4 h-[320px] w-[320px] object-contain sm:h-[380px] sm:w-[380px]"
+              />
+              <p className="text-2xl font-semibold text-white sm:text-3xl">Wanna help out?</p>
+              <p className="mt-5 max-w-md text-base leading-relaxed text-white/70 sm:text-lg">
+                We are growing and <span className="font-semibold text-primary">paying everyone</span> that wants to help. Send us a message if you are interested.
+              </p>
+              <a
+                href="https://wa.me/306988617790"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary/90 sm:text-lg"
+              >
+                Shoot us a text
+              </a>
+            </div>
           </div>
         ) : !currentUser && loadingMore ? (
           <div className="flex flex-1 items-center justify-center">
