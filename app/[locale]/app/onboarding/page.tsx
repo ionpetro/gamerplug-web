@@ -9,6 +9,7 @@ import { getPlatformAssetUrl } from '@/lib/assets';
 import { uploadClip, deleteClip, getUserClips } from '@/lib/clips';
 import { Loader2, ChevronLeft, ChevronRight, Check, Gamepad2, User, Calendar, Monitor, Video, PartyPopper, Plus, X, Upload } from 'lucide-react';
 import Image from 'next/image';
+import posthog from 'posthog-js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -715,6 +716,19 @@ export default function OnboardingPage() {
 
       // Refresh auth context to pick up the new profile
       await refreshUser();
+
+      posthog.identify(data.gamertag, {
+        gamertag: data.gamertag,
+        age,
+        platforms: data.platforms,
+        games: data.selectedGames.map((g) => g.display_name),
+      });
+      posthog.capture('onboarding_completed', {
+        gamertag: data.gamertag,
+        age,
+        platforms: data.platforms,
+        games_count: data.selectedGames.length,
+      });
 
       // Redirect to profile
       router.replace(`/en/app/profile/${data.gamertag}`);

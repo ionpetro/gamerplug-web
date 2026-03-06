@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getPostHogClient } from '@/lib/posthog-server'
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -61,6 +62,17 @@ export async function POST(request: NextRequest) {
         error: 'Something went wrong. Please try again.'
       }, { status: 500 })
     }
+
+    const posthog = getPostHogClient()
+    posthog.capture({
+      distinctId: email.toLowerCase().trim(),
+      event: 'referral_submitted',
+      properties: {
+        referrer: validReferrer.gamertag,
+        email: email.toLowerCase().trim(),
+      },
+    })
+    await posthog.shutdown()
 
     return NextResponse.json({
       message: 'Thanks! Redirecting you to download the app...'

@@ -8,6 +8,7 @@ import { Crown, DollarSign, Gamepad2, Loader2, Star, Timer } from 'lucide-react'
 import { useI18n } from '@/components/I18nProvider';
 import { getGameAssetUrl } from '@/lib/assets';
 import { supabase, TABLES } from '@/lib/supabase';
+import posthog from 'posthog-js';
 
 interface FeaturedListing {
   id: string;
@@ -288,10 +289,28 @@ export default function PayToPlayPage() {
             {listings.map((listing) => (
               <article
                 key={listing.id}
-                onClick={() => router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`)}
+                onClick={() => {
+                  posthog.capture('pay_to_play_listing_clicked', {
+                    gamertag: listing.gamertag,
+                    offer_id: listing.offerId,
+                    price_cents: listing.priceCents,
+                    currency: listing.currency,
+                    games: listing.games,
+                    instant_book: listing.instantBook,
+                  });
+                  router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    posthog.capture('pay_to_play_listing_clicked', {
+                      gamertag: listing.gamertag,
+                      offer_id: listing.offerId,
+                      price_cents: listing.priceCents,
+                      currency: listing.currency,
+                      games: listing.games,
+                      instant_book: listing.instantBook,
+                    });
                     router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`);
                   }
                 }}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getPostHogClient } from '@/lib/posthog-server'
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -83,8 +84,18 @@ export async function POST(request: NextRequest) {
       }, { status: 500 })
     }
 
-    return NextResponse.json({ 
-      message: 'Successfully joined the waitlist! We\'ll be in touch soon.' 
+    const posthog = getPostHogClient()
+    posthog.capture({
+      distinctId: email.toLowerCase().trim(),
+      event: 'waitlist_joined',
+      properties: {
+        email: email.toLowerCase().trim(),
+      },
+    })
+    await posthog.shutdown()
+
+    return NextResponse.json({
+      message: 'Successfully joined the waitlist! We\'ll be in touch soon.'
     }, { status: 200 })
 
   } catch (error) {

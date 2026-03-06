@@ -9,6 +9,7 @@ import { useI18n } from '@/components/I18nProvider';
 import { useAuth } from '@/contexts/AuthContext';
 import { getGameAssetUrl } from '@/lib/assets';
 import { supabase, TABLES } from '@/lib/supabase';
+import posthog from 'posthog-js';
 
 interface ListingDetail {
   offerId: string;
@@ -272,6 +273,16 @@ export default function PayToPlayListingPage() {
         return;
       }
 
+      posthog.capture('pay_to_play_booking_requested', {
+        offer_id: listing.offerId,
+        provider_gamertag: listing.gamertag,
+        price_cents: listing.priceCents,
+        currency: listing.currency,
+        duration_minutes: listing.durationMinutes,
+        game_name: listing.gameName,
+        guests,
+        instant_book: listing.instantBook,
+      });
       setMessage({ type: 'success', text: `Booking request sent to @${listing.gamertag}.` });
     } catch (error) {
       console.error('Unexpected booking error:', error);

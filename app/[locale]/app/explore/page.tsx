@@ -7,6 +7,7 @@ import { motion, type PanInfo } from 'framer-motion';
 import { supabase, User, Clip, TABLES } from '@/lib/supabase';
 import { swipeUser } from '@/lib/swipes';
 import { useAuth } from '@/contexts/AuthContext';
+import posthog from 'posthog-js';
 import {
   Heart,
   Loader2,
@@ -245,8 +246,14 @@ export default function ExplorePage() {
 
       // Persist swipe to DB (fire-and-forget for left; check match for right)
       if (authUser?.id) {
+        if (direction === 'right') {
+          posthog.capture('user_swiped_right', { target_gamertag: swipedUser.gamertag });
+        } else {
+          posthog.capture('user_swiped_left', { target_gamertag: swipedUser.gamertag });
+        }
         swipeUser(authUser.id, swipedUser.id, direction).then((result) => {
           if (result.isMatch) {
+            posthog.capture('match_occurred', { matched_gamertag: swipedUser.gamertag });
             setMatchedUser(swipedUser);
             setShowMatchModal(true);
           }

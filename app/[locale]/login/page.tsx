@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/Footer';
 import { Loader2, Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import posthog from 'posthog-js';
 
 const GoogleIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -59,6 +60,8 @@ function LoginContent() {
         setError(result.error);
         setLoading(false);
       } else if (result.needsConfirmation) {
+        posthog.identify(email, { email });
+        posthog.capture('user_signed_up', { method: 'email', email });
         setNeedsConfirmation(true);
         setLoading(false);
       }
@@ -67,8 +70,16 @@ function LoginContent() {
       if (result.error) {
         setError(result.error);
         setLoading(false);
+      } else {
+        posthog.identify(email, { email });
+        posthog.capture('user_signed_in', { method: 'email' });
       }
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    posthog.capture('user_signed_in_google', { method: 'google' });
+    signInWithGoogle();
   };
 
   return (
@@ -140,7 +151,7 @@ function LoginContent() {
 
                   {/* Google Sign In */}
                   <button
-                    onClick={() => signInWithGoogle()}
+                    onClick={handleGoogleSignIn}
                     className="w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 transition-colors mb-6 cursor-pointer"
                   >
                     <GoogleIcon />
