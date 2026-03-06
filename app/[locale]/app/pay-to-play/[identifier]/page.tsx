@@ -283,8 +283,80 @@ export default function PayToPlayListingPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="relative flex-1 overflow-hidden bg-background">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-[-20%] left-[-15%] h-[520px] w-[520px] rounded-full bg-primary/20 blur-[190px]" />
+          <div className="absolute bottom-[-25%] right-[-10%] h-[600px] w-[600px] rounded-full bg-accent/25 blur-[200px]" />
+        </div>
+        <div className="relative container mx-auto max-w-5xl px-6 py-8">
+          <div className="mb-4 h-5 w-24 rounded bg-white/10 animate-pulse" />
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_310px]">
+            <article className="overflow-hidden rounded-2xl bg-white/5">
+              <div className="relative h-[420px] w-full overflow-hidden bg-white/10 animate-pulse sm:h-[520px]" />
+              <div className="flex gap-2 overflow-x-hidden p-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-16 w-24 shrink-0 rounded-lg bg-white/10 animate-pulse" />
+                ))}
+              </div>
+              <div className="flex items-center justify-between px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-11 w-11 rounded-full bg-white/10 animate-pulse" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-32 rounded bg-white/10 animate-pulse" />
+                    <div className="h-3 w-24 rounded bg-white/10 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-5 p-5">
+                <div className="space-y-2">
+                  <div className="h-4 w-full rounded bg-white/10 animate-pulse" />
+                  <div className="h-4 w-4/5 rounded bg-white/10 animate-pulse" />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-8 w-20 rounded-full bg-white/10 animate-pulse" />
+                  ))}
+                </div>
+              </div>
+            </article>
+            <aside className="lg:sticky lg:top-24">
+              <div className="rounded-2xl border border-white/10 bg-card p-4">
+                <div className="mb-3 flex items-baseline justify-between">
+                  <div className="h-7 w-20 rounded bg-white/10 animate-pulse" />
+                  <div className="h-4 w-16 rounded bg-white/10 animate-pulse" />
+                </div>
+                <div className="overflow-hidden rounded-xl border border-white/20">
+                  <div className="grid grid-cols-2">
+                    <div className="border-r border-white/20 bg-black/20 p-3">
+                      <div className="mb-1 h-3 w-14 rounded bg-white/10 animate-pulse" />
+                      <div className="h-8 w-full rounded bg-white/10 animate-pulse" />
+                    </div>
+                    <div className="bg-black/20 p-3">
+                      <div className="mb-1 h-3 w-16 rounded bg-white/10 animate-pulse" />
+                      <div className="h-8 w-full rounded bg-white/10 animate-pulse" />
+                    </div>
+                  </div>
+                  <div className="border-t border-white/20 bg-black/20 p-3">
+                    <div className="mb-1 h-3 w-12 rounded bg-white/10 animate-pulse" />
+                    <div className="h-8 w-full rounded bg-white/10 animate-pulse" />
+                  </div>
+                </div>
+                <div className="mt-3 h-10 w-full rounded-xl bg-white/10 animate-pulse" />
+                <div className="mt-3 h-3 w-full rounded bg-white/10 animate-pulse" />
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-white/15 bg-black/20 p-2">
+                    <div className="mb-1 h-3 w-10 rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-14 rounded bg-white/10 animate-pulse" />
+                  </div>
+                  <div className="rounded-lg border border-white/15 bg-black/20 p-2">
+                    <div className="mb-1 h-3 w-14 rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-12 rounded bg-white/10 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
       </div>
     );
   }
