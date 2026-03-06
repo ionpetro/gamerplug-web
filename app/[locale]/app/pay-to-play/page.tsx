@@ -246,13 +246,45 @@ export default function PayToPlayPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
+              >
+                <div className="relative h-56 w-full bg-white/10 animate-pulse" />
+                <div className="space-y-3 p-3">
+                  <div className="h-3 w-full rounded bg-white/10 animate-pulse" />
+                  <div className="h-3 w-4/5 rounded bg-white/10 animate-pulse" />
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3].map((j) => (
+                      <div key={j} className="h-6 w-16 rounded-full bg-white/10 animate-pulse" />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-4 w-10 rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-16 rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-14 rounded bg-white/10 animate-pulse" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <div className="rounded-xl border border-white/15 bg-black/20 p-3">
+                      <div className="mb-1 h-3 w-16 rounded bg-white/10 animate-pulse" />
+                      <div className="h-4 w-12 rounded bg-white/10 animate-pulse" />
+                    </div>
+                    <div className="rounded-xl border border-white/15 bg-black/20 p-3">
+                      <div className="mb-1 h-3 w-14 rounded bg-white/10 animate-pulse" />
+                      <div className="h-4 w-10 rounded bg-white/10 animate-pulse" />
+                    </div>
+                  </div>
+                  <div className="h-10 w-full rounded-lg bg-white/10 animate-pulse" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : listings.length === 0 ? (
           <p className="text-white/60">No featured listings found yet. Activate featured profiles and offers in Supabase.</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {listings.map((listing) => (
               <article
                 key={listing.id}
