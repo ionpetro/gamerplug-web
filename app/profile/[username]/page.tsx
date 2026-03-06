@@ -73,7 +73,7 @@ function ProfileSkeleton() {
 
               <div className="flex-1">
                 <SkeletonLine className="h-6 w-20 mb-4 lg:mb-6 animate-pulse" />
-                <div className="grid grid-cols-3 gap-2 lg:grid-cols-5 xl:grid-cols-6 lg:gap-4">
+                <div className="grid grid-cols-3 gap-2 lg:gap-4">
                   {clipSkeletons.map((_, idx) => (
                     <div
                       key={`clip-skeleton-${idx}`}
@@ -450,7 +450,7 @@ export default function UserProfilePage() {
                 <h3 className="text-lg font-semibold mb-4 text-white lg:text-2xl lg:mb-6">Clips</h3>
                 
                 {clips.length > 0 ? (
-                  <div className="grid grid-cols-3 gap-2 lg:grid-cols-5 xl:grid-cols-6 lg:gap-4">
+                  <div className="grid grid-cols-3 gap-2 lg:gap-4">
                 {clips.map((clip) => (
                   <button
                     key={clip.id}
