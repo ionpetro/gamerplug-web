@@ -416,8 +416,12 @@ export default function PayToPlayListingPage() {
               <p className="text-white/85">{listing.description}</p>
 
               <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-3 py-1 text-white/85">
-                  <Image src={getGameAssetUrl(listing.gameName)} alt={listing.gameName} width={14} height={14} className="rounded-sm" unoptimized />
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-black/20 px-3 py-1 text-white/85">
+                  {listing.gameName === 'Any Game' ? (
+                    <Gamepad2 size={14} className="shrink-0" />
+                  ) : (
+                    <Image src={getGameAssetUrl(listing.gameName)} alt={listing.gameName} width={14} height={14} className="rounded-sm shrink-0" unoptimized />
+                  )}
                   {listing.gameName}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-3 py-1 text-white/85">
