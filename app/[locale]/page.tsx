@@ -20,7 +20,7 @@ export default function LocalizedHome() {
         },
         sameAs: [
           'https://x.com/The_Gamer_Plug',
-          'https://discord.gg/gamerplug',
+          'https://discord.gg/3Z2nh37saV',
           'https://www.tiktok.com/@thegamerplugapp',
           'https://www.linkedin.com/company/gamer-plug',
         ],
