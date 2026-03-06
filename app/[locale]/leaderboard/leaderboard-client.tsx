@@ -223,7 +223,7 @@ export default function LeaderboardClient({
 
         {/* Podium */}
         {top3.length > 0 ? (
-          <div className="mb-20 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-end">
+          <div className={`mb-20 gap-4 sm:items-end ${top3.length === 1 ? 'flex justify-center' : 'grid grid-cols-1 sm:grid-cols-3'}`}>
             {top3.map((entry, i) => (
               <PodiumCard
                 key={entry.gamertag}
