@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase, User, TABLES } from '@/lib/supabase';
 import { getPlatformAssetUrl } from '@/lib/assets';
 import { useI18n } from '@/components/I18nProvider';
-import { Users, MessageCircle, Loader2, Heart, Sparkles, LayoutGrid, List, Gamepad2 } from 'lucide-react';
+import { Users, MessageCircle, Loader2, Heart, Sparkles, LayoutGrid, List } from 'lucide-react';
 
 interface Match {
   id: string;
@@ -119,13 +119,6 @@ export default function MatchesPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              href={`/${locale}/app/play-now`}
-              className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/15 px-3 py-2 text-sm font-medium text-primary hover:bg-primary/20"
-            >
-              <Gamepad2 size={16} />
-              Play Now
-            </Link>
             <div className="flex items-center gap-1 p-1 bg-white/5 rounded-lg border border-white/10">
               <button
                 onClick={() => setViewMode('grid')}

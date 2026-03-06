@@ -67,7 +67,7 @@ export default function PayToPlayPage() {
           return;
         }
 
-        const [usersResponse, offersResponse] = await Promise.all([
+        const [usersResponse, offersResponse, userGamesResponse] = await Promise.all([
           supabase
             .from(TABLES.USERS)
             .select('id,gamertag,bio,profile_image_url')
@@ -79,6 +79,10 @@ export default function PayToPlayPage() {
             )
             .eq('is_active', true)
             .in('provider_id', providerIds),
+          supabase
+            .from(TABLES.USER_GAMES)
+            .select('user_id, game_id')
+            .in('user_id', providerIds),
         ]);
 
         if (usersResponse.error) {
@@ -97,6 +101,34 @@ export default function PayToPlayPage() {
         if (offers.length === 0) {
           setListings([]);
           return;
+        }
+
+        const userGamesRows = userGamesResponse.data ?? [];
+        const gameIds = [...new Set(userGamesRows.map((r) => r.game_id).filter(Boolean))];
+        let gamesById: Record<string, { display_name: string | null; name: string }> = {};
+        if (gameIds.length > 0) {
+          const { data: gamesData } = await supabase
+            .from(TABLES.GAMES)
+            .select('id, display_name, name')
+            .in('id', gameIds);
+          gamesById = (gamesData ?? []).reduce<Record<string, { display_name: string | null; name: string }>>(
+            (acc, g) => {
+              acc[g.id] = { display_name: g.display_name ?? null, name: g.name };
+              return acc;
+            },
+            {}
+          );
+        }
+        const gamesByProviderId: Record<string, string[]> = {};
+        for (const row of userGamesRows) {
+          const game = gamesById[row.game_id];
+          if (!game) continue;
+          const label = game.display_name ?? game.name ?? '';
+          if (!label) continue;
+          if (!gamesByProviderId[row.user_id]) gamesByProviderId[row.user_id] = [];
+          if (!gamesByProviderId[row.user_id].includes(label)) {
+            gamesByProviderId[row.user_id].push(label);
+          }
         }
 
         const { data: media, error: mediaError } = await supabase
@@ -144,7 +176,13 @@ export default function PayToPlayPage() {
               return null;
             }
 
-            const games = offer.game_name ? [offer.game_name] : ['Any Game'];
+            const userGames = gamesByProviderId[offer.provider_id];
+            const games =
+              userGames && userGames.length > 0
+                ? userGames
+                : offer.game_name
+                  ? [offer.game_name]
+                  : ['Any Game'];
 
             return {
               id: `${offer.provider_id}-${offer.id}`,
@@ -194,10 +232,10 @@ export default function PayToPlayPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
       </div>
 
-      <div className="relative container mx-auto max-w-7xl px-6 py-8">
-        <div className="mb-8 flex items-center justify-between gap-3">
+      <div className="relative container mx-auto px-6 py-8 max-w-4xl">
+        <div className="mb-8 flex items-start justify-between gap-4">
           <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold">
+            <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
               <Crown className="text-primary" />
               Pay to Play
             </h1>
@@ -205,22 +243,16 @@ export default function PayToPlayPage() {
               Book sessions with featured gamers. Choose hourly coaching or pay per match.
             </p>
           </div>
-          <Link
-            href={`/${locale}/app/matches`}
-            className="rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm hover:bg-white/10"
-          >
-            Back to Matches
-          </Link>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-7 w-7 animate-spin text-primary" />
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : listings.length === 0 ? (
           <p className="text-white/60">No featured listings found yet. Activate featured profiles and offers in Supabase.</p>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {listings.map((listing) => (
               <article
                 key={listing.id}
