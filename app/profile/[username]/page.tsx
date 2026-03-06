@@ -252,12 +252,13 @@ export default function UserProfilePage() {
                       className="rounded-full lg:w-28 lg:h-28 xl:w-32 xl:h-32"
                     />
                   ) : (
-                    <div className="w-[100px] h-[100px] lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full bg-white/10 flex items-center justify-center">
-                      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2" className="lg:w-12 lg:h-12">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                      </svg>
-                    </div>
+                    <Image
+                      src="/images/logo-no-back.png"
+                      alt="Profile"
+                      width={100}
+                      height={100}
+                      className="w-[100px] h-[100px] lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full object-contain opacity-60"
+                    />
                   )}
                 </div>
                 

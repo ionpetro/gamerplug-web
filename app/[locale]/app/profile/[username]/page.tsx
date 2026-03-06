@@ -548,15 +548,13 @@ export default function AuthenticatedProfilePage() {
                     className="w-28 h-28 rounded-full object-cover border-2 border-white/10"
                   />
                 ) : (
-                  <div className="w-28 h-28 rounded-full bg-white/10 flex items-center justify-center border-2 border-white/10">
-                    <Image
-                      src="/logo.png"
-                      alt="Default Avatar"
-                      width={60}
-                      height={60}
-                      className="opacity-50"
-                    />
-                  </div>
+                  <Image
+                    src="/images/logo-no-back.png"
+                    alt="Profile"
+                    width={112}
+                    height={112}
+                    className="w-28 h-28 rounded-full object-contain opacity-60 border-2 border-white/10"
+                  />
                 )}
                 {isOwnProfile && (
                   <button
