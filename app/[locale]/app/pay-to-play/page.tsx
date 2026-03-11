@@ -4,29 +4,27 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Crown, DollarSign, Gamepad2, Loader2, Star, Timer } from 'lucide-react';
+import { Calendar, Crown, DollarSign, Gamepad2, LayoutDashboard, Loader2, Star } from 'lucide-react';
 import { useI18n } from '@/components/I18nProvider';
 import { getGameAssetUrl } from '@/lib/assets';
 import { supabase, TABLES } from '@/lib/supabase';
 import posthog from 'posthog-js';
 
-interface FeaturedListing {
-  id: string;
-  offerId: string;
+interface HostCard {
   providerId: string;
   gamertag: string;
   profileImageUrl?: string;
   heroImageUrl?: string;
-  title: string;
+  headline: string;
   bio: string;
   games: string[];
   rating: number;
   completedSessions: number;
-  priceCents: number;
+  lowestPriceCents: number;
   currency: string;
-  durationMinutes: number;
+  offerCount: number;
   locationType: string;
-  instantBook: boolean;
+  hasInstantBook: boolean;
   featuredRank: number | null;
 }
 
@@ -40,7 +38,7 @@ const formatPrice = (priceCents: number, currency: string) =>
 export default function PayToPlayPage() {
   const { locale } = useI18n();
   const router = useRouter();
-  const [listings, setListings] = useState<FeaturedListing[]>([]);
+  const [hosts, setHosts] = useState<HostCard[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -58,13 +56,13 @@ export default function PayToPlayPage() {
 
         if (profilesError) {
           console.error('Error loading featured pay-to-play profiles:', profilesError);
-          setListings([]);
+          setHosts([]);
           return;
         }
 
         const providerIds = [...new Set((profiles ?? []).map((profile) => profile.user_id))];
         if (providerIds.length === 0) {
-          setListings([]);
+          setHosts([]);
           return;
         }
 
@@ -88,19 +86,19 @@ export default function PayToPlayPage() {
 
         if (usersResponse.error) {
           console.error('Error loading featured users for pay-to-play:', usersResponse.error);
-          setListings([]);
+          setHosts([]);
           return;
         }
 
         if (offersResponse.error) {
           console.error('Error loading pay-to-play listings:', offersResponse.error);
-          setListings([]);
+          setHosts([]);
           return;
         }
 
         const offers = offersResponse.data ?? [];
         if (offers.length === 0) {
-          setListings([]);
+          setHosts([]);
           return;
         }
 
@@ -134,7 +132,7 @@ export default function PayToPlayPage() {
 
         const { data: media, error: mediaError } = await supabase
           .from(TABLES.PAY_TO_PLAY_LISTING_MEDIA)
-          .select('offer_id,media_url,is_cover,sort_order')
+          .select('offer_id,media_url,media_type,is_cover,sort_order')
           .in(
             'offer_id',
             offers.map((offer) => offer.id)
@@ -162,61 +160,76 @@ export default function PayToPlayPage() {
           {}
         );
 
+        // Prefer image media for card hero; skip videos (they can't render in <Image>)
         const mediaByOffer = (media ?? []).reduce<Record<string, string>>((acc, item) => {
-          if (!acc[item.offer_id]) {
+          if (!acc[item.offer_id] && item.media_type !== 'video') {
             acc[item.offer_id] = item.media_url;
           }
           return acc;
         }, {});
 
-        const next = offers
-          .map((offer) => {
-            const profile = profilesByProvider[offer.provider_id];
-            const user = usersById[offer.provider_id];
-            if (!profile || !user?.gamertag) {
-              return null;
+        // Group offers by provider to create one card per host
+        const hostMap = new Map<string, HostCard>();
+
+        for (const offer of offers) {
+          const profile = profilesByProvider[offer.provider_id];
+          const user = usersById[offer.provider_id];
+          if (!profile || !user?.gamertag) continue;
+
+          const priceCents = Number(offer.price_cents ?? 0);
+
+          if (hostMap.has(offer.provider_id)) {
+            const existing = hostMap.get(offer.provider_id)!;
+            existing.offerCount += 1;
+            if (priceCents < existing.lowestPriceCents) {
+              existing.lowestPriceCents = priceCents;
+              existing.currency = offer.currency || 'USD';
             }
+            if (offer.instant_book) existing.hasInstantBook = true;
+            if (!existing.heroImageUrl && mediaByOffer[offer.id]) {
+              existing.heroImageUrl = mediaByOffer[offer.id];
+            }
+            continue;
+          }
 
-            const userGames = gamesByProviderId[offer.provider_id];
-            const games =
-              userGames && userGames.length > 0
-                ? userGames
-                : offer.game_name
-                  ? [offer.game_name]
-                  : ['Any Game'];
+          const userGames = gamesByProviderId[offer.provider_id];
+          const games =
+            userGames && userGames.length > 0
+              ? userGames
+              : offer.game_name
+                ? [offer.game_name]
+                : ['Any Game'];
 
-            return {
-              id: `${offer.provider_id}-${offer.id}`,
-              offerId: offer.id,
-              providerId: offer.provider_id,
-              gamertag: user.gamertag,
-              profileImageUrl: user.profile_image_url,
-              heroImageUrl: mediaByOffer[offer.id],
-              title: offer.title?.trim() || profile.headline || 'Game Session',
-              bio: offer.description?.trim() || profile.about?.trim() || user.bio?.trim() || 'No description yet.',
-              games: games.slice(0, 3),
-              rating: Number(profile.average_rating ?? 0),
-              completedSessions: Number(profile.total_completed_bookings ?? 0),
-              priceCents: Number(offer.price_cents ?? 0),
-              currency: offer.currency || 'USD',
-              durationMinutes: Number(offer.duration_minutes ?? 60),
-              locationType: offer.location_type || 'online',
-              instantBook: Boolean(offer.instant_book),
-              featuredRank: profile.featured_rank,
-            } as FeaturedListing;
-          })
-          .filter((listing): listing is FeaturedListing => Boolean(listing))
-          .sort((a, b) => {
-            const rankA = a.featuredRank ?? Number.MAX_SAFE_INTEGER;
-            const rankB = b.featuredRank ?? Number.MAX_SAFE_INTEGER;
-            if (rankA !== rankB) return rankA - rankB;
-            return b.rating - a.rating;
+          hostMap.set(offer.provider_id, {
+            providerId: offer.provider_id,
+            gamertag: user.gamertag,
+            profileImageUrl: user.profile_image_url,
+            heroImageUrl: mediaByOffer[offer.id],
+            headline: profile.headline || offer.title?.trim() || 'Game Session',
+            bio: profile.about?.trim() || user.bio?.trim() || 'No description yet.',
+            games: games.slice(0, 3),
+            rating: Number(profile.average_rating ?? 0),
+            completedSessions: Number(profile.total_completed_bookings ?? 0),
+            lowestPriceCents: priceCents,
+            currency: offer.currency || 'USD',
+            offerCount: 1,
+            locationType: offer.location_type || 'online',
+            hasInstantBook: Boolean(offer.instant_book),
+            featuredRank: profile.featured_rank,
           });
+        }
 
-        setListings(next);
+        const next = Array.from(hostMap.values()).sort((a, b) => {
+          const rankA = a.featuredRank ?? Number.MAX_SAFE_INTEGER;
+          const rankB = b.featuredRank ?? Number.MAX_SAFE_INTEGER;
+          if (rankA !== rankB) return rankA - rankB;
+          return b.rating - a.rating;
+        });
+
+        setHosts(next);
       } catch (error) {
         console.error('Unexpected error loading pay-to-play marketplace listings:', error);
-        setListings([]);
+        setHosts([]);
       } finally {
         setLoading(false);
       }
@@ -243,6 +256,29 @@ export default function PayToPlayPage() {
             <p className="text-white/60">
               Book sessions with featured gamers. Choose hourly coaching or pay per match.
             </p>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <Link
+              href={`/${locale}/app/pay-to-play/bookings`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white/70 transition hover:bg-white/10 hover:text-white"
+            >
+              <Calendar size={14} />
+              <span className="hidden sm:inline">My Bookings</span>
+            </Link>
+            <Link
+              href={`/${locale}/app/pay-to-play/become-host`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition hover:bg-primary/20"
+            >
+              <Crown size={14} />
+              <span className="hidden sm:inline">Become a Host</span>
+            </Link>
+            <Link
+              href={`/${locale}/app/pay-to-play/dashboard`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white/70 transition hover:bg-white/10 hover:text-white"
+            >
+              <LayoutDashboard size={14} />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Link>
           </div>
         </div>
 
@@ -282,76 +318,79 @@ export default function PayToPlayPage() {
               </div>
             ))}
           </div>
-        ) : listings.length === 0 ? (
+        ) : hosts.length === 0 ? (
           <p className="text-white/60">No featured listings found yet. Activate featured profiles and offers in Supabase.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {listings.map((listing) => (
+            {hosts.map((host) => (
               <article
-                key={listing.id}
+                key={host.providerId}
                 onClick={() => {
                   posthog.capture('pay_to_play_listing_clicked', {
-                    gamertag: listing.gamertag,
-                    offer_id: listing.offerId,
-                    price_cents: listing.priceCents,
-                    currency: listing.currency,
-                    games: listing.games,
-                    instant_book: listing.instantBook,
+                    gamertag: host.gamertag,
+                    price_cents: host.lowestPriceCents,
+                    currency: host.currency,
+                    games: host.games,
+                    offer_count: host.offerCount,
                   });
-                  router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`);
+                  router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(host.gamertag)}`);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     posthog.capture('pay_to_play_listing_clicked', {
-                      gamertag: listing.gamertag,
-                      offer_id: listing.offerId,
-                      price_cents: listing.priceCents,
-                      currency: listing.currency,
-                      games: listing.games,
-                      instant_book: listing.instantBook,
+                      gamertag: host.gamertag,
+                      price_cents: host.lowestPriceCents,
+                      currency: host.currency,
+                      games: host.games,
+                      offer_count: host.offerCount,
                     });
-                    router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`);
+                    router.push(`/${locale}/app/pay-to-play/${encodeURIComponent(host.gamertag)}`);
                   }
                 }}
                 role="button"
                 tabIndex={0}
-                className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-200 hover:border-primary/40 hover:bg-white/[0.07]"
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-200 hover:border-primary/40 hover:bg-white/[0.07]"
               >
-                <div className="relative h-56 overflow-hidden bg-gradient-to-br from-red-500/25 via-black/40 to-zinc-900/80">
-                  {listing.heroImageUrl || listing.profileImageUrl ? (
+                <div className="relative h-44 shrink-0 overflow-hidden bg-gradient-to-br from-red-500/25 via-black/40 to-zinc-900/80">
+                  {(host.heroImageUrl || host.profileImageUrl) ? (
                     <Image
-                      src={listing.heroImageUrl || listing.profileImageUrl || ''}
-                      alt={listing.gamertag}
+                      src={host.heroImageUrl || host.profileImageUrl || ''}
+                      alt={host.gamertag}
                       fill
                       className="object-cover object-center opacity-90"
                       unoptimized
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
-                  ) : null}
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Gamepad2 size={40} className="text-white/15" />
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-                  <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
-                    <Crown size={12} />
+                  <div className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/20 px-2 py-0.5 text-[10px] font-medium text-primary">
+                    <Crown size={10} />
                     Featured
                   </div>
-                  {listing.instantBook && (
-                    <div className="absolute right-3 top-3 rounded-full border border-emerald-300/40 bg-emerald-500/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-200">
+                  {host.hasInstantBook && (
+                    <div className="absolute right-2.5 top-2.5 rounded-full border border-emerald-300/40 bg-emerald-500/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-200">
                       Instant
                     </div>
                   )}
-                  <div className="absolute bottom-3 left-3">
-                    <p className="text-base font-semibold">@{listing.gamertag}</p>
-                    <p className="line-clamp-1 text-xs text-white/70">{listing.title}</p>
+                  <div className="absolute bottom-2.5 left-2.5">
+                    <p className="text-sm font-semibold">@{host.gamertag}</p>
+                    <p className="line-clamp-1 text-[11px] text-white/70">{host.headline}</p>
                   </div>
                 </div>
 
-                <div className="space-y-3 p-3">
-                  <p className="line-clamp-2 text-xs text-white/80">{listing.bio}</p>
+                <div className="flex flex-1 flex-col gap-2 p-2.5">
+                  <p className="line-clamp-2 text-[11px] text-white/80">{host.bio}</p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {(listing.games.length > 0 ? listing.games : ['Any Game']).slice(0, 3).map((game) => (
+                  <div className="flex min-h-[24px] flex-wrap gap-1.5">
+                    {(host.games.length > 0 ? host.games : ['Any Game']).slice(0, 3).map((game) => (
                       <span
                         key={game}
-                        className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-xs text-white/85"
+                        className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/20 px-2 py-0.5 text-[11px] text-white/85"
                       >
                         {game !== 'Any Game' ? (
                           <Image
@@ -370,41 +409,33 @@ export default function PayToPlayPage() {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs text-white/80">
+                  <div className="flex items-center gap-2.5 text-[11px] text-white/80">
                     <span className="inline-flex items-center gap-1">
-                      <Star size={14} className="text-primary" />
-                      {listing.rating.toFixed(1)}
+                      <Star size={12} className="text-primary" />
+                      {host.rating.toFixed(1)}
                     </span>
-                    <span>{listing.completedSessions} sessions</span>
-                    <span className="rounded-full border border-white/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-white/65">
-                      {listing.locationType.replaceAll('_', ' ')}
+                    <span>{host.completedSessions} sessions</span>
+                    <span className="rounded-full border border-white/15 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-white/65">
+                      {host.locationType.replaceAll('_', ' ')}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <div className="rounded-xl border border-white/15 bg-black/20 p-3">
-                      <p className="mb-1 inline-flex items-center gap-1 text-xs text-white/60">
-                        <DollarSign size={12} />
-                        Listing Price
+                  <div className="mt-auto space-y-2">
+                    <div className="flex items-center justify-between rounded-lg border border-white/15 bg-black/20 px-2.5 py-2">
+                      <p className="text-[10px] text-white/60">
+                        {host.offerCount > 1
+                          ? <>{host.offerCount} offers, starting price</>
+                          : 'Price'}
                       </p>
-                      <p className="text-xs font-semibold">{formatPrice(listing.priceCents, listing.currency)}</p>
+                      <span className="text-xs font-semibold text-white">{formatPrice(host.lowestPriceCents, host.currency)}</span>
                     </div>
-                    <div className="rounded-xl border border-white/15 bg-black/20 p-3">
-                      <p className="mb-1 inline-flex items-center gap-1 text-xs text-white/60">
-                        <Timer size={12} />
-                        Duration
-                      </p>
-                      <p className="text-xs font-semibold">{listing.durationMinutes} min</p>
-                    </div>
-                  </div>
 
-                  <div className="flex">
                     <Link
-                      href={`/${locale}/app/pay-to-play/${encodeURIComponent(listing.gamertag)}`}
-                      className="inline-flex h-10 w-full items-center justify-center gap-1 rounded-lg bg-primary px-4 text-sm font-medium text-white transition hover:bg-primary/90"
+                      href={`/${locale}/app/pay-to-play/${encodeURIComponent(host.gamertag)}`}
+                      className="inline-flex h-9 w-full items-center justify-center gap-1 rounded-lg bg-primary px-3 text-xs font-medium text-white transition hover:bg-primary/90"
                     >
-                      <Gamepad2 size={14} />
-                      Play
+                      <Gamepad2 size={13} />
+                      {host.offerCount > 1 ? 'View Offers' : 'Play'}
                     </Link>
                   </div>
                 </div>

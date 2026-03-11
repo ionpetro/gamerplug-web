@@ -42,6 +42,8 @@ yarn-error.log*
 .agent*/
 skills/
 skills-lock.json
+.claude*
+
 
 # typescript
 *.tsbuildinfo
