@@ -6,6 +6,11 @@ export interface SwipeResult {
   matchId?: string;
 }
 
+export interface ClearLeftSwipesResult {
+  success: boolean;
+  deletedCount: number;
+}
+
 export const swipeUser = async (
   fromUserId: string,
   toUserId: string,
@@ -47,5 +52,26 @@ export const swipeUser = async (
   } catch (error) {
     console.error('Swipe operation error:', error);
     return { success: false };
+  }
+};
+
+export const clearLeftSwipes = async (userId: string): Promise<ClearLeftSwipesResult> => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLES.SWIPES)
+      .delete()
+      .eq('from_user_id', userId)
+      .eq('direction', 'left')
+      .select('id');
+
+    if (error) {
+      console.error('Clear left swipes error:', error);
+      return { success: false, deletedCount: 0 };
+    }
+
+    return { success: true, deletedCount: data?.length ?? 0 };
+  } catch (error) {
+    console.error('Clear left swipes unexpected error:', error);
+    return { success: false, deletedCount: 0 };
   }
 };

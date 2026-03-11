@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, type PanInfo } from 'framer-motion';
 import { supabase, User, Clip, TABLES } from '@/lib/supabase';
-import { swipeUser } from '@/lib/swipes';
+import { clearLeftSwipes, swipeUser } from '@/lib/swipes';
 import { useAuth } from '@/contexts/AuthContext';
 import posthog from 'posthog-js';
 import {
@@ -76,6 +76,7 @@ export default function ExplorePage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [matchedUser, setMatchedUser] = useState<UserWithClips | null>(null);
+  const [isRefreshingDiscovery, setIsRefreshingDiscovery] = useState(false);
   const seenUserIds = useRef(new Set<string>());
   const PAGE_SIZE = 20;
 
@@ -363,6 +364,34 @@ export default function ExplorePage() {
     setIsProfileOpen(false);
   }, []);
 
+  const handleRefreshDiscovery = useCallback(async () => {
+    if (!authUser?.id || isRefreshingDiscovery) return;
+
+    const shouldRefresh = window.confirm(
+      'Refresh Discovery?\n\nGive anyone you swiped left on, a second chance.'
+    );
+
+    if (!shouldRefresh) return;
+
+    setIsRefreshingDiscovery(true);
+    try {
+      const result = await clearLeftSwipes(authUser.id);
+      if (!result.success) {
+        window.alert('Could not refresh discovery. Please try again.');
+        return;
+      }
+
+      seenUserIds.current.clear();
+      setHasMore(true);
+      await fetchUsers(true);
+    } catch (error) {
+      console.error('Refresh discovery error:', error);
+      window.alert('Could not refresh discovery. Please try again.');
+    } finally {
+      setIsRefreshingDiscovery(false);
+    }
+  }, [authUser?.id, fetchUsers, isRefreshingDiscovery]);
+
   useEffect(() => {
     if (!currentUser || loading) return;
 
@@ -413,7 +442,7 @@ export default function ExplorePage() {
             <Loader2 className="h-8 w-8 animate-spin text-white/80" />
           </div>
         ) : !currentUser && !loadingMore ? (
-          <div className="flex flex-1 flex-col items-center justify-center text-center w-full px-6 py-12">
+          <div className="flex flex-1 flex-col items-center justify-between text-center w-full px-6 pt-12 pb-0">
             <div className="flex flex-col items-center justify-center max-w-lg">
               <img
                 src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTl5czd2ZDVpYnZiZjBlYjYxdzQyNHQ1amtzaDdkaTYzejB1azRreSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCdPNT81vlv3y/giphy.gif"
@@ -433,6 +462,15 @@ export default function ExplorePage() {
                 Shoot us a text
               </a>
             </div>
+
+            <button
+              type="button"
+              onClick={handleRefreshDiscovery}
+              disabled={isRefreshingDiscovery}
+              className="mb-[calc(env(safe-area-inset-bottom)+12px)] text-sm font-semibold text-white underline underline-offset-4 transition-opacity hover:opacity-80 disabled:opacity-60"
+            >
+              {isRefreshingDiscovery ? 'Refreshing...' : 'Refresh Discovery'}
+            </button>
           </div>
         ) : !currentUser && loadingMore ? (
           <div className="flex flex-1 items-center justify-center">
