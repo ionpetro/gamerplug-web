@@ -5,7 +5,7 @@ import { Loader2, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useI18n } from '@/components/I18nProvider';
 
-const ALLOWED_GAMERTAGS = ['abed42', 'ionp', 'TheStephanos'];
+const ALLOWED_GAMERTAGS = ['abed42', 'ionp', 'TheStephanos', 'TheMangler'];
 
 export default function PayToPlayLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
