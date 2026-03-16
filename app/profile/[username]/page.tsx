@@ -312,7 +312,7 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <div className="mb-3 flex items-center justify-center gap-2 lg:justify-start">
+                  <div className="mb-3 flex items-center justify-center gap-2">
                     <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl font-space-mono">
                       @{user.gamertag}
                     </h2>
