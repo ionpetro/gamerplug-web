@@ -17,6 +17,8 @@ export interface User {
   id: string;
   steam_id?: string;
   gamertag: string;
+  referred_by?: string | null;
+  referred_by_user_id?: string | null;
   platform?: ('PC' | 'PS5' | 'Xbox' | 'Nintendo Switch')[];
   bio?: string;
   profile_image_url?: string;
@@ -83,6 +85,7 @@ export interface Game {
 export interface Referral {
   id: string;
   referrer: string;
+  referrer_user_id?: string | null;
   email: string;
   converted: boolean;
   created_at: string;

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { LoLPlayerStats, LeagueEntry, getRankDisplay } from '@/lib/riot-api';
+import { LoLPlayerStats } from '@/lib/riot-api';
 
 interface LoLStatsProps {
   playerId: string;
@@ -94,20 +94,7 @@ export default function LoLStats({ playerId }: LoLStatsProps) {
   }
 
   if (error || !stats) {
-    return (
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-red-500/10 via-transparent to-orange-500/10 p-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="15" y1="9" x2="9" y2="15"/>
-              <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-          </div>
-          <p className="text-sm text-white/60">{error || 'Stats unavailable'}</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const getTierColor = (tier: string) => {

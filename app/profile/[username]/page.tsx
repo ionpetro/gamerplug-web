@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase, User, Clip, Game, UserGame, TABLES } from '@/lib/supabase';
@@ -12,6 +13,17 @@ import { getGameAssetUrl, getPlatformAssetUrl } from '@/lib/assets';
 
 interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
+}
+
+interface ReferrerProfile {
+  gamertag: string;
+  profile_image_url?: string | null;
+}
+
+interface ReferredUserProfile {
+  id: string;
+  gamertag: string;
+  profile_image_url?: string | null;
 }
 
 const SkeletonLine = ({ className = "" }: { className?: string }) => (
@@ -96,8 +108,11 @@ function ProfileSkeleton() {
 export default function UserProfilePage() {
   const params = useParams();
   const username = params.username as string;
+  const locale = params.locale === 'es' ? 'es' : 'en';
   
   const [user, setUser] = useState<UserWithGames | null>(null);
+  const [referrerProfile, setReferrerProfile] = useState<ReferrerProfile | null>(null);
+  const [referredUsers, setReferredUsers] = useState<ReferredUserProfile[]>([]);
   const [clips, setClips] = useState<Clip[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -114,6 +129,8 @@ export default function UserProfilePage() {
     try {
       setLoading(true);
       setError(null);
+      setReferrerProfile(null);
+      setReferredUsers([]);
 
       console.log('Searching for user with gamertag:', username);
 
@@ -140,23 +157,55 @@ export default function UserProfilePage() {
 
       setUser(userData);
 
-      // Fetch user's public clips
-      const currentUser = userData;
-      if (currentUser?.id) {
-        const { data: clipsData, error: clipsError } = await supabase
-          .from(TABLES.CLIPS)
-          .select('*')
-          .eq('user_id', currentUser.id)
-          .eq('is_public', true)
-          .order('created_at', { ascending: false });
+      const clipsPromise = supabase
+        .from(TABLES.CLIPS)
+        .select('*')
+        .eq('user_id', userData.id)
+        .eq('is_public', true)
+        .order('created_at', { ascending: false });
 
-        console.log('Clips query result:', { data: clipsData, error: clipsError });
+      const referrerPromise = userData.referred_by_user_id
+        ? supabase
+            .from(TABLES.USERS)
+            .select('gamertag, profile_image_url')
+            .eq('id', userData.referred_by_user_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null });
 
-        if (clipsError) {
-          console.error('Error fetching clips:', clipsError);
-        } else {
-          setClips(clipsData || []);
-        }
+      const referredUsersPromise = supabase
+        .from(TABLES.USERS)
+        .select('id, gamertag, profile_image_url')
+        .eq('referred_by_user_id', userData.id)
+        .order('created_at', { ascending: false });
+
+      const [
+        { data: clipsData, error: clipsError },
+        { data: referrerData, error: referrerError },
+        { data: referredUsersData, error: referredUsersError },
+      ] = await Promise.all([
+        clipsPromise,
+        referrerPromise,
+        referredUsersPromise,
+      ]);
+
+      console.log('Clips query result:', { data: clipsData, error: clipsError });
+
+      if (clipsError) {
+        console.error('Error fetching clips:', clipsError);
+      } else {
+        setClips(clipsData || []);
+      }
+
+      if (referrerError) {
+        console.error('Error fetching referrer:', referrerError);
+      } else {
+        setReferrerProfile(referrerData);
+      }
+
+      if (referredUsersError) {
+        console.error('Error fetching referred users:', referredUsersError);
+      } else {
+        setReferredUsers(referredUsersData || []);
       }
 
     } catch (error) {
@@ -263,9 +312,31 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl mb-3 font-space-mono">
-                    @{user.gamertag}
-                  </h2>
+                  <div className="mb-3 flex items-center justify-center gap-2 lg:justify-start">
+                    <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl font-space-mono">
+                      @{user.gamertag}
+                    </h2>
+                    {referrerProfile && (
+                      <div className="relative group/referral">
+                        <Link
+                          href={`/${locale}/profile/${encodeURIComponent(referrerProfile.gamertag)}`}
+                          aria-label={`This profile joined Gamerplug through @${referrerProfile.gamertag}'s referral.`}
+                          className="inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 transition hover:scale-105 hover:border-white/20"
+                        >
+                          <Image
+                            src={referrerProfile.profile_image_url || '/images/logo-no-back.png'}
+                            alt={referrerProfile.profile_image_url ? `@${referrerProfile.gamertag}` : 'GamerPlug referral badge'}
+                            width={20}
+                            height={20}
+                            className={referrerProfile.profile_image_url ? 'h-full w-full object-cover' : 'h-full w-full object-contain bg-white/10 p-[1px]'}
+                          />
+                        </Link>
+                        <div className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[220px] -translate-x-1/2 rounded-lg border border-white/10 bg-black/90 px-3 py-2 text-center text-[11px] leading-snug text-white/80 opacity-0 shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition duration-150 group-hover/referral:opacity-100">
+                          This profile joined Gamerplug through @{referrerProfile.gamertag}&apos;s referral.
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   {user.platform && Array.isArray(user.platform) && user.platform.length > 0 && (
                     <div className="flex gap-2 justify-center lg:justify-start flex-wrap mb-3">
                       {user.platform.map((platform) => {
@@ -358,6 +429,49 @@ export default function UserProfilePage() {
                     </div>
                   </div>
 
+                  {referredUsers.length > 0 && (
+                    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-5 py-4 mb-4">
+                      <div className="absolute inset-0 opacity-40 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
+                      <div className="relative">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/40 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(220,38,38,0.35)]">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                              <circle cx="8.5" cy="7" r="4"/>
+                              <path d="M20 8v6"/>
+                              <path d="M23 11h-6"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <p className="text-sm uppercase tracking-[0.3em] text-white/60">Referred</p>
+                            <p className="text-xl font-semibold text-white">{referredUsers.length} joined</p>
+                          </div>
+                        </div>
+                        <div className="max-h-56 space-y-2 overflow-y-auto pr-1">
+                          {referredUsers.map((referredUser) => (
+                            <Link
+                              key={referredUser.id}
+                              href={`/${locale}/profile/${encodeURIComponent(referredUser.gamertag)}`}
+                              className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 transition hover:border-white/20 hover:bg-white/[0.06]"
+                              title={`@${referredUser.gamertag}`}
+                            >
+                              <div className="h-9 w-9 overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                                <Image
+                                  src={referredUser.profile_image_url || '/images/logo-no-back.png'}
+                                  alt={`@${referredUser.gamertag}`}
+                                  width={36}
+                                  height={36}
+                                  className={referredUser.profile_image_url ? 'h-full w-full object-cover' : 'h-full w-full object-contain p-1 opacity-70'}
+                                />
+                              </div>
+                              <span className="truncate text-sm font-medium text-white/90 font-space-mono">@{referredUser.gamertag}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {user.user_games && user.user_games.length > 0 && (
                     <div className="space-y-4">
                       {user.user_games.map((userGame) => {
@@ -428,6 +542,48 @@ export default function UserProfilePage() {
                     )}
                   </div>
                 </div>
+
+                {referredUsers.length > 0 && (
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-white/5 px-4 py-4 mb-3">
+                    <div className="absolute inset-0 opacity-30 blur-3xl bg-gradient-to-r from-primary/30 to-accent/30" />
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-primary">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <path d="M20 8v6"/>
+                            <path d="M23 11h-6"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Referred</p>
+                          <p className="text-lg font-semibold text-white">{referredUsers.length} joined</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 overflow-x-auto -mx-4 px-4">
+                        {referredUsers.map((referredUser) => (
+                          <Link
+                            key={referredUser.id}
+                            href={`/${locale}/profile/${encodeURIComponent(referredUser.gamertag)}`}
+                            className="flex-shrink-0"
+                            title={`@${referredUser.gamertag}`}
+                          >
+                            <div className="h-12 w-12 overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                              <Image
+                                src={referredUser.profile_image_url || '/images/logo-no-back.png'}
+                                alt={`@${referredUser.gamertag}`}
+                                width={48}
+                                height={48}
+                                className={referredUser.profile_image_url ? 'h-full w-full object-cover' : 'h-full w-full object-contain p-1 opacity-70'}
+                              />
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {user.user_games && user.user_games.length > 0 && (
                   <div className="space-y-4">

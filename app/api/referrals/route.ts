@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     // Validate that the referrer username belongs to a real user
     const { data: validReferrer } = await supabase
       .from('users')
-      .select('gamertag')
+      .select('id, gamertag')
       .ilike('gamertag', referrer.trim())
       .single()
 
@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
       .insert([
         {
           referrer: validReferrer.gamertag,
+          referrer_user_id: validReferrer.id,
           email: email.toLowerCase().trim(),
           converted: false
         }

@@ -26,6 +26,17 @@ interface UserWithGames extends User {
   user_games: (UserGame & { games: Game })[];
 }
 
+interface ReferrerProfile {
+  gamertag: string;
+  profile_image_url?: string | null;
+}
+
+interface ReferredUserProfile {
+  id: string;
+  gamertag: string;
+  profile_image_url?: string | null;
+}
+
 type Platform = 'PC' | 'PS5' | 'Xbox' | 'Nintendo Switch';
 type PreferenceFieldKey =
   | 'playStyle'
@@ -168,9 +179,12 @@ export default function AuthenticatedProfilePage() {
   const params = useParams();
   const router = useRouter();
   const username = params.username as string;
+  const locale = params.locale as string;
   const { user: authUser, session } = useAuth();
   
   const [profileUser, setProfileUser] = useState<UserWithGames | null>(null);
+  const [profileReferrer, setProfileReferrer] = useState<ReferrerProfile | null>(null);
+  const [referredUsers, setReferredUsers] = useState<ReferredUserProfile[]>([]);
   const [clips, setClips] = useState<Clip[]>([]);
   const [loading, setLoading] = useState(true);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -210,6 +224,8 @@ export default function AuthenticatedProfilePage() {
   const fetchProfileData = async () => {
     try {
       setLoading(true);
+      setProfileReferrer(null);
+      setReferredUsers([]);
 
       // Fetch user with games
       const { data: userData, error: userError } = await supabase
@@ -240,16 +256,51 @@ export default function AuthenticatedProfilePage() {
         setProfileUser(userData);
       }
 
-      // Fetch clips
-      const user = userData || profileUser;
-      if (user?.id) {
-        const { data: clipsData } = await supabase
+      const currentUser = userData || profileUser;
+      if (currentUser?.id) {
+        const clipsPromise = supabase
           .from(TABLES.CLIPS)
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .order('created_at', { ascending: false });
 
+        const referrerPromise = currentUser.referred_by_user_id
+          ? supabase
+              .from(TABLES.USERS)
+              .select('gamertag, profile_image_url')
+              .eq('id', currentUser.referred_by_user_id)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null });
+
+        const referredUsersPromise = supabase
+          .from(TABLES.USERS)
+          .select('id, gamertag, profile_image_url')
+          .eq('referred_by_user_id', currentUser.id)
+          .order('created_at', { ascending: false });
+
+        const [
+          { data: clipsData },
+          { data: referrerData, error: referrerError },
+          { data: referredUsersData, error: referredUsersError },
+        ] = await Promise.all([
+          clipsPromise,
+          referrerPromise,
+          referredUsersPromise,
+        ]);
+
         setClips(clipsData || []);
+
+        if (referrerError) {
+          console.error('Error fetching referrer:', referrerError);
+        } else {
+          setProfileReferrer(referrerData);
+        }
+
+        if (referredUsersError) {
+          console.error('Error fetching referred users:', referredUsersError);
+        } else {
+          setReferredUsers(referredUsersData || []);
+        }
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -566,42 +617,62 @@ export default function AuthenticatedProfilePage() {
                 )}
               </div>
 
-              {/* Gamertag & Age */}
+              {/* Gamertag & Meta */}
               <div className="text-center mb-3">
-                <h1 className="text-2xl font-bold mb-1">
-                  @{profileUser.gamertag}
-                </h1>
-                {profileUser.age && (
-                  <span className="text-white/50 text-sm">{profileUser.age} years old</span>
+                <div className="mb-1 flex items-center justify-center gap-2">
+                  <h1 className="text-2xl font-bold">
+                    @{profileUser.gamertag}
+                  </h1>
+                  {profileReferrer && (
+                    <div className="relative group/referral">
+                      <Link
+                        href={`/${locale}/profile/${encodeURIComponent(profileReferrer.gamertag)}`}
+                        aria-label={`This profile joined Gamerplug through @${profileReferrer.gamertag}'s referral.`}
+                        className="inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 transition hover:scale-105 hover:border-white/20"
+                      >
+                        <Image
+                          src={profileReferrer.profile_image_url || '/images/logo-no-back.png'}
+                          alt={profileReferrer.profile_image_url ? `@${profileReferrer.gamertag}` : 'GamerPlug referral badge'}
+                          width={20}
+                          height={20}
+                          className={profileReferrer.profile_image_url ? 'h-full w-full object-cover' : 'h-full w-full object-contain bg-white/10 p-[1px]'}
+                        />
+                      </Link>
+                      <div className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[220px] -translate-x-1/2 rounded-lg border border-white/10 bg-black/90 px-3 py-2 text-center text-[11px] leading-snug text-white/80 opacity-0 shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition duration-150 group-hover/referral:opacity-100">
+                        This profile joined Gamerplug through @{profileReferrer.gamertag}&apos;s referral.
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {(profileUser.age || (profileUser.platform && Array.isArray(profileUser.platform) && profileUser.platform.length > 0)) && (
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {profileUser.age && (
+                      <span className="text-sm text-white/50">{profileUser.age} years old</span>
+                    )}
+                    {profileUser.platform && Array.isArray(profileUser.platform) && profileUser.platform.length > 0 && profileUser.platform.map((platform) => {
+                      const platformIconUrl = getPlatformAssetUrl(platform);
+                      return (
+                        <div
+                          key={platform}
+                          className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5"
+                        >
+                          {platformIconUrl && (
+                            <Image
+                              src={platformIconUrl}
+                              alt={platform}
+                              width={16}
+                              height={16}
+                              className="h-4 w-4 rounded object-contain"
+                              unoptimized
+                            />
+                          )}
+                          <span className="text-sm text-white/80">{platform}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
-
-              {/* Platform Badges */}
-              {profileUser.platform && Array.isArray(profileUser.platform) && profileUser.platform.length > 0 && (
-                <div className="flex gap-2 mb-4">
-                  {profileUser.platform.map((platform) => {
-                    const platformIconUrl = getPlatformAssetUrl(platform);
-                    return (
-                      <div
-                        key={platform}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg"
-                      >
-                        {platformIconUrl && (
-                          <Image
-                            src={platformIconUrl}
-                            alt={platform}
-                            width={16}
-                            height={16}
-                            className="w-4 h-4 object-contain rounded"
-                            unoptimized
-                          />
-                        )}
-                        <span className="text-sm text-white/80">{platform}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
 
               {/* Bio */}
               {profileUser.bio && (
@@ -680,6 +751,38 @@ export default function AuthenticatedProfilePage() {
                       </div>
                     );
                   })}
+                </div>
+              </div>
+            )}
+
+            {referredUsers.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
+                    <Gamepad2 size={20} className="text-primary" />
+                    Referred
+                  </h2>
+                  <span className="text-sm text-white/50">{referredUsers.length} joined</span>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-2">
+                  {referredUsers.map((referredUser) => (
+                    <Link
+                      key={referredUser.id}
+                      href={`/${locale}/app/profile/${encodeURIComponent(referredUser.gamertag)}`}
+                      className="flex-shrink-0"
+                      title={`@${referredUser.gamertag}`}
+                    >
+                      <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-white/10 hover:border-primary/40 transition-colors">
+                        <Image
+                          src={referredUser.profile_image_url || '/images/logo-no-back.png'}
+                          alt={`@${referredUser.gamertag}`}
+                          width={64}
+                          height={64}
+                          className={referredUser.profile_image_url ? 'w-full h-full object-cover' : 'w-full h-full object-contain p-1 opacity-70'}
+                        />
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
             )}
