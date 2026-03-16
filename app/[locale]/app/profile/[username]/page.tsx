@@ -619,12 +619,12 @@ export default function AuthenticatedProfilePage() {
 
               {/* Gamertag & Meta */}
               <div className="text-center mb-3">
-                <div className="mb-1 flex items-center justify-center gap-2">
+                <div className="mb-1 flex items-center justify-center gap-2 leading-none">
                   <h1 className="text-2xl font-bold">
                     @{profileUser.gamertag}
                   </h1>
                   {profileReferrer && (
-                    <div className="relative group/referral">
+                    <div className="relative flex h-5 items-center self-center group/referral">
                       <Link
                         href={`/${locale}/profile/${encodeURIComponent(profileReferrer.gamertag)}`}
                         aria-label={`This profile joined Gamerplug through @${profileReferrer.gamertag}'s referral.`}

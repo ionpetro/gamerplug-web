@@ -312,16 +312,16 @@ export default function UserProfilePage() {
                 </div>
                 
                 <div className="text-center lg:text-left w-full">
-                  <div className="mb-3 flex items-center justify-center gap-2 lg:justify-start">
+                  <div className="mb-3 flex items-center justify-center gap-2 leading-none lg:justify-start">
                     <h2 className="text-lg font-medium text-white lg:text-xl xl:text-2xl font-space-mono">
                       @{user.gamertag}
                     </h2>
                     {referrerProfile && (
-                      <div className="relative group/referral">
+                      <div className="relative inline-flex h-5 items-center self-center align-middle leading-none group/referral">
                         <Link
                           href={`/${locale}/profile/${encodeURIComponent(referrerProfile.gamertag)}`}
                           aria-label={`This profile joined Gamerplug through @${referrerProfile.gamertag}'s referral.`}
-                          className="inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 transition hover:scale-105 hover:border-white/20"
+                          className="inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 align-middle leading-none transition hover:scale-105 hover:border-white/20"
                         >
                           <Image
                             src={referrerProfile.profile_image_url || '/images/logo-no-back.png'}
