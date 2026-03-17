@@ -23,8 +23,15 @@ interface ClipWithProcessing extends Clip {
     | Array<{ processed_video_url?: string; status?: string }>;
 }
 
+interface ReferrerProfile {
+  id: string;
+  gamertag: string;
+  profile_image_url?: string | null;
+}
+
 interface UserWithClips extends User {
   clips: ClipWithProcessing[];
+  referrer?: ReferrerProfile | null;
 }
 
 type SwipeDirection = 'left' | 'right';
@@ -127,6 +134,11 @@ export default function ExplorePage() {
         .select(
           `
           *,
+          referrer:users!users_referred_by_user_id_fkey (
+            id,
+            gamertag,
+            profile_image_url
+          ),
           clips!inner (
             *,
             video_processing (
@@ -425,6 +437,7 @@ export default function ExplorePage() {
   }, [currentUser, handleCloseProfile, handleLike, handleNope, handleOpenProfile, goToNextPhoto, goToPrevPhoto, loading]);
 
   const displayName = currentUser?.gamertag ? currentUser.gamertag.replace(/^@/, '') : 'Gamer';
+  const currentUserReferrer = currentUser?.referrer;
   const likeOpacity = Math.max(0, Math.min(1, currentDragX / (screenWidth * 0.5)));
   const nopeOpacity = Math.max(0, Math.min(1, -currentDragX / (screenWidth * 0.5)));
 
@@ -628,10 +641,29 @@ export default function ExplorePage() {
                             Recently Active
                           </div>
 
-                          <h2 className="text-2xl sm:text-4xl font-extrabold leading-none text-white">
-                            {displayName}
-                            {currentUser.age ? ` ${currentUser.age}` : ''}
-                          </h2>
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-2xl sm:text-4xl font-extrabold leading-none text-white">
+                              {displayName}
+                            </h2>
+                            {currentUserReferrer && (
+                              <div className="group/referral relative flex h-6 items-center self-center">
+                                <Link
+                                  href={`/${locale}/app/profile/${encodeURIComponent(currentUserReferrer.gamertag)}`}
+                                  aria-label={`This profile joined Gamerplug through @${currentUserReferrer.gamertag}'s referral.`}
+                                  className="inline-flex h-6 w-6 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 transition hover:scale-105 hover:border-white/20"
+                                >
+                                  <img
+                                    src={currentUserReferrer.profile_image_url || '/images/logo-no-back.png'}
+                                    alt={currentUserReferrer.profile_image_url ? `@${currentUserReferrer.gamertag}` : 'GamerPlug referral badge'}
+                                    className={currentUserReferrer.profile_image_url ? 'h-full w-full object-cover' : 'h-full w-full object-contain bg-white/10 p-[1px]'}
+                                  />
+                                </Link>
+                                <div className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[220px] -translate-x-1/2 rounded-lg border border-white/10 bg-black/90 px-3 py-2 text-center text-[11px] leading-snug text-white/80 opacity-0 shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition duration-150 group-hover/referral:opacity-100">
+                                  This profile joined Gamerplug through @{currentUserReferrer.gamertag}&apos;s referral.
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
                           <button
                             type="button"
