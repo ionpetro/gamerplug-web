@@ -312,17 +312,6 @@ export default async function Image({
                 </div>
               ))}
             </div>
-            <span
-              style={{
-                display: 'flex',
-                fontSize: 16,
-                fontFamily: 'Inter',
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.5)',
-              }}
-            >
-              {referredUsersData.length} referred
-            </span>
           </div>
         )}
 
