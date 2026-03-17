@@ -134,11 +134,6 @@ export default function ExplorePage() {
         .select(
           `
           *,
-          referrer:users!users_referred_by_user_id_fkey (
-            id,
-            gamertag,
-            profile_image_url
-          ),
           clips!inner (
             *,
             video_processing (
@@ -189,11 +184,41 @@ export default function ExplorePage() {
         })
         .filter((user) => user.clips.length > 0);
 
-      for (const user of usersWithPlayableClips) {
+      const referrerIds = Array.from(
+        new Set(
+          usersWithPlayableClips
+            .map((user) => user.referred_by_user_id)
+            .filter((userId): userId is string => Boolean(userId))
+        )
+      );
+
+      let usersWithReferrers = usersWithPlayableClips;
+
+      if (referrerIds.length > 0) {
+        const { data: referrerData, error: referrerError } = await supabase
+          .from(TABLES.USERS)
+          .select('id, gamertag, profile_image_url')
+          .in('id', referrerIds);
+
+        if (referrerError) {
+          console.error('Error fetching explore referrers:', referrerError);
+        } else {
+          const referrerMap = new Map(
+            (referrerData || []).map((referrer) => [referrer.id, referrer as ReferrerProfile])
+          );
+
+          usersWithReferrers = usersWithPlayableClips.map((user) => ({
+            ...user,
+            referrer: user.referred_by_user_id ? referrerMap.get(user.referred_by_user_id) || null : null,
+          }));
+        }
+      }
+
+      for (const user of usersWithReferrers) {
         seenUserIds.current.add(user.id);
       }
 
-      const clipsData: Record<string, ClipWithProcessing[]> = usersWithPlayableClips.reduce(
+      const clipsData: Record<string, ClipWithProcessing[]> = usersWithReferrers.reduce(
         (acc, user) => {
           acc[user.id] = user.clips;
           return acc;
@@ -202,7 +227,7 @@ export default function ExplorePage() {
       );
 
       if (isInitial) {
-        setUsers(usersWithPlayableClips);
+        setUsers(usersWithReferrers);
         setClipsByUser(clipsData);
         setCurrentIndex(0);
         setClipIndices({});
@@ -212,7 +237,7 @@ export default function ExplorePage() {
         setCurrentDragX(0);
         setSlotTransforms(Array.from({ length: SLOT_COUNT }, () => ({ ...SLOT_EMPTY })));
       } else {
-        setUsers((prev) => [...prev, ...usersWithPlayableClips]);
+        setUsers((prev) => [...prev, ...usersWithReferrers]);
         setClipsByUser((prev) => ({ ...prev, ...clipsData }));
       }
     } catch (error) {
