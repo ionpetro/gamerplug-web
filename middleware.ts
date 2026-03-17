@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_FILE = /\.(.*)$/;
-const SUPPORTED_LOCALES = ["en", "es"] as const;
+const SUPPORTED_LOCALES = ["en", "es", "ja"] as const;
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

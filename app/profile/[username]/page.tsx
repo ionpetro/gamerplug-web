@@ -108,7 +108,7 @@ function ProfileSkeleton() {
 export default function UserProfilePage() {
   const params = useParams();
   const username = params.username as string;
-  const locale = params.locale === 'es' ? 'es' : 'en';
+  const locale = params.locale === 'es' ? 'es' : params.locale === 'ja' ? 'ja' : 'en';
   
   const [user, setUser] = useState<UserWithGames | null>(null);
   const [referrerProfile, setReferrerProfile] = useState<ReferrerProfile | null>(null);

@@ -18,7 +18,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
   const { locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
   const localePrefix = locale === 'es' ? '/es' : '/en'
   const url = `${baseUrl}${localePrefix}/blog`
   
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
 export default async function BlogPage({ params }: BlogPageProps) {
   const { locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
   const blogPosts = getAllBlogPosts()
 
   return (

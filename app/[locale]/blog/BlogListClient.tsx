@@ -27,7 +27,7 @@ export function BlogListClient({ posts, locale: initialLocale }: BlogListClientP
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)

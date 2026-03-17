@@ -12,7 +12,7 @@ export function Footer() {
   const locale = context?.locale || 'en'
   const pathname = usePathname()
 
-  const localeHref = (target: 'en' | 'es') => {
+  const localeHref = (target: 'en' | 'es' | 'ja') => {
     const segs = (pathname?.split('/') || []);
     if (segs.length > 1) segs[1] = target;
     const nextPath = segs.join('/') || '/';

@@ -150,7 +150,7 @@ export function TeamSection() {
             />
 
             <Link
-              href={`/${locale === 'es' ? 'es' : 'en'}/team`}
+              href={`/${locale}/team`}
               className="text-white hover:text-primary transition-colors duration-300 font-semibold uppercase tracking-wide text-xs underline underline-offset-4 pt-8 flex items-center gap-1"
             >
               Choose Your Character
@@ -190,7 +190,7 @@ export function TeamSection() {
 
           <div className="pt-5 text-center">
             <Link
-              href={`/${locale === 'es' ? 'es' : 'en'}/team`}
+              href={`/${locale}/team`}
               className="text-white hover:text-primary transition-colors duration-300 font-semibold uppercase tracking-wide text-xs underline underline-offset-4 inline-flex items-center gap-1"
             >
               View Full Team

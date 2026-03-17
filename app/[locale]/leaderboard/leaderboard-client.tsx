@@ -138,7 +138,7 @@ export default function LeaderboardClient({
   nextResetAt = null,
 }: {
   entries: LeaderboardEntry[]
-  locale: 'en' | 'es'
+  locale: 'en' | 'es' | 'ja'
   periodLabel: string
   nextResetAt?: string | null
 }) {

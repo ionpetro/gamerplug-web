@@ -14,7 +14,7 @@ import { Footer } from '@/components/Footer'
 function useLocale() {
   const pathname = usePathname()
   const seg = pathname?.split('/')[1]
-  return seg === 'es' ? 'es' : 'en'
+  return seg === 'es' ? 'es' : seg === 'ja' ? 'ja' : 'en'
 }
 
 const IOS_APP_URL = 'https://apps.apple.com/us/app/gamerplug/id6752116866'

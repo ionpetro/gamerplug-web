@@ -12,7 +12,7 @@ export default function DownloadButton() {
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   const hrefWithLocale = (path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`

@@ -44,7 +44,7 @@ interface PageProps {
 
 export default async function LeaderboardPage({ params }: PageProps) {
   const { locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
 
   const { iso: periodStartIso, label: periodLabel } = getPeriodStart()
   const nextResetAt = getNextResetAt()

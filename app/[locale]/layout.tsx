@@ -21,6 +21,7 @@ export const metadata: Metadata = {
       'x-default': 'https://gamerplug.app/en',
       'en': '/en',
       'es': '/es',
+      'ja': '/ja',
     },
   },
   openGraph: {
@@ -78,6 +79,7 @@ export function generateStaticParams() {
   return [
     { locale: "en" },
     { locale: "es" },
+    { locale: "ja" },
   ];
 }
 
@@ -89,7 +91,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale: rawLocale } = await params;
-  const locale = rawLocale === 'es' ? 'es' : 'en';
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en';
   const messages = await loadMessages(locale);
   return (
     <I18nProvider locale={locale} messages={messages}>

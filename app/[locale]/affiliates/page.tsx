@@ -5,7 +5,7 @@ const baseUrl = 'https://gamerplug.app'
 
 export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
   const { locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
   const localePrefix = locale === 'es' ? '/es' : '/en'
   const url = `${baseUrl}${localePrefix}/affiliates`
   

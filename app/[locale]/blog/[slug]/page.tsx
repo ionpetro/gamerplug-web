@@ -89,7 +89,7 @@ export async function generateMetadata(
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug, locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
   const post = getBlogPostBySlug(slug)
 
   if (!post) {

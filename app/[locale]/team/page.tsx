@@ -200,7 +200,7 @@ export default function TeamPage() {
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   useEffect(() => {

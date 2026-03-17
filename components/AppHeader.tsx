@@ -17,7 +17,8 @@ export const AppHeader = () => {
   const handleSignOut = async () => {
     await signOut();
     setUserMenuOpen(false);
-    const locale = pathname?.split('/')[1] === 'es' ? 'es' : 'en';
+    const seg = pathname?.split('/')[1];
+    const locale = seg === 'es' ? 'es' : seg === 'ja' ? 'ja' : 'en';
     window.location.href = `/${locale}`;
   };
 

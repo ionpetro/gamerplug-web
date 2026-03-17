@@ -35,7 +35,7 @@ export function GameDropdown() {
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`
@@ -177,7 +177,7 @@ export function MobileGameMenu({ onClose }: { onClose: () => void }) {
   
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   const hrefWithLocale = (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`

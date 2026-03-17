@@ -16,13 +16,13 @@ export function Navbar() {
 
   const locale = useMemo(() => {
     const seg = pathname?.split("/")[1]
-    return seg === "es" ? "es" : "en"
+    return seg === "es" ? "es" : seg === "ja" ? "ja" : "en"
   }, [pathname])
 
   const hrefWithLocale = (path: string) => `/${locale}${path === '/' ? '' : (path.startsWith('/') ? path : `/${path}`)}`
   const switchLocaleHref = useMemo(() => {
     const segs = pathname?.split('/') || []
-    const nextLocale = locale === 'en' ? 'es' : 'en'
+    const nextLocale = locale === 'en' ? 'es' : locale === 'es' ? 'ja' : 'en'
     if (segs.length > 1) {
       segs[1] = nextLocale
     }

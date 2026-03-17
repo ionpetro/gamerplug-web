@@ -16,7 +16,7 @@ interface PageProps {
 
 export default async function LeaderboardFebruary2026Page({ params }: PageProps) {
   const { locale: rawLocale } = await params
-  const locale = rawLocale === 'es' ? 'es' : 'en'
+  const locale = rawLocale === 'es' ? 'es' : rawLocale === 'ja' ? 'ja' : 'en'
 
   const getCachedAllTimeEntries = unstable_cache(
     async () => getLeaderboardEntries(null),
