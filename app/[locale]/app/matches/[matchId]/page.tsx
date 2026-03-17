@@ -2,6 +2,7 @@
 
 import { FormEvent, startTransition, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Gamepad2, Loader2, Send, Sparkles, Users, X } from 'lucide-react';
 import { createGameShareContent, GameShareMessage, isGameShareMessage } from '@/components/matches/GameShareMessage';
@@ -295,7 +296,10 @@ export default function MatchChatPage() {
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.05),_transparent_35%)]">
         <div className="border-b border-white/10 px-5 py-4 sm:px-7">
           {matchedUser ? (
-            <div className="flex min-w-0 items-center gap-3">
+            <Link
+              href={`/${locale}/profile/${matchedUser.gamertag}`}
+              className="flex min-w-0 items-center gap-3 rounded-2xl transition hover:bg-white/[0.04]"
+            >
               <div className="relative shrink-0">
                 {matchedUser.profile_image_url ? (
                   <Image
@@ -321,7 +325,7 @@ export default function MatchChatPage() {
                   @{matchedUser.gamertag} • lock in a game and keep the chat moving
                 </p>
               </div>
-            </div>
+            </Link>
           ) : (
             <p className="text-sm text-white/50">Loading conversation...</p>
           )}
