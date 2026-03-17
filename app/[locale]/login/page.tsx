@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,9 +19,11 @@ const GoogleIcon = () => (
 );
 
 function LoginContent() {
+  const params = useParams<{ locale?: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signInWithEmail, signUpWithEmail, signInWithGoogle, session, user } = useAuth();
+  const locale = params?.locale === 'es' ? 'es' : params?.locale === 'ja' ? 'ja' : 'en';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,12 +38,12 @@ function LoginContent() {
   // Redirect if already logged in
   useEffect(() => {
     if (session && user?.gamertag) {
-      const redirectTo = returnUrl || `/en/app/profile/${user.gamertag}`;
+      const redirectTo = returnUrl || `/${locale}/app/profile/${user.gamertag}`;
       router.push(redirectTo);
     } else if (session) {
-      router.push('/en/app');
+      router.push(`/${locale}/app`);
     }
-  }, [session, user, router, returnUrl]);
+  }, [locale, session, user, router, returnUrl]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,7 +214,7 @@ function LoginContent() {
                       {/* Forgot Password (sign in mode only) */}
                       {!isSignUp && (
                         <div className="text-right">
-                          <Link href="/en/auth/forgot-password" className="text-sm text-primary hover:underline">
+                          <Link href={`/${locale}/auth/forgot-password`} className="text-sm text-primary hover:underline">
                             Forgot password?
                           </Link>
                         </div>
@@ -222,11 +224,11 @@ function LoginContent() {
                       {isSignUp && (
                         <p className="text-xs text-white/40 text-center">
                           By signing up, you agree to our{' '}
-                          <Link href="/en/tac" className="text-primary hover:underline">
+                          <Link href={`/${locale}/tac`} className="text-primary hover:underline">
                             Terms of Service
                           </Link>{' '}
                           and{' '}
-                          <Link href="/en/privacy" className="text-primary hover:underline">
+                          <Link href={`/${locale}/privacy`} className="text-primary hover:underline">
                             Privacy Policy
                           </Link>
                         </p>

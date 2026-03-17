@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Footer } from '@/components/Footer';
 import { Loader2, Mail, CheckCircle, ArrowLeft } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
+  const params = useParams<{ locale?: string }>();
   const { resetPassword } = useAuth();
+  const locale = params?.locale === 'es' ? 'es' : params?.locale === 'ja' ? 'ja' : 'en';
   
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -76,7 +79,7 @@ export default function ForgotPasswordPage() {
                     Click the link in your email to reset your password. Don't forget to check your spam folder!
                   </p>
                   <Link
-                    href="/en/login"
+                    href={`/${locale}/login`}
                     className="inline-flex items-center gap-2 text-primary hover:underline"
                   >
                     <ArrowLeft className="w-4 h-4" />
@@ -135,7 +138,7 @@ export default function ForgotPasswordPage() {
 
                   {/* Back to Login */}
                   <p className="mt-6 text-center">
-                    <Link href="/en/login" className="inline-flex items-center gap-2 text-white/60 hover:text-white">
+                    <Link href={`/${locale}/login`} className="inline-flex items-center gap-2 text-white/60 hover:text-white">
                       <ArrowLeft className="w-4 h-4" />
                       Back to login
                     </Link>

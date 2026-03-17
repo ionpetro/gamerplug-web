@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter, usePathname } from 'next/navigation';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { AppHeader } from '@/components/AppHeader';
@@ -9,23 +9,25 @@ import { Footer } from '@/components/Footer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { session, user, loading } = useAuth();
+  const params = useParams<{ locale?: string }>();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = params?.locale === 'es' ? 'es' : params?.locale === 'ja' ? 'ja' : 'en';
 
   useEffect(() => {
     if (!loading && !session) {
       // Redirect to login with return URL
       const returnUrl = encodeURIComponent(pathname || '/');
-      router.push(`/en/login?returnUrl=${returnUrl}`);
+      router.push(`/${locale}/login?returnUrl=${returnUrl}`);
     }
-  }, [session, loading, router, pathname]);
+  }, [locale, session, loading, router, pathname]);
 
   // Redirect to onboarding if user has session but no profile/gamertag
   useEffect(() => {
     if (!loading && session && !user?.gamertag && !pathname?.includes('/onboarding')) {
-      router.replace('/en/app/onboarding');
+      router.replace(`/${locale}/app/onboarding`);
     }
-  }, [session, user, loading, router, pathname]);
+  }, [locale, session, user, loading, router, pathname]);
 
   if (loading) {
     return (

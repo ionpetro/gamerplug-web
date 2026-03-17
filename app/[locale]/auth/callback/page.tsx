@@ -1,14 +1,16 @@
 'use client';
 
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { Footer } from '@/components/Footer';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 function AuthCallbackContent() {
+  const params = useParams<{ locale?: string }>();
   const router = useRouter();
+  const locale = params?.locale === 'es' ? 'es' : params?.locale === 'ja' ? 'ja' : 'en';
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
@@ -35,7 +37,7 @@ function AuthCallbackContent() {
         setStatus('success');
         setMessage('Successfully signed in! Redirecting...');
         setTimeout(() => {
-          router.push('/en/app');
+          router.push(`/${locale}/app`);
         }, 1500);
       }
     });
@@ -46,7 +48,7 @@ function AuthCallbackContent() {
         setStatus('success');
         setMessage('Successfully signed in! Redirecting...');
         setTimeout(() => {
-          router.push('/en/app');
+          router.push(`/${locale}/app`);
         }, 1500);
       }
     });
@@ -121,7 +123,7 @@ function AuthCallbackContent() {
                     {message}
                   </p>
                   <Link
-                    href="/en/login"
+                    href={`/${locale}/login`}
                     className="inline-block py-3 px-8 rounded-xl bg-primary hover:bg-primary/90 font-bold uppercase tracking-wide transition-colors"
                   >
                     Try Again

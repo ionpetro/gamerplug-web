@@ -4,13 +4,44 @@ import { useI18n } from "@/components/I18nProvider"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useMemo } from "react"
+import { useState, useRef, useEffect } from "react"
+
+const LOCALE_LABELS: Record<string, string> = {
+  en: 'English',
+  es: 'Español',
+  ja: '日本語',
+}
 
 export function Footer() {
   const context = useI18n()
   const t = context?.t || {}
   const locale = context?.locale || 'en'
   const pathname = usePathname()
+  const [langOpen, setLangOpen] = useState(false)
+  const langRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false)
+      }
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setLangOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
+
+  useEffect(() => {
+    setLangOpen(false)
+  }, [pathname])
 
   const localeHref = (target: 'en' | 'es' | 'ja') => {
     const segs = (pathname?.split('/') || []);
@@ -121,28 +152,44 @@ export function Footer() {
             <Link href={`/${locale}/privacy`} className="hover:text-gray-400">{messages.footer.privacy}</Link>
             <Link href={`/${locale}/tac`} className="hover:text-gray-400">{messages.footer.terms}</Link>
             <a href="#" className="hover:text-gray-400">{messages.footer.cookies}</a>
-            {/* Language Selector */}
-            <div className="flex items-center space-x-2">
-              <Link
-                href={localeHref('en')}
-                className={`text-sm ${locale === 'en' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+            {/* Language Selector Dropdown */}
+            <div ref={langRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                aria-expanded={langOpen}
+                aria-haspopup="menu"
+                aria-label="Change language"
               >
-                EN
-              </Link>
-              <span className="text-muted-foreground/50">|</span>
-              <Link
-                href={localeHref('es')}
-                className={`text-sm ${locale === 'es' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
-              >
-                ES
-              </Link>
-              <span className="text-muted-foreground/50">|</span>
-              <Link
-                href={localeHref('ja')}
-                className={`text-sm ${locale === 'ja' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
-              >
-                JA
-              </Link>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                {LOCALE_LABELS[locale] || locale.toUpperCase()}
+                <svg className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {langOpen && (
+                <div className="absolute bottom-full mb-2 right-0 min-w-[140px] rounded-lg border border-border bg-card shadow-xl overflow-hidden z-50">
+                  {(['en', 'es', 'ja'] as const).map((l) => (
+                    <Link
+                      key={l}
+                      href={localeHref(l)}
+                      onClick={() => setLangOpen(false)}
+                      className={`block px-4 py-2.5 text-sm transition-colors ${
+                        locale === l
+                          ? 'text-primary font-semibold bg-primary/10'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+                      }`}
+                    >
+                      {LOCALE_LABELS[l]}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

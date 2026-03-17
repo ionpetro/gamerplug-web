@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
@@ -9,8 +9,10 @@ import { Footer } from '@/components/Footer';
 import { Loader2, Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
 
 function ResetPasswordContent() {
+  const params = useParams<{ locale?: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const locale = params?.locale === 'es' ? 'es' : params?.locale === 'ja' ? 'ja' : 'en';
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -135,7 +137,7 @@ function ResetPasswordContent() {
       // Sign out and redirect to login after a delay
       setTimeout(async () => {
         await supabase.auth.signOut();
-        router.push('/en/login');
+        router.push(`/${locale}/login`);
       }, 3000);
     } catch (err) {
       setError('An error occurred while updating your password');
@@ -202,7 +204,7 @@ function ResetPasswordContent() {
                   <h2 className="text-xl font-bold mb-2">Reset Failed</h2>
                   <p className="text-white/60 mb-6">{error}</p>
                   <Link
-                    href="/en/auth/forgot-password"
+                    href={`/${locale}/auth/forgot-password`}
                     className="inline-block py-3 px-6 rounded-xl bg-primary hover:bg-primary/90 font-bold uppercase tracking-wide transition-colors"
                   >
                     Request New Link
