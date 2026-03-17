@@ -239,7 +239,7 @@ export default function PayToPlayPage() {
   }, []);
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-background">
+    <div className="relative flex-1 overflow-y-auto bg-background">
       <div className="relative container mx-auto px-6 py-8 max-w-4xl">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>

@@ -572,7 +572,7 @@ export default function AuthenticatedProfilePage() {
 
   return (
     <>
-      <div className="relative flex-1">
+      <div className="relative flex-1 overflow-y-auto">
         <div className="relative container mx-auto px-6 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Profile Header */}

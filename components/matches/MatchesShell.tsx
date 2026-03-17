@@ -81,7 +81,7 @@ export function MatchesShell({ activeMatchId, children }: MatchesShellProps) {
 
   return (
     <div className="relative min-h-0 flex-1 overflow-hidden bg-background">
-      <div className="flex h-full items-center justify-center px-6 py-10 xl:hidden">
+      <div className="flex h-full items-center justify-center px-6 py-10 md:hidden">
         <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/[0.04] p-6 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
           <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-primary/10 text-primary">
             <MessageCircle size={30} />
@@ -103,9 +103,9 @@ export function MatchesShell({ activeMatchId, children }: MatchesShellProps) {
         </div>
       </div>
 
-      <div className="relative mx-auto hidden h-full min-h-0 w-full max-w-[1400px] flex-1 px-4 py-4 sm:px-6 sm:py-6 xl:flex">
-        <div className="grid h-full min-h-0 w-full overflow-hidden rounded-[30px] border border-white/10 bg-[#09090b]/90 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur xl:grid-cols-[360px_minmax(0,1fr)]">
-          <aside className="flex h-full min-h-0 flex-col overflow-hidden border-b border-white/10 bg-white/[0.03] xl:border-b-0 xl:border-r">
+      <div className="relative mx-auto hidden h-full min-h-0 w-full max-w-[1400px] flex-1 px-4 py-4 sm:px-6 sm:py-6 md:flex">
+        <div className="grid h-full min-h-0 w-full overflow-hidden rounded-[30px] border border-white/10 bg-[#09090b]/90 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur lg:grid-cols-[360px_minmax(0,1fr)]">
+          <aside className="flex h-full min-h-0 flex-col overflow-hidden border-b border-white/10 bg-white/[0.03] lg:border-b-0 lg:border-r">
             <div className="border-b border-white/10 px-5 py-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
