@@ -101,7 +101,7 @@ export function Footer() {
               <li><Link href={`/${locale}/team`} className="hover:text-primary transition-colors">{messages.footer.team}</Link></li>
               <li><a href="https://www.linkedin.com/company/gamer-plug/jobs/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{messages.footer.careers}</a></li>
               <li><Link href={`/${locale}/affiliates`} className="hover:text-primary transition-colors">{messages.footer.affiliates || 'Affiliates'}</Link></li>
-              <li><Link href={`/${locale}/leaderboard`} className="hover:text-primary transition-colors">Leaderboard</Link></li>
+              <li><Link href={`/${locale}/leaderboard`} className="hover:text-primary transition-colors">{messages.footer.leaderboard || 'Leaderboard'}</Link></li>
             </ul>
           </div>
 
@@ -135,6 +135,13 @@ export function Footer() {
                 className={`text-sm ${locale === 'es' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 ES
+              </Link>
+              <span className="text-muted-foreground/50">|</span>
+              <Link
+                href={localeHref('ja')}
+                className={`text-sm ${locale === 'ja' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                JA
               </Link>
             </div>
           </div>

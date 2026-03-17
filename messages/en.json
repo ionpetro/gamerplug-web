@@ -9,11 +9,18 @@
       "en": "EN",
       "es": "ES",
       "ja": "JA"
-    }
+    },
+    "leaderboard": "Leaderboard",
+    "myProfile": "My Profile",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "downloadApp": "Download App"
   },
   "dropdown": {
     "popular": "Popular Games",
-    "viewAll": "View All Games"
+    "viewAll": "View All Games",
+    "allGames": "All Games",
+    "noGamesAvailable": "No games available"
   },
   "footer": {
     "tagline": "The ultimate social platform for gamers. Find your squad, build your community, and never game alone again.",
@@ -29,7 +36,9 @@
     "privacy": "Privacy Policy",
     "cookies": "Cookies",
     "copyright": "GamerPlug Inc.",
-    "patentPending": "Patent Pending"
+    "patentPending": "Patent Pending",
+    "leaderboard": "Leaderboard",
+    "contact": "Contact Us"
   },
   "home": {
     "badge": "The Future of Gaming Connections",
@@ -115,7 +124,8 @@
       "title1": "NO",
       "title2": "MORE RANDOMS.",
       "subtitle": "Get your ideal player plugged in.",
-      "gamersOnline": "gamers online now"
+      "gamersOnline": "gamers online now",
+      "scanMe": "scan me"
     },
     "features": {
       "sectionLabel": "Key Features",
@@ -152,6 +162,43 @@
       "titleHighlight": "SQUAD?",
       "subtitle": "Join thousands of gamers who are matching, chatting, and winning together right now."
     },
+    "demo": {
+      "label": "Demo",
+      "titlePre": "See ",
+      "titlePost": " in Action",
+      "subtitle": "Watch how easy it is to find your perfect gaming squad.",
+      "watchOnYoutube": "Watch Demo on YouTube",
+      "mobileDesc": "Opens in the YouTube app when installed."
+    },
+    "promise": {
+      "label": "Our Promise",
+      "titlePre": "The ",
+      "titleHighlight": "Foundation",
+      "titlePost": " of GamerPlug",
+      "subtitle": "Built on trust, authenticity, and community. Here's what we stand for.",
+      "noNpcs": "no NPCs",
+      "noNpcsDesc": "Every profile is monitored to keep the platform real and legit.",
+      "onlyGamers": "only gamers",
+      "onlyGamersDesc": "No bots. No spam. Just real gamers who actually want to play.",
+      "goodVibes": "good vibes",
+      "goodVibesDesc": "A healthy, respectful community where gaming is fun again."
+    },
+    "team": {
+      "label": "Meet The Team",
+      "titlePre": "The ",
+      "titleHighlight": "Squad",
+      "titlePost": " Behind GamerPlug",
+      "subtitle": "A diverse team of gamers, engineers, and entrepreneurs united by one mission: revolutionizing how gamers connect.",
+      "chooseCharacter": "Choose Your Character",
+      "viewFullTeam": "View Full Team",
+      "engineers": "Engineers",
+      "product": "Product",
+      "board": "Board",
+      "operations": "Operations"
+    },
+    "games": {
+      "noGamesAvailable": "No games available right now."
+    },
     "phone": {
       "live": "LIVE",
       "profileDesc": "Immortal 3 Valorant player. Looking for a laid back duo or trio. No toxicity pls.",
@@ -160,6 +207,24 @@
       "newMessage": "New Message",
       "duoMessage": "\"Duo for ranked?\""
     }
+  },
+  "leaderboard": {
+    "title": "Top Referrers",
+    "subtitle": "The gamers bringing the most players to GamerPlug",
+    "referralsSince": "Referrals since {period}",
+    "previousMonth": "Previous month",
+    "resetsIn": "Resets in",
+    "days": "days",
+    "hrs": "hrs",
+    "min": "min",
+    "sec": "sec",
+    "allReferrers": "All Referrers",
+    "rank": "Rank",
+    "referrer": "Referrer",
+    "referrals": "referrals",
+    "place": "Place",
+    "noReferralsYet": "No referrals yet.",
+    "beTheFirst": "Be the first to refer a gamer!"
   },
   "affiliates": {
     "badge": "Affiliate Program",

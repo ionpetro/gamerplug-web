@@ -4,6 +4,7 @@ import { Trophy, Crown, Medal, Clock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, startTransition } from 'react'
+import { useI18n } from "@/components/I18nProvider"
 
 export interface LeaderboardEntry {
   rank: number
@@ -70,6 +71,7 @@ function Avatar({ src, gamertag, size = 48, ring }: { src: string | null; gamert
 }
 
 function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; highlight: boolean; locale: string }) {
+  const { t } = useI18n()
   const trophyColor = TROPHY_COLORS[entry.rank - 1]
   const glow = RANK_GLOWS[entry.rank - 1]
   const RankIcon = entry.rank === 1 ? Crown : Medal
@@ -111,7 +113,7 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
       {/* Name */}
       <div className="text-center">
         <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: trophyColor }}>
-          {RANK_LABELS[entry.rank - 1]} Place
+          {RANK_LABELS[entry.rank - 1]} {t.leaderboard?.place || 'Place'}
         </span>
         <h3 className={`font-bold text-white mt-1 ${highlight ? 'text-xl' : 'text-lg'}`}>
           {entry.gamertag}
@@ -123,7 +125,7 @@ function PodiumCard({ entry, highlight, locale }: { entry: LeaderboardEntry; hig
         <Trophy size={14} color={trophyColor} />
         <span className="text-sm">
           <span className="font-bold text-white">{entry.convertedReferrals}</span>
-          <span className="text-white/50 ml-1">referrals</span>
+          <span className="text-white/50 ml-1">{t.leaderboard?.referrals || 'referrals'}</span>
         </span>
       </div>
     </div>
@@ -142,6 +144,7 @@ export default function LeaderboardClient({
   periodLabel: string
   nextResetAt?: string | null
 }) {
+  const { t } = useI18n()
   const top3 = entries.slice(0, 3)
   const countdown = useCountdown(nextResetAt || '2099-01-01T00:00:00.000Z')
 
@@ -163,20 +166,20 @@ export default function LeaderboardClient({
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
             </span>
             <span className="text-sm font-medium text-primary">
-              Referrals since {periodLabel}
+              {(t.leaderboard?.referralsSince || 'Referrals since {period}').replace('{period}', periodLabel)}
             </span>
           </div>
           <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl tracking-tight">
-            Top Referrers
+            {t.leaderboard?.title || 'Top Referrers'}
           </h1>
           <p className="mt-4 text-white/50 text-lg max-w-md mx-auto">
-            The gamers bringing the most players to GamerPlug
+            {t.leaderboard?.subtitle || 'The gamers bringing the most players to GamerPlug'}
             {' · '}
             <Link
               href={`/${locale}/leaderboard/february-2026`}
               className="text-primary hover:underline font-medium"
             >
-              Previous month
+              {t.leaderboard?.previousMonth || 'Previous month'}
             </Link>
           </p>
 
@@ -185,7 +188,7 @@ export default function LeaderboardClient({
             <div className="mt-4 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03]">
               <div className="flex items-center gap-1.5 text-white/60">
                 <Clock size={14} />
-                <span className="text-xs font-medium">Resets in</span>
+                <span className="text-xs font-medium">{t.leaderboard?.resetsIn || 'Resets in'}</span>
               </div>
               {countdown.mounted ? (
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
@@ -193,25 +196,25 @@ export default function LeaderboardClient({
                     <span className="text-base sm:text-lg font-bold tabular-nums text-white">
                       {String(countdown.days).padStart(2, '0')}
                     </span>
-                    <span className="text-[10px] text-white/40 uppercase tracking-wider">days</span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">{t.leaderboard?.days || 'days'}</span>
                   </div>
                   <div className="flex flex-col items-center min-w-[2rem]">
                     <span className="text-base sm:text-lg font-bold tabular-nums text-white">
                       {String(countdown.hours).padStart(2, '0')}
                     </span>
-                    <span className="text-[10px] text-white/40 uppercase tracking-wider">hrs</span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">{t.leaderboard?.hrs || 'hrs'}</span>
                   </div>
                   <div className="flex flex-col items-center min-w-[2rem]">
                     <span className="text-base sm:text-lg font-bold tabular-nums text-white">
                       {String(countdown.minutes).padStart(2, '0')}
                     </span>
-                    <span className="text-[10px] text-white/40 uppercase tracking-wider">min</span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">{t.leaderboard?.min || 'min'}</span>
                   </div>
                   <div className="flex flex-col items-center min-w-[2rem]">
                     <span className="text-base sm:text-lg font-bold tabular-nums text-white">
                       {String(countdown.seconds).padStart(2, '0')}
                     </span>
-                    <span className="text-[10px] text-white/40 uppercase tracking-wider">sec</span>
+                    <span className="text-[10px] text-white/40 uppercase tracking-wider">{t.leaderboard?.sec || 'sec'}</span>
                   </div>
                 </div>
               ) : (
@@ -238,14 +241,14 @@ export default function LeaderboardClient({
         {/* Table */}
         {entries.length > 0 ? (
           <div>
-            <h2 className="text-lg font-semibold mb-4 text-white/70">All Referrers</h2>
+            <h2 className="text-lg font-semibold mb-4 text-white/70">{t.leaderboard?.allReferrers || 'All Referrers'}</h2>
             <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.04] sm:bg-white/[0.02] sm:backdrop-blur-sm">
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-white/40">
-                    <th className="px-6 py-4 font-medium w-16">Rank</th>
-                    <th className="px-6 py-4 font-medium">Referrer</th>
-                    <th className="px-6 py-4 font-medium text-right">Referrals</th>
+                    <th className="px-6 py-4 font-medium w-16">{t.leaderboard?.rank || 'Rank'}</th>
+                    <th className="px-6 py-4 font-medium">{t.leaderboard?.referrer || 'Referrer'}</th>
+                    <th className="px-6 py-4 font-medium text-right">{t.leaderboard?.referrals || 'Referrals'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -290,8 +293,8 @@ export default function LeaderboardClient({
         ) : (
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] py-20 text-center">
             <Trophy size={40} className="mx-auto mb-4 text-white/20" />
-            <p className="text-white/40 text-lg">No referrals yet.</p>
-            <p className="text-white/30 text-sm mt-1">Be the first to refer a gamer!</p>
+            <p className="text-white/40 text-lg">{t.leaderboard?.noReferralsYet || 'No referrals yet.'}</p>
+            <p className="text-white/30 text-sm mt-1">{t.leaderboard?.beTheFirst || 'Be the first to refer a gamer!'}</p>
           </div>
         )}
       </div>

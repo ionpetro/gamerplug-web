@@ -54,7 +54,7 @@ export const Hero = () => {
             <span className="font-handwritten text-2xl text-muted-foreground font-semibold" style={{ 
               transform: 'rotate(-8deg)'
             }}>
-              scan me
+              {t.landing?.hero?.scanMe || 'scan me'}
             </span>
           </div>
         </Link>

@@ -9,11 +9,18 @@
       "en": "EN",
       "es": "ES",
       "ja": "JA"
-    }
+    },
+    "leaderboard": "Clasificación",
+    "myProfile": "Mi Perfil",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "downloadApp": "Descargar App"
   },
   "dropdown": {
     "popular": "Juegos populares",
-    "viewAll": "Ver todos los juegos"
+    "viewAll": "Ver todos los juegos",
+    "allGames": "Todos los Juegos",
+    "noGamesAvailable": "No hay juegos disponibles"
   },
   "footer": {
     "tagline": "La plataforma social definitiva para gamers. Encuentra tu escuadrón, construye tu comunidad, y nunca juegues solo de nuevo.",
@@ -29,7 +36,9 @@
     "privacy": "Política de Privacidad",
     "cookies": "Cookies",
     "copyright": "GamerPlug Inc.",
-    "patentPending": "Patente en trámite"
+    "patentPending": "Patente en trámite",
+    "leaderboard": "Clasificación",
+    "contact": "Contáctanos"
   },
   "home": {
     "badge": "El futuro de las conexiones gamer",
@@ -115,7 +124,8 @@
       "title1": "NO",
       "title2": "MÁS RANDOMS.",
       "subtitle": "Conecta a tu jugador ideal.",
-      "gamersOnline": "gamers en línea ahora"
+      "gamersOnline": "gamers en línea ahora",
+      "scanMe": "escanéame"
     },
     "features": {
       "sectionLabel": "Características Clave",
@@ -152,6 +162,43 @@
       "titleHighlight": "ESCUADRÓN?",
       "subtitle": "Únete a miles de gamers que están haciendo match, chateando y ganando juntos ahora mismo."
     },
+    "demo": {
+      "label": "Demo",
+      "titlePre": "Mira ",
+      "titlePost": " en Acción",
+      "subtitle": "Mira lo fácil que es encontrar tu equipo de juego perfecto.",
+      "watchOnYoutube": "Ver Demo en YouTube",
+      "mobileDesc": "Se abre en la app de YouTube si está instalada."
+    },
+    "promise": {
+      "label": "Nuestra Promesa",
+      "titlePre": "Los ",
+      "titleHighlight": "Cimientos",
+      "titlePost": " de GamerPlug",
+      "subtitle": "Construido sobre confianza, autenticidad y comunidad. Esto es lo que defendemos.",
+      "noNpcs": "sin NPCs",
+      "noNpcsDesc": "Cada perfil es monitoreado para mantener la plataforma real y legítima.",
+      "onlyGamers": "solo gamers",
+      "onlyGamersDesc": "Sin bots. Sin spam. Solo gamers reales que realmente quieren jugar.",
+      "goodVibes": "buenas vibras",
+      "goodVibesDesc": "Una comunidad saludable y respetuosa donde los juegos son divertidos de nuevo."
+    },
+    "team": {
+      "label": "Conoce al Equipo",
+      "titlePre": "El ",
+      "titleHighlight": "Squad",
+      "titlePost": " Detrás de GamerPlug",
+      "subtitle": "Un equipo diverso de gamers, ingenieros y emprendedores unidos por una misión: revolucionar cómo se conectan los gamers.",
+      "chooseCharacter": "Elige Tu Personaje",
+      "viewFullTeam": "Ver Equipo Completo",
+      "engineers": "Ingenieros",
+      "product": "Producto",
+      "board": "Directiva",
+      "operations": "Operaciones"
+    },
+    "games": {
+      "noGamesAvailable": "No hay juegos disponibles en este momento."
+    },
     "phone": {
       "live": "EN VIVO",
       "profileDesc": "Jugador Inmortal 3 de Valorant. Buscando duo o trío relajado. Sin toxicidad por favor.",
@@ -160,6 +207,24 @@
       "newMessage": "Nuevo Mensaje",
       "duoMessage": "\"¿Duo para ranked?\""
     }
+  },
+  "leaderboard": {
+    "title": "Top Referidores",
+    "subtitle": "Los gamers que traen más jugadores a GamerPlug",
+    "referralsSince": "Referidos desde {period}",
+    "previousMonth": "Mes anterior",
+    "resetsIn": "Se reinicia en",
+    "days": "días",
+    "hrs": "hrs",
+    "min": "min",
+    "sec": "seg",
+    "allReferrers": "Todos los Referidores",
+    "rank": "Puesto",
+    "referrer": "Referidor",
+    "referrals": "referidos",
+    "place": "Lugar",
+    "noReferralsYet": "Aún no hay referidos.",
+    "beTheFirst": "¡Sé el primero en referir a un gamer!"
   },
   "affiliates": {
     "badge": "Programa de Afiliados",

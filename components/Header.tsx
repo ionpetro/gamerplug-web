@@ -103,7 +103,7 @@ export const Header = () => {
             href={hrefWithLocale("/leaderboard")}
             className="relative text-muted-foreground hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase"
           >
-            Leaderboard
+            {t.nav?.leaderboard || 'Leaderboard'}
             <span className="absolute -top-1 -right-2.5 flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
@@ -130,14 +130,14 @@ export const Header = () => {
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
                   >
                     <User size={16} />
-                    My Profile
+                    {t.nav?.myProfile || 'My Profile'}
                   </Link>
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors"
                   >
                     <LogOut size={16} />
-                    Sign Out
+                    {t.nav?.signOut || 'Sign Out'}
                   </button>
                 </div>
               )}
@@ -147,7 +147,7 @@ export const Header = () => {
               href={hrefWithLocale("/login")}
               className="py-2 px-4 rounded-lg bg-primary hover:bg-primary/90 text-sm font-bold uppercase tracking-wide transition-colors"
             >
-              Sign In
+              {t.nav?.signIn || 'Sign In'}
             </Link>
           )}
         </div>
@@ -188,7 +188,7 @@ export const Header = () => {
               className="relative text-gray-300 hover:text-primary font-medium py-2 border-b border-border/50 w-fit"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Leaderboard
+              {t.nav?.leaderboard || 'Leaderboard'}
               <span className="absolute -top-0.5 -right-3 flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
@@ -204,7 +204,7 @@ export const Header = () => {
                 >
                   <User size={18} className="text-primary" />
                   <span className="truncate">
-                    My Profile
+                    {t.nav?.myProfile || 'My Profile'}
                   </span>
                 </Link>
                 <button
@@ -215,7 +215,7 @@ export const Header = () => {
                   className="flex items-center gap-2 text-gray-300 hover:text-primary font-medium py-2"
                 >
                   <LogOut size={18} />
-                  Sign Out
+                  {t.nav?.signOut || 'Sign Out'}
                 </button>
               </>
             ) : (
@@ -224,16 +224,16 @@ export const Header = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full py-3 mt-4 gradient-accent text-white font-bold rounded-lg hover:opacity-90 hover:scale-105 transition-all duration-200 text-center"
               >
-                Sign In
+                {t.nav?.signIn || 'Sign In'}
               </Link>
             )}
-            
+
             <Link
               href={hrefWithLocale("/download")}
               onClick={() => setIsMobileMenuOpen(false)}
               className="block w-full py-3 mt-4 border border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-center"
             >
-              Download App
+              {t.nav?.downloadApp || 'Download App'}
             </Link>
           </div>
         </div>

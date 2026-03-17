@@ -9,11 +9,18 @@
       "en": "EN",
       "es": "ES",
       "ja": "JA"
-    }
+    },
+    "leaderboard": "リーダーボード",
+    "myProfile": "マイプロフィール",
+    "signIn": "サインイン",
+    "signOut": "サインアウト",
+    "downloadApp": "アプリをダウンロード"
   },
   "dropdown": {
     "popular": "人気ゲーム",
-    "viewAll": "すべてのゲームを見る"
+    "viewAll": "すべてのゲームを見る",
+    "allGames": "すべてのゲーム",
+    "noGamesAvailable": "利用可能なゲームはありません"
   },
   "footer": {
     "tagline": "ゲーマーのための究極のソーシャルプラットフォーム。仲間を見つけ、コミュニティを築き、もう一人でゲームをしない。",
@@ -29,7 +36,9 @@
     "privacy": "プライバシーポリシー",
     "cookies": "Cookie",
     "copyright": "GamerPlug Inc.",
-    "patentPending": "特許出願中"
+    "patentPending": "特許出願中",
+    "leaderboard": "リーダーボード",
+    "contact": "お問い合わせ"
   },
   "home": {
     "badge": "ゲーミングコネクションの未来",
@@ -115,7 +124,8 @@
       "title1": "もう",
       "title2": "野良はいらない。",
       "subtitle": "理想のプレイヤーとつながろう。",
-      "gamersOnline": "人のゲーマーがオンライン中"
+      "gamersOnline": "人のゲーマーがオンライン中",
+      "scanMe": "スキャンして"
     },
     "features": {
       "sectionLabel": "主な機能",
@@ -152,6 +162,43 @@
       "titleHighlight": "チーム",
       "subtitle": "今すぐマッチング、チャット、勝利を楽しんでいる数千人のゲーマーに参加しよう。"
     },
+    "demo": {
+      "label": "デモ",
+      "titlePre": "",
+      "titlePost": "を体験しよう",
+      "subtitle": "理想のゲーミングチームを見つけるのがいかに簡単かをご覧ください。",
+      "watchOnYoutube": "YouTubeでデモを見る",
+      "mobileDesc": "インストール済みの場合、YouTubeアプリで開きます。"
+    },
+    "promise": {
+      "label": "私たちの約束",
+      "titlePre": "GamerPlugの",
+      "titleHighlight": "基盤",
+      "titlePost": "",
+      "subtitle": "信頼、真正性、コミュニティの上に築かれています。私たちの信念をご紹介します。",
+      "noNpcs": "NPCはいない",
+      "noNpcsDesc": "すべてのプロフィールが監視され、プラットフォームの信頼性を保ちます。",
+      "onlyGamers": "ゲーマーだけ",
+      "onlyGamersDesc": "ボットなし。スパムなし。本当にプレイしたいリアルなゲーマーだけ。",
+      "goodVibes": "良い雰囲気",
+      "goodVibesDesc": "ゲームが再び楽しくなる、健全で敬意のあるコミュニティ。"
+    },
+    "team": {
+      "label": "チーム紹介",
+      "titlePre": "GamerPlugの",
+      "titleHighlight": "チーム",
+      "titlePost": "メンバー",
+      "subtitle": "ゲーマー、エンジニア、起業家が一つのミッションの下に集結：ゲーマーのつながり方を革新する。",
+      "chooseCharacter": "キャラクターを選ぶ",
+      "viewFullTeam": "チーム全員を見る",
+      "engineers": "エンジニア",
+      "product": "プロダクト",
+      "board": "取締役会",
+      "operations": "オペレーション"
+    },
+    "games": {
+      "noGamesAvailable": "現在利用可能なゲームはありません。"
+    },
     "phone": {
       "live": "ライブ",
       "profileDesc": "イモータル3のValorantプレイヤー。のんびりデュオかトリオ探し中。トキシックNG。",
@@ -160,6 +207,24 @@
       "newMessage": "新着メッセージ",
       "duoMessage": "「ランク戦デュオしない？」"
     }
+  },
+  "leaderboard": {
+    "title": "トップリファラー",
+    "subtitle": "GamerPlugに最も多くのプレイヤーを紹介しているゲーマー",
+    "referralsSince": "{period}からの紹介",
+    "previousMonth": "先月",
+    "resetsIn": "リセットまで",
+    "days": "日",
+    "hrs": "時",
+    "min": "分",
+    "sec": "秒",
+    "allReferrers": "全リファラー",
+    "rank": "順位",
+    "referrer": "リファラー",
+    "referrals": "紹介",
+    "place": "位",
+    "noReferralsYet": "まだ紹介はありません。",
+    "beTheFirst": "最初にゲーマーを紹介しよう！"
   },
   "affiliates": {
     "badge": "アフィリエイトプログラム",

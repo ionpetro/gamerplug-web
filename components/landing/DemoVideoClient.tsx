@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useI18n } from "@/components/I18nProvider"
 
 export const DemoVideo = () => {
+  const { t } = useI18n()
   const youtubeId = '0W88C5LfzvE'
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${youtubeId}?controls=0`
   const youtubeMobileLink = `https://youtu.be/${youtubeId}`
@@ -21,13 +23,13 @@ export const DemoVideo = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">
-            Demo
+            {t.landing?.demo?.label || 'Demo'}
           </span>
           <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase italic">
-            See <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GamerPlug</span> in Action
+            {t.landing?.demo?.titlePre || 'See '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">GamerPlug</span>{t.landing?.demo?.titlePost || ' in Action'}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Watch how easy it is to find your perfect gaming squad.
+            {t.landing?.demo?.subtitle || 'Watch how easy it is to find your perfect gaming squad.'}
           </p>
         </div>
 
@@ -36,8 +38,8 @@ export const DemoVideo = () => {
             href={youtubeMobileLink}
             className="md:hidden block rounded-xl border border-primary/30 bg-card/70 p-8 text-center shadow-xl hover:border-primary transition-colors"
           >
-            <p className="text-white text-xl font-bold mb-2">Watch Demo on YouTube</p>
-            <p className="text-muted-foreground text-sm">Opens in the YouTube app when installed.</p>
+            <p className="text-white text-xl font-bold mb-2">{t.landing?.demo?.watchOnYoutube || 'Watch Demo on YouTube'}</p>
+            <p className="text-muted-foreground text-sm">{t.landing?.demo?.mobileDesc || 'Opens in the YouTube app when installed.'}</p>
           </a>
           {isDesktop ? (
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>

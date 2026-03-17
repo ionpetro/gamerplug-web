@@ -2,23 +2,26 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { useI18n } from "@/components/I18nProvider"
 
 export const OurPromise = () => {
+  const { t } = useI18n()
+
   const promises = [
     {
       gif: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGowcWRxcjh1OGtla2sydTQ4dW41cmlkbG4yd2MxMXo2MTg4YTZpYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tczJoRU7XwBS8/giphy.gif",
-      title: "no NPCs",
-      description: "Every profile is monitored to keep the platform real and legit."
+      title: t.landing?.promise?.noNpcs || "no NPCs",
+      description: t.landing?.promise?.noNpcsDesc || "Every profile is monitored to keep the platform real and legit."
     },
     {
       gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2M2Y2ZkMjM1bHA0bXBpYzV5dmw0emcwOTRtemhvcndrM2NnZzlhaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o85xpckLTpHHRnnBS/giphy.gif",
-      title: "only gamers",
-      description: "No bots. No spam. Just real gamers who actually want to play."
+      title: t.landing?.promise?.onlyGamers || "only gamers",
+      description: t.landing?.promise?.onlyGamersDesc || "No bots. No spam. Just real gamers who actually want to play."
     },
     {
       gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGg0Mzc5OXY0ZGoxMnh6MGNycG44M3Q3ZnJnZTVlNTY4bmQ0amptdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4oMoIbIQrvCjm/giphy.gif",
-      title: "good vibes",
-      description: "A healthy, respectful community where gaming is fun again."
+      title: t.landing?.promise?.goodVibes || "good vibes",
+      description: t.landing?.promise?.goodVibesDesc || "A healthy, respectful community where gaming is fun again."
     }
   ]
 
@@ -31,7 +34,7 @@ export const OurPromise = () => {
             whileInView={{ opacity: 1 }}
             className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
           >
-            Our Promise
+            {t.landing?.promise?.label || 'Our Promise'}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -39,7 +42,7 @@ export const OurPromise = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
           >
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Foundation</span> of GamerPlug
+            {t.landing?.promise?.titlePre || 'The '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{t.landing?.promise?.titleHighlight || 'Foundation'}</span>{t.landing?.promise?.titlePost || ' of GamerPlug'}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -47,7 +50,7 @@ export const OurPromise = () => {
             viewport={{ once: true }}
             className="text-muted-foreground max-w-2xl mx-auto text-lg"
           >
-            Built on trust, authenticity, and community. Here's what we stand for.
+            {t.landing?.promise?.subtitle || "Built on trust, authenticity, and community. Here's what we stand for."}
           </motion.p>
         </div>
 

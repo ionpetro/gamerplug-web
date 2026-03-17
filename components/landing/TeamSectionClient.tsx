@@ -36,7 +36,7 @@ const teamMemberIds = [
 
 export function TeamSection() {
   const [selectedCharacterId, setSelectedCharacterId] = useState('stephan-nicklow')
-  const { locale } = useI18n()
+  const { locale, t } = useI18n()
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const isInitialMount = useRef(true)
 
@@ -84,7 +84,7 @@ export function TeamSection() {
             whileInView={{ opacity: 1 }}
             className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block"
           >
-            Meet The Team
+            {t.landing?.team?.label || 'Meet The Team'}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -92,7 +92,7 @@ export function TeamSection() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black mb-6 uppercase italic"
           >
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Squad</span> Behind GamerPlug
+            {t.landing?.team?.titlePre || 'The '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{t.landing?.team?.titleHighlight || 'Squad'}</span>{t.landing?.team?.titlePost || ' Behind GamerPlug'}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -100,7 +100,7 @@ export function TeamSection() {
             viewport={{ once: true }}
             className="text-muted-foreground max-w-2xl mx-auto text-lg"
           >
-            A diverse team of gamers, engineers, and entrepreneurs united by one mission: revolutionizing how gamers connect.
+            {t.landing?.team?.subtitle || 'A diverse team of gamers, engineers, and entrepreneurs united by one mission: revolutionizing how gamers connect.'}
           </motion.p>
         </div>
 
@@ -153,7 +153,7 @@ export function TeamSection() {
               href={`/${locale}/team`}
               className="text-white hover:text-primary transition-colors duration-300 font-semibold uppercase tracking-wide text-xs underline underline-offset-4 pt-8 flex items-center gap-1"
             >
-              Choose Your Character
+              {t.landing?.team?.chooseCharacter || 'Choose Your Character'}
               <ExternalLink className="w-3 h-3" />
             </Link>
           </motion.div>
@@ -163,12 +163,12 @@ export function TeamSection() {
         <div className="md:hidden">
           <div className="grid grid-cols-2 gap-3">
             {[
-              { id: 'ion-petropoulos', name: 'ION', role: 'Engineers', thumb: '/models/thumbnails/ion.png' },
-              { id: 'abed-hamami', name: 'ABED', role: 'Engineers', thumb: '/models/thumbnails/abed.png' },
-              { id: 'hunter-klehm', name: 'HUNTER', role: 'Product', thumb: '/models/thumbnails/hunter.png' },
-              { id: 'bill-klehm', name: 'BILL', role: 'Board', thumb: '/models/thumbnails/bill.png' },
-              { id: 'billy-edwards', name: 'BILLY', role: 'Operations', thumb: '/models/thumbnails/billy.png' },
-              { id: 'stephan-nicklow', name: 'STEPHAN', role: 'Operations', thumb: '/models/thumbnails/stephan.png' },
+              { id: 'ion-petropoulos', name: 'ION', role: t.landing?.team?.engineers || 'Engineers', thumb: '/models/thumbnails/ion.png' },
+              { id: 'abed-hamami', name: 'ABED', role: t.landing?.team?.engineers || 'Engineers', thumb: '/models/thumbnails/abed.png' },
+              { id: 'hunter-klehm', name: 'HUNTER', role: t.landing?.team?.product || 'Product', thumb: '/models/thumbnails/hunter.png' },
+              { id: 'bill-klehm', name: 'BILL', role: t.landing?.team?.board || 'Board', thumb: '/models/thumbnails/bill.png' },
+              { id: 'billy-edwards', name: 'BILLY', role: t.landing?.team?.operations || 'Operations', thumb: '/models/thumbnails/billy.png' },
+              { id: 'stephan-nicklow', name: 'STEPHAN', role: t.landing?.team?.operations || 'Operations', thumb: '/models/thumbnails/stephan.png' },
             ].map((member) => (
               <div key={member.id} className="rounded-lg border border-white/15 bg-card/40 overflow-hidden">
                 <div className="relative aspect-square">
@@ -193,7 +193,7 @@ export function TeamSection() {
               href={`/${locale}/team`}
               className="text-white hover:text-primary transition-colors duration-300 font-semibold uppercase tracking-wide text-xs underline underline-offset-4 inline-flex items-center gap-1"
             >
-              View Full Team
+              {t.landing?.team?.viewFullTeam || 'View Full Team'}
               <ExternalLink className="w-3 h-3" />
             </Link>
           </div>
