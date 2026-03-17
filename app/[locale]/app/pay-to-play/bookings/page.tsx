@@ -136,9 +136,6 @@ export default function BuyerBookingsPage() {
   if (authLoading) {
     return (
       <div className="relative flex-1 overflow-hidden bg-background">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-[-20%] left-[-15%] h-[520px] w-[520px] rounded-full bg-primary/20 blur-[190px]" />
-        </div>
         <div className="relative container mx-auto max-w-4xl px-6 py-8">
           <div className="flex items-center justify-center py-20">
             <Loader2 size={24} className="animate-spin text-primary" />
@@ -155,11 +152,6 @@ export default function BuyerBookingsPage() {
 
   return (
     <div className="relative flex-1 overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-[-20%] left-[-15%] h-[520px] w-[520px] rounded-full bg-primary/20 blur-[190px]" />
-        <div className="absolute bottom-[-25%] right-[-10%] h-[600px] w-[600px] rounded-full bg-accent/25 blur-[200px]" />
-      </div>
-
       <div className="relative container mx-auto max-w-4xl px-6 py-8">
         <Link href={`/${locale}/app/pay-to-play`} className="mb-4 inline-flex items-center gap-2 text-white/70 hover:text-white">
           <ArrowLeft size={16} />

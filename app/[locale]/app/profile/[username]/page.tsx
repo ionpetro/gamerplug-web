@@ -145,10 +145,6 @@ const SkeletonLine = ({ className = "" }: { className?: string }) => (
 function ProfileSkeleton() {
   return (
     <div className="relative flex-1">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
-      </div>
       <div className="relative container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Profile Header Skeleton */}
@@ -577,13 +573,6 @@ export default function AuthenticatedProfilePage() {
   return (
     <>
       <div className="relative flex-1">
-        {/* Background Effects */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
-          <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
-        </div>
-
         <div className="relative container mx-auto px-6 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Profile Header */}

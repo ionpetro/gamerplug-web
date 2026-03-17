@@ -430,12 +430,6 @@ export default function ExplorePage() {
 
   return (
     <div className="relative flex-1 overflow-hidden bg-black">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[520px] h-[520px] bg-primary/20 blur-[190px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-10%] w-[600px] h-[600px] bg-accent/25 blur-[200px] rounded-full" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
-      </div>
-
       <div className="relative mx-auto flex h-[calc(100dvh-86px)] max-w-7xl flex-col items-center px-4 pb-24 pt-2 sm:pb-0 sm:pt-4">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">

@@ -240,12 +240,6 @@ export default function PayToPlayPage() {
 
   return (
     <div className="relative flex-1 overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-[-20%] left-[-15%] h-[520px] w-[520px] rounded-full bg-primary/20 blur-[190px]" />
-        <div className="absolute bottom-[-25%] right-[-10%] h-[600px] w-[600px] rounded-full bg-accent/25 blur-[200px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_20%,#000_70%,transparent_100%)] opacity-10" />
-      </div>
-
       <div className="relative container mx-auto px-6 py-8 max-w-4xl">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
