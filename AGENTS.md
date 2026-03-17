@@ -21,8 +21,12 @@ A `.env.local` file is needed with at minimum:
 
 Without real Supabase credentials, pages that query the database will show empty states but the app still starts and renders static pages (homepage, blog, team, contact, etc.) correctly.
 
+These secrets are configured in the Cursor Cloud Secrets panel and injected as environment variables. The `.env.local` file must be created at startup from these env vars (it is gitignored).
+
 ### Gotchas
 
 - **Dual lockfiles:** Both `package-lock.json` (npm) and `pnpm-lock.yaml` (pnpm) exist. Always use **npm** as the package manager — `next lint` auto-detects pnpm from the lockfile and will corrupt `node_modules` if it tries to install ESLint deps via pnpm. The `eslint.config.mjs` and ESLint devDependencies are already committed to avoid this.
 - **ESLint config:** Uses ESLint v9 flat config (`eslint.config.mjs`). The `@typescript-eslint/no-explicit-any` and `react/no-unescaped-entities` rules are set to `warn` (not `error`) because the existing codebase has many pre-existing violations. This allows `npm run build` to succeed.
 - **Locale middleware:** All non-API/auth routes redirect to `/{locale}/...` (e.g., `/en/`). The root `/` returns a 307 redirect to `/en/`.
+- **Blog content is static/hardcoded** in the codebase (not fetched from DB), so blog pages always render. Database-backed pages like Games, Leaderboard, and user profiles require real Supabase data.
+- **`.env.local` creation:** On each fresh VM, create `.env.local` from env vars before starting the dev server. Example: `printf "NEXT_PUBLIC_SUPABASE_URL=%s\nNEXT_PUBLIC_SUPABASE_ANON_KEY=%s\n" "$NEXT_PUBLIC_SUPABASE_URL" "$NEXT_PUBLIC_SUPABASE_ANON_KEY" > .env.local`
