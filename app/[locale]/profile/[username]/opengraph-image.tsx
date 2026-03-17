@@ -65,25 +65,45 @@ export default async function Image({
 }) {
   const { username } = await params;
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   const [fonts, userData] = await Promise.all([
     loadFonts(`@${username}`),
-    (async () => {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-      const { data } = await supabase
-        .from('users')
-        .select('gamertag, profile_image_url, platform')
-        .ilike('gamertag', username)
-        .single();
-      return data;
-    })(),
+    supabase
+      .from('users')
+      .select('id, gamertag, profile_image_url, platform, referred_by_user_id')
+      .ilike('gamertag', username)
+      .single()
+      .then((res) => res.data),
   ]);
 
   const gamertag = userData?.gamertag || username;
   const profileImage = userData?.profile_image_url;
   const platforms: string[] = userData?.platform || [];
+
+  // Fetch referral data in parallel
+  const [referrerData, referredUsersData] = await Promise.all([
+    userData?.referred_by_user_id
+      ? supabase
+          .from('users')
+          .select('gamertag, profile_image_url')
+          .eq('id', userData.referred_by_user_id)
+          .maybeSingle()
+          .then((res) => res.data)
+      : Promise.resolve(null),
+    userData?.id
+      ? supabase
+          .from('users')
+          .select('id, profile_image_url')
+          .eq('referred_by_user_id', userData.id)
+          .order('created_at', { ascending: false })
+          .limit(5)
+          .then((res) => res.data || [])
+      : Promise.resolve([]),
+  ]);
 
   return new ImageResponse(
     (
@@ -198,19 +218,113 @@ export default async function Image({
           )}
         </div>
 
-        {/* Username — Space Mono */}
+        {/* Username + referrer badge */}
         <div
           style={{
             display: 'flex',
-            fontSize: 48,
-            fontWeight: 400,
-            fontFamily: 'Space Mono',
-            color: '#fff',
+            alignItems: 'center',
+            gap: 14,
             marginBottom: 20,
           }}
         >
-          @{gamertag}
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 48,
+              fontWeight: 400,
+              fontFamily: 'Space Mono',
+              color: '#fff',
+            }}
+          >
+            @{gamertag}
+          </div>
+          {referrerData && (
+            <div
+              style={{
+                display: 'flex',
+                width: 36,
+                height: 36,
+                borderRadius: 8,
+                overflow: 'hidden',
+                border: '2px solid rgba(255,255,255,0.15)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={
+                  referrerData.profile_image_url ||
+                  'https://gamerplug.app/images/logo-no-back.png'
+                }
+                alt=""
+                width={36}
+                height={36}
+                style={{
+                  objectFit: referrerData.profile_image_url
+                    ? 'cover'
+                    : 'contain',
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            </div>
+          )}
         </div>
+
+        {/* Referred users */}
+        {referredUsersData.length > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginBottom: 20,
+            }}
+          >
+            <div style={{ display: 'flex' }}>
+              {referredUsersData.map((u, i) => (
+                <div
+                  key={u.id}
+                  style={{
+                    display: 'flex',
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '2px solid #0D0D0D',
+                    marginLeft: i > 0 ? -10 : 0,
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={
+                      u.profile_image_url ||
+                      'https://gamerplug.app/images/logo-no-back.png'
+                    }
+                    alt=""
+                    width={32}
+                    height={32}
+                    style={{
+                      objectFit: u.profile_image_url ? 'cover' : 'contain',
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <span
+              style={{
+                display: 'flex',
+                fontSize: 16,
+                fontFamily: 'Inter',
+                fontWeight: 700,
+                color: 'rgba(255,255,255,0.5)',
+              }}
+            >
+              {referredUsersData.length} referred
+            </span>
+          </div>
+        )}
 
         {/* Platforms */}
         {platforms.length > 0 && (
