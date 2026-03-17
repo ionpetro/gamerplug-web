@@ -41,7 +41,7 @@ function formatMessageTime(dateString: string) {
 }
 
 export default function MatchChatPage() {
-  const params = useParams<{ matchId: string }>();
+  const params = useParams<{ locale: string; matchId: string }>();
   useI18n();
   const { user } = useAuth();
   const [matchedUser, setMatchedUser] = useState<User | null>(null);
@@ -55,6 +55,7 @@ export default function MatchChatPage() {
   const [loadingGames, setLoadingGames] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  const locale = params?.locale || 'en';
   const matchId = params?.matchId;
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
