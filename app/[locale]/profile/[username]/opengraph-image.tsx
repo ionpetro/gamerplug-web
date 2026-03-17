@@ -270,51 +270,6 @@ export default async function Image({
           )}
         </div>
 
-        {/* Referred users */}
-        {referredUsersData.length > 0 && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 20,
-            }}
-          >
-            <div style={{ display: 'flex' }}>
-              {referredUsersData.map((u, i) => (
-                <div
-                  key={u.id}
-                  style={{
-                    display: 'flex',
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    border: '2px solid #0D0D0D',
-                    marginLeft: i > 0 ? -10 : 0,
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={
-                      u.profile_image_url ||
-                      'https://gamerplug.app/images/logo-no-back.png'
-                    }
-                    alt=""
-                    width={32}
-                    height={32}
-                    style={{
-                      objectFit: u.profile_image_url ? 'cover' : 'contain',
-                      width: '100%',
-                      height: '100%',
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Platforms */}
         {platforms.length > 0 && (
           <div
