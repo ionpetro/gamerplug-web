@@ -49,12 +49,12 @@ export const Hero = () => {
             height={100}
             className="rounded-lg shadow-2xl"
           />
-          {/* Handwritten "scan me" text */}
+          {/* Download app text */}
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
-            <span className="font-handwritten text-2xl text-muted-foreground font-semibold" style={{ 
+            <span className="font-handwritten text-2xl text-muted-foreground font-semibold" style={{
               transform: 'rotate(-8deg)'
             }}>
-              {t.landing?.hero?.scanMe || 'scan me'}
+              {t.landing?.hero?.scanMe || 'Download the App'}
             </span>
           </div>
         </Link>
